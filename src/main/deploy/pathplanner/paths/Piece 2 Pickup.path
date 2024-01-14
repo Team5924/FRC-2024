@@ -1,0 +1,130 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.89042082945277,
+        "y": 4.435151377247199
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.2298268034036064,
+        "y": 4.825410369570739
+      },
+      "isLocked": false
+    },
+    {
+      "anchor": {
+        "x": 4.283294130824373,
+        "y": 4.736224882171986
+      },
+      "prevControl": {
+        "x": 3.574971160358987,
+        "y": 4.727004796023481
+      },
+      "nextControl": {
+        "x": 5.137087725491922,
+        "y": 4.74733852781686
+      },
+      "isLocked": false
+    },
+    {
+      "anchor": {
+        "x": 6.35,
+        "y": 4.6
+      },
+      "prevControl": {
+        "x": 5.502832121355176,
+        "y": 4.6
+      },
+      "nextControl": {
+        "x": 6.556544558683317,
+        "y": 4.6
+      },
+      "isLocked": false
+    },
+    {
+      "anchor": {
+        "x": 7.05158150594079,
+        "y": 4.6
+      },
+      "prevControl": {
+        "x": 6.85158150594079,
+        "y": 4.6
+      },
+      "nextControl": null,
+      "isLocked": false
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 180.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 2.0,
+      "maxWaypointRelativePos": 3.0,
+      "constraints": {
+        "maxVelocity": 0.75,
+        "maxAcceleration": 1.0,
+        "maxAngularVelocity": 180.0,
+        "maxAngularAcceleration": 240.0
+      }
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "Set Pivot Pickup",
+      "waypointRelativePos": 1.8,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "setPivotPickup"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Run Intake",
+      "waypointRelativePos": 2.05,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "runIntake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 1.5,
+    "maxAcceleration": 1.0,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 240.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": 180.0,
+    "velocity": 0
+  }
+}
