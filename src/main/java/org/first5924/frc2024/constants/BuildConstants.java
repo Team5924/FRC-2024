@@ -1,4 +1,4 @@
-package org.first5924.frc2023swerve.constants;
+package org.first5924.frc2024.constants;
 
 /** Automatically generated file containing build version information. */
 public final class BuildConstants {

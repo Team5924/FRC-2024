@@ -5,15 +5,16 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package org.first5924.frc2023swerve.commands.drive;
+package org.first5924.frc2024.commands.drive;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-import org.first5924.frc2023swerve.constants.DriveConstants;
-import org.first5924.frc2023swerve.constants.InputConstants;
-import org.first5924.frc2023swerve.subsystems.drive.Drive;
+
+import org.first5924.frc2024.constants.DriveConstants;
+import org.first5924.frc2024.constants.InputConstants;
+import org.first5924.frc2024.subsystems.drive.Drive;
 
 public class DriveWithJoysticks extends Command {
   private final Drive drive;

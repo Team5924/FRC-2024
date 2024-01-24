@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package org.first5924.frc2023swerve.subsystems.drive;
+package org.first5924.frc2024.subsystems.drive;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -13,7 +13,9 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import org.first5924.frc2023swerve.constants.DriveConstants;
+
+import org.first5924.frc2024.subsystems.drive.ModuleIOInputsAutoLogged;
+import org.first5924.frc2024.constants.DriveConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class Module {

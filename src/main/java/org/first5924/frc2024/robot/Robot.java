@@ -2,12 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.first5924.frc2023swerve.robot;
+package org.first5924.frc2024.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import org.first5924.frc2023swerve.constants.BuildConstants;
-import org.first5924.frc2023swerve.constants.Constants;
+
+import org.first5924.frc2024.constants.BuildConstants;
+import org.first5924.frc2024.constants.Constants;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -31,6 +33,8 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotInit() {
+
+  
     // Record metadata
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
@@ -91,6 +95,7 @@ public class Robot extends LoggedRobot {
     // finished or interrupted commands, and running subsystem periodic() methods.
     // This must be called from the robot's periodic block in order for anything in
     // the Command-based framework to work.
+    Logger.recordOutput("Pose", LimelightHelpers.getBotPose("limelight"));
     CommandScheduler.getInstance().run();
   }
 

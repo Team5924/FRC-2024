@@ -5,12 +5,13 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package org.first5924.frc2023swerve.subsystems.drive;
+package org.first5924.frc2024.subsystems.drive;
+
+import org.first5924.frc2024.constants.RobotConstants;
 
 import com.ctre.phoenix6.configs.MountPoseConfigs;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.util.Units;
-import org.first5924.frc2023swerve.constants.RobotConstants;
 
 /** IO implementation for Pigeon2 */
 public class GyroIOPigeon2 implements GyroIO {
