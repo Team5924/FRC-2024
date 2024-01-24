@@ -14,7 +14,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
-import org.first5924.frc2024.subsystems.drive.ModuleIOInputsAutoLogged;
 import org.first5924.frc2024.constants.DriveConstants;
 import org.littletonrobotics.junction.Logger;
 
