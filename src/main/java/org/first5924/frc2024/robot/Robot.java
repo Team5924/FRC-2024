@@ -4,12 +4,11 @@
 
 package org.first5924.frc2024.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import org.first5924.frc2024.constants.BuildConstants;
-import org.first5924.frc2024.constants.Constants;
+import org.first5924.frc2024.constants.RobotConstants;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -33,8 +32,6 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotInit() {
-
-  
     // Record metadata
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
@@ -54,20 +51,20 @@ public class Robot extends LoggedRobot {
     }
 
     // Set up data receivers & replay source
-    switch (Constants.currentMode) {
-        // Running on a real robot, log to a USB stick
+    switch (RobotConstants.kCurrentMode) {
+      // Running on a real robot, log to a USB stick
       case REAL:
         Logger.addDataReceiver(new WPILOGWriter("/media/sda1/"));
         Logger.addDataReceiver(new NT4Publisher());
         break;
 
-        // Running a physics simulator, log to local folder
+      // Running a physics simulator, log to local folder
       case SIM:
         Logger.addDataReceiver(new WPILOGWriter(""));
         Logger.addDataReceiver(new NT4Publisher());
         break;
 
-        // Replaying a log, set up replay source
+      // Replaying a log, set up replay source
       case REPLAY:
         setUseTiming(false); // Run as fast as possible
         String logPath = LogFileUtil.findReplayLog();
@@ -95,7 +92,6 @@ public class Robot extends LoggedRobot {
     // finished or interrupted commands, and running subsystem periodic() methods.
     // This must be called from the robot's periodic block in order for anything in
     // the Command-based framework to work.
-    Logger.recordOutput("Pose", LimelightHelpers.getBotPose("limelight"));
     CommandScheduler.getInstance().run();
   }
 
