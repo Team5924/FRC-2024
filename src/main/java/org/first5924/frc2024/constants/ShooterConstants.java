@@ -7,6 +7,6 @@ package org.first5924.frc2024.constants;
 /** Add your docs here. */
 public class ShooterConstants {
     //Placeholder values for future change
-    public static final int upperMotorID = 1;
-    public static final int lowerMotorID = 2;
+    public static final int upperMotorID = 3;
+    public static final int lowerMotorID = 7;
 }
