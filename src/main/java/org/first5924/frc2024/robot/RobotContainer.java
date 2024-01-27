@@ -20,6 +20,9 @@ import org.first5924.frc2024.subsystems.drive.GyroIO;
 import org.first5924.frc2024.subsystems.drive.GyroIOPigeon2;
 import org.first5924.frc2024.subsystems.drive.ModuleIO;
 import org.first5924.frc2024.subsystems.drive.ModuleIOSparkMax;
+import org.first5924.frc2024.subsystems.shooter.Shooter;
+import org.first5924.frc2024.subsystems.shooter.ShooterIO;
+import org.first5924.frc2024.subsystems.shooter.ShooterIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -31,6 +34,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  private final Shooter shooter;
   //private final Vision vision;
 
   private final CommandXboxController driverController = new CommandXboxController(0);
@@ -51,6 +55,7 @@ public class RobotContainer {
           new ModuleIOSparkMax(2),
           new ModuleIOSparkMax(3)
         );
+        shooter = new Shooter(new ShooterIOTalonFX());
         break;
 
       // Sim robot, instantiate physics sim IO implementations
@@ -62,6 +67,7 @@ public class RobotContainer {
           new ModuleIO() {},
           new ModuleIO() {}
         );
+        shooter = new Shooter(new ShooterIO() {});
         break;
 
       // Replayed robot, disable IO implementations
@@ -73,6 +79,7 @@ public class RobotContainer {
           new ModuleIOSparkMax(2),
           new ModuleIOSparkMax(3)
         );
+        shooter = new Shooter(new ShooterIO() {});
         break;
     }
 
