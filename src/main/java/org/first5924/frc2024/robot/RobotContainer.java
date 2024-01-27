@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
+import org.first5924.frc2024.subsystems.intake.Intake;
+import org.first5924.frc2024.subsystems.intake.IntakeIOTalonFX;
 import org.first5924.frc2024.constants.Constants;
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.drive.GyroIO;
@@ -106,7 +108,7 @@ public class RobotContainer {
             driverController::getRightX,
             swerveModeChooser::get));
     driverController.a().onTrue(new SetGyroYaw(drive, 0));
-
+    driverController.rightBumper().onTrue(new IntakeIOTalonFX());
   }
 
   /**

@@ -6,7 +6,8 @@ package org.first5924.frc2024.constants;
 
 /** Add your docs here. */
 public class IntakeConstants {
-  public static final int kTalonId = 12;
+  public static final int rollerTalonID = 12;
+  public static final int pivotTalonID = 12;
 
   public static final double kPickupVoltage = -5;
   public static final double kLowVoltage = 3;
