@@ -4,11 +4,16 @@
 
 package org.first5924.frc2024.commands.feeder;
 
+import org.first5924.frc2024.constants.FeederConstants;
+import org.first5924.frc2024.subsystems.feeder.Feeder;
+
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class slowFeeder extends Command {
+public class FeederSlow extends Command {
   /** Creates a new slowFeeder. */
-  public slowFeeder() {
+  private final Feeder feeder;
+  public FeederSlow(Feeder feeder) {
+    this.feeder = feeder;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -18,7 +23,10 @@ public class slowFeeder extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    feeder.setPercent(FeederConstants.slowPercent);
+
+  }
 
   // Called once the command ends or is interrupted.
   @Override

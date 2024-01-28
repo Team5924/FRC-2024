@@ -6,7 +6,6 @@ package org.first5924.frc2024.subsystems.feeder;
 
 import org.littletonrobotics.junction.AutoLog;
 
-import au.grapplerobotics.LaserCan.Measurement;
 
 public interface FeederIO {
     @AutoLog
