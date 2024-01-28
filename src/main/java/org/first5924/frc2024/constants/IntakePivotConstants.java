@@ -5,8 +5,10 @@
 package org.first5924.frc2024.constants;
 
 /** Add your docs here. */
-public class IntakeConstants {
+public class IntakePivotConstants {
+    public static final int IntakePivotID = 1;
+    public static final int pivotCancoderID = 0;
 
-     public static final int rollerTalonID = 1;
-     public static final double percentSpeed = 1.0;
+
+
 }

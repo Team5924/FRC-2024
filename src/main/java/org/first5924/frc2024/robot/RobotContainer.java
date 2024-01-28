@@ -15,9 +15,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
+import org.first5924.frc2024.commands.intake.Spin;
 import org.first5924.frc2024.subsystems.intake.Intake;
 import org.first5924.frc2024.subsystems.intake.IntakeIOTalonFX;
 import org.first5924.frc2024.constants.Constants;
+import org.first5924.frc2024.subsystems.IntakePivot.IntakePivotIO;
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.drive.GyroIO;
 import org.first5924.frc2024.subsystems.drive.GyroIOPigeon2;
@@ -35,6 +37,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  private final Intake intake;
   //private final Vision vision;
   // Controller
   private final CommandXboxController driverController = new CommandXboxController(0);
@@ -54,6 +57,7 @@ public class RobotContainer {
                 new ModuleIOSparkMax(1),
                 new ModuleIOSparkMax(2),
                 new ModuleIOSparkMax(3));
+          mIntakePivot = new IntakeSubsystem(new IntakePivotIO);
         break;
 
         // Sim robot, instantiate physics sim IO implementations
@@ -108,7 +112,7 @@ public class RobotContainer {
             driverController::getRightX,
             swerveModeChooser::get));
     driverController.a().onTrue(new SetGyroYaw(drive, 0));
-    driverController.rightBumper().onTrue(new IntakeIOTalonFX());
+    driverController.rightBumper().onTrue(new Spin(intake));
   }
 
   /**

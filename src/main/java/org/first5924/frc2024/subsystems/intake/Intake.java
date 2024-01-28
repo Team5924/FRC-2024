@@ -24,8 +24,8 @@ public class Intake extends SubsystemBase {
     Logger.processInputs("Intake", inputs);
   }
 
-  public void setRollerVoltage(double voltage) {
-    io.setRollerVoltage(voltage);
+  public void setRollerVoltage(double percentSpeed) {
+    io.setRollerVoltage(percentSpeed);
   }
 
   public double getOutputCurrent() {
