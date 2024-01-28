@@ -28,7 +28,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         inputs.motorCurrentVelocity = mMotor.getVelocity().getValueAsDouble();
         inputs.motorPosition = mMotor.getPosition().getValueAsDouble();
         inputs.lastAxleEncoderPosition = mEncoder.getPosition().getValueAsDouble();
-        inputs.height = lc.getMeasurement().distance_mm; //* Math.sin(ElevatorConstants.elevatorAngle);
+        inputs.height = lc.getMeasurement().distance_mm*Math.sin(ElevatorConstants.elevatorAngle);
     }
 
     @Override
