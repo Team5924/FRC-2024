@@ -23,4 +23,6 @@ public interface WristIO {
 
     public default void setPercent(double percent) {
     }
+   public default void setVoltage(double percent) {
+    }
 }

@@ -1,14 +1,21 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 
 package org.first5924.frc2024.commands.wrist;
+
+import java.util.function.DoubleSupplier;
+
+import org.first5924.frc2024.subsystems.wrist.Wrist;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class RotateWrist extends Command {
-  /** Creates a new RotateWrist. */
-  public RotateWrist() {
+  /** Creates a new SetWristAngle. */
+  private final Wrist wrist;
+  private final double mJoystick;
+
+  public RotateWrist(Wrist wrist, DoubleSupplier joystickY) {
+    this.wrist = wrist;
+    mJoystick = joystickY.getAsDouble();
+    addRequirements(wrist);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -18,7 +25,9 @@ public class RotateWrist extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    wrist.setPercent(mJoystick);
+  }
 
   // Called once the command ends or is interrupted.
   @Override

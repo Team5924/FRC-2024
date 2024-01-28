@@ -24,11 +24,15 @@ public class WristIOTalonFX implements WristIO {
         inputs.motorCurrentAmps = mMotor.getSupplyCurrent().getValueAsDouble();
         inputs.motorCurrentVelocity = mMotor.getVelocity().getValueAsDouble();
         inputs.encoderPosition = mEncoder.getPosition().getValueAsDouble();
-        inputs.wristAngle = mEncoder.getPosition().getValueAsDouble()/360;
+        inputs.wristAngle = mEncoder.getPosition().getValueAsDouble()*360;
     }
 
     @Override
     public void setPercent(double percent) {
         mMotor.set(percent);
     }
+    public void setVoltage(double voltage) {
+        mMotor.setVoltage(voltage);
+    }
+    
 }
