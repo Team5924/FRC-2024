@@ -6,13 +6,16 @@ package org.first5924.frc2024.subsystems.elevator;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.pathplanner.lib.util.PIDConstants;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new elevator. */
   private final ElevatorIO io;
   private final ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
-
+  private final PIDController mPID = new PIDController(10, 0, 0);
   public Elevator(ElevatorIO io) {
     this.io = io;
   }
@@ -48,7 +51,7 @@ public class Elevator extends SubsystemBase {
     return inputs.motorTempCelsius;
   } 
 
-  public int getHeight() {
+  public double getHeight() {
     return inputs.height;
   }
 
@@ -56,5 +59,8 @@ public class Elevator extends SubsystemBase {
     io.setPercent(percent);
   }
 
+  public void setHeight(double height) {
+    io.setVoltage(mPID.calculate(inputs.height, height));
+  }
 
 }
