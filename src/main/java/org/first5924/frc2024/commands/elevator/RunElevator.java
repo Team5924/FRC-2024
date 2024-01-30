@@ -10,11 +10,11 @@ import org.first5924.frc2024.subsystems.elevator.Elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class SetPercent extends Command {
+public class RunElevator extends Command {
   /** Creates a new SetPercent. (still need joystick y setup) */
   private final Elevator elevator;
   private final DoubleSupplier mJoystickY;
-  public SetPercent(Elevator elevator, DoubleSupplier joystickY) {
+  public RunElevator(Elevator elevator, DoubleSupplier joystickY) {
     this.elevator = elevator;
     mJoystickY = joystickY;
     // Use addRequirements() here to declare subsystem dependencies.
