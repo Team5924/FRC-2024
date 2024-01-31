@@ -29,7 +29,7 @@ public class Feeder extends SubsystemBase {
   }
 
     public double getMotorCurrentAmps() {
-    return inputs.motorTempCelsius;
+    return inputs.motorCurrentAmps;
   }
 
     public double motorCurrentVelocity() {
@@ -37,11 +37,7 @@ public class Feeder extends SubsystemBase {
   }
 
   public Boolean isNoteIn() {
-      if (inputs.distanceToNextObject > FeederConstants.distanceToNoteFromLaser) {
-            return false;
-        } else {
-            return true;
-        }
+      return inputs.distanceToNextObject < FeederConstants.distanceToNoteFromLaser;
     }
 
   public void setPercent(double percent) {
