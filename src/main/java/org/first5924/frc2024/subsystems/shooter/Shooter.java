@@ -29,23 +29,23 @@ public class Shooter extends SubsystemBase {
   }
 
     public double getLowerMotorTempCelsius() {
-    return inputs.upperMotorTempCelsius;
+    return inputs.lowerMotorTempCelsius;
   }
 
     public double getUpperMotorCurrentAmps() {
-    return inputs.upperMotorTempCelsius;
+    return inputs.upperMotorCurrentAmps;
   }
 
     public double getLowerMotorCurrentAmps() {
-    return inputs.upperMotorTempCelsius;
+    return inputs.lowerMotorCurrentAmps;
   }
 
     public double getUpperMotorCurrentVelocity() {
-    return inputs.upperMotorTempCelsius;
+    return inputs.upperMotorCurrentVelocity;
   }
 
     public double getLowerMotorCurrentVelocity() {
-    return inputs.upperMotorTempCelsius;
+    return inputs.lowerMotorCurrentVelocity;
   }
 
   public void setPercent(double percent) {
