@@ -33,22 +33,22 @@ public class Elevator extends SubsystemBase {
 
 
   public double getMotorCurrentAmps() {
-    return inputs.motorTempCelsius;
+    return inputs.motorCurrentAmps;
   } 
 
 
   public double getMotorCurrentVelocity() {
-    return inputs.motorTempCelsius;
+    return inputs.motorCurrentVelocity;
   } 
 
 
   public double getMotorPosition() {
-    return inputs.motorTempCelsius;
+    return inputs.motorPosition;
   } 
 
 
   public double getLastAxleEncoderPosition() {
-    return inputs.motorTempCelsius;
+    return inputs.lastAxleEncoderPosition;
   } 
 
   public double getHeight() {
