@@ -1,5 +1,5 @@
 
-package org.first5924.frc2024.subsystems.IntakePivot;
+package org.first5924.frc2024.subsystems.intakePivot;
 
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;

@@ -11,6 +11,8 @@ public interface IntakeIO {
   @AutoLog
   public static class IntakeIOInputs {
     public double supplyCurrent = 0.0;
+    public double rollerMotorTempCelsius = 0.0;
+    public double rollerMotorCurrentAmps = 0.0;
   }
 
   /** Updates the set of loggable inputs */

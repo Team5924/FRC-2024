@@ -17,9 +17,12 @@ import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
 import org.first5924.frc2024.commands.intake.Spin;
 import org.first5924.frc2024.subsystems.intake.Intake;
+import org.first5924.frc2024.subsystems.intake.IntakeIO;
 import org.first5924.frc2024.subsystems.intake.IntakeIOTalonFX;
+import org.first5924.frc2024.subsystems.intakePivot.IntakePivot;
+import org.first5924.frc2024.subsystems.intakePivot.IntakePivotIO;
+import org.first5924.frc2024.subsystems.intakePivot.IntakePivotIOTalonFX;
 import org.first5924.frc2024.constants.Constants;
-import org.first5924.frc2024.subsystems.IntakePivot.IntakePivotIO;
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.drive.GyroIO;
 import org.first5924.frc2024.subsystems.drive.GyroIOPigeon2;
@@ -38,6 +41,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final Intake intake;
+  private final IntakePivot intakePivot; 
   //private final Vision vision;
   // Controller
   private final CommandXboxController driverController = new CommandXboxController(0);
@@ -57,7 +61,8 @@ public class RobotContainer {
                 new ModuleIOSparkMax(1),
                 new ModuleIOSparkMax(2),
                 new ModuleIOSparkMax(3));
-          mIntakePivot = new IntakeSubsystem(new IntakePivotIO);
+        intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
+        intake = new Intake( new IntakeIOTalonFX());
         break;
 
         // Sim robot, instantiate physics sim IO implementations
@@ -69,6 +74,8 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
+        intakePivot = new IntakePivot(new IntakePivotIO() {});
+        intake = new Intake(new IntakeIO() {});
 
         break;
 
@@ -81,7 +88,8 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-
+        intakePivot = new IntakePivot(new IntakePivotIO() {});
+        intake = new Intake(new IntakeIO() {});
         break;
     }
 

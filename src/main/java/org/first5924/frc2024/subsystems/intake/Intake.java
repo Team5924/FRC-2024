@@ -5,6 +5,8 @@
 package org.first5924.frc2024.subsystems.intake;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import org.first5924.frc2024.subsystems.intakePivot.IntakePivotIOInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
