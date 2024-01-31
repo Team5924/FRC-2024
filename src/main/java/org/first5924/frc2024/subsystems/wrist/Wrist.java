@@ -40,7 +40,7 @@ public class Wrist extends SubsystemBase {
   }
 
   public void setPercent(double percent) {
-    
+    io.setPercent(percent);
   }
 
   public void setAngle(double angle) {
