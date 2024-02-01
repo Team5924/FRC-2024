@@ -79,8 +79,8 @@ public class RobotContainer {
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
 
-    autoModeChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
+    //autoModeChooser = AutoBuilder.buildAutoChooser();
+    //SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
 
     // Configure the button bindings
     configureButtonBindings();
