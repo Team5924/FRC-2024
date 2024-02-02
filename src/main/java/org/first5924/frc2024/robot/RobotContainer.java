@@ -4,7 +4,8 @@
 
 package org.first5924.frc2024.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
+import com.choreo.lib.*;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -21,6 +22,9 @@ import org.first5924.frc2024.subsystems.drive.GyroIOPigeon2;
 import org.first5924.frc2024.subsystems.drive.ModuleIO;
 import org.first5924.frc2024.subsystems.drive.ModuleIOSparkMax;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import com.choreo.lib.Choreo;
+import com.choreo.lib.ChoreoTrajectory;
+import com.google.flatbuffers.Constants;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -79,7 +83,7 @@ public class RobotContainer {
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
 
-    //autoModeChooser = AutoBuilder.buildAutoChooser();
+    autoModeChooser = null;
     //SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
 
     // Configure the button bindings
@@ -109,6 +113,13 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoModeChooser.getSelected();
+    return Choreo.choreoSwerveCommand
+    (Choreo.getTrajectory("NewPath"), //will need to make sendable chooser in the future
+    drive.getPose(), 
+    null, 
+    null, 
+    false, 
+    drive);
   }
 }
+
