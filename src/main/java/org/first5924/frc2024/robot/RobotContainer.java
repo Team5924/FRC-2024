@@ -115,10 +115,10 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return Choreo.choreoSwerveCommand
     (Choreo.getTrajectory("NewPath"), //will need to make sendable chooser in the future
-    drive.getPose(), 
+    () -> drive.getPose(), 
     null, 
     null, 
-    false, 
+    () -> false, 
     drive);
   }
 }
