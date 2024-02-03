@@ -107,6 +107,8 @@ public class RobotContainer {
       swerveModeChooser::get
     ));
     driverController.a().onTrue(new SetGyroYaw(drive, 0));
+
+    driverController.y().onTrue(FollowPath());
   }
 
   /**
@@ -115,6 +117,22 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    // return Choreo.choreoSwerveCommand
+    // (Choreo.getTrajectory("NewPath"), //will need to make sendable chooser in the future
+    // () -> drive.getPose(), 
+    // Choreo.choreoSwerveController(
+    //   new PIDController(DriveConstants.kDriveKp, 0, 0), 
+    //   new PIDController(DriveConstants.kDriveKp, 0, 0),
+    //   new PIDController(DriveConstants.kDriveKp, 0, 0)),
+    // (ChassisSpeeds speeds) ->
+    //   drive.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false), 
+    // () -> false, 
+    // drive);
+    return null;
+  }
+
+  public Command FollowPath()
+  {
     return Choreo.choreoSwerveCommand
     (Choreo.getTrajectory("NewPath"), //will need to make sendable chooser in the future
     () -> drive.getPose(), 
