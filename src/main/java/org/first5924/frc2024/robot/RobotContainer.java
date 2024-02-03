@@ -6,6 +6,7 @@ package org.first5924.frc2024.robot;
 
 import com.choreo.lib.*;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
+import org.first5924.frc2024.constants.DriveConstants;
 import org.first5924.frc2024.constants.RobotConstants;
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.drive.GyroIO;
@@ -116,8 +118,12 @@ public class RobotContainer {
     return Choreo.choreoSwerveCommand
     (Choreo.getTrajectory("NewPath"), //will need to make sendable chooser in the future
     () -> drive.getPose(), 
-    null, 
-    null, 
+    Choreo.choreoSwerveController(
+      new PIDController(DriveConstants.kDriveKp, 0, 0), 
+      new PIDController(DriveConstants.kDriveKp, 0, 0),
+      new PIDController(DriveConstants.kDriveKp, 0, 0)),
+    (ChassisSpeeds speeds) ->
+      drive.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false), 
     () -> false, 
     drive);
   }
