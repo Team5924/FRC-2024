@@ -11,16 +11,18 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 
 public class Vision extends SubsystemBase {
-    private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-    
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    NetworkTable tabletable = NetworkTableInstance.getDefault().getTable(NetworkTableInstance.getDefault().toString());
     // Vertical offset from crosshair to target
-    private NetworkTableEntry tx = table.getEntry("tx");
-    private NetworkTableEntry ty = table.getEntry("ty");
+    NetworkTableEntry tx = table.getEntry("tx");
+    NetworkTableEntry ty = table.getEntry("ty");
 
     /** Creates a new Vision. */
     public Vision() {}
@@ -28,9 +30,13 @@ public class Vision extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        String x = Double.toString(tx.getDouble(0));
-        String y = Double.toString(ty.getDouble(0));
-        System.out.println("(" + x + ", " + y + ")");
+        double x = tx.getDouble(0.0);
+        double y = ty.getDouble(0.0);
+        SmartDashboard.putNumber("tx", x);
+        SmartDashboard.putNumber("ty", y);
+        SmartDashboard.putString("table", table.toString());
+        
+        // System.out.println("BANANA - table: " + table.containsKey("tx") + " / pos: (" + x + ", " + y + ")");
     }
 
     public final Pose2d robotPose() {

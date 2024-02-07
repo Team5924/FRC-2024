@@ -23,6 +23,7 @@ import org.first5924.frc2024.subsystems.drive.GyroIO;
 import org.first5924.frc2024.subsystems.drive.GyroIOPigeon2;
 import org.first5924.frc2024.subsystems.drive.ModuleIO;
 import org.first5924.frc2024.subsystems.drive.ModuleIOSparkMax;
+import org.first5924.frc2024.subsystems.vision.Vision;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import com.choreo.lib.Choreo;
 import com.choreo.lib.ChoreoTrajectory;
@@ -37,7 +38,7 @@ import com.google.flatbuffers.Constants;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
-  //private final Vision vision;
+  private final Vision vision;
 
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
@@ -57,6 +58,7 @@ public class RobotContainer {
           new ModuleIOSparkMax(2),
           new ModuleIOSparkMax(3)
         );
+        vision = new Vision();
         break;
 
       // Sim robot, instantiate physics sim IO implementations
@@ -68,6 +70,7 @@ public class RobotContainer {
           new ModuleIO() {},
           new ModuleIO() {}
         );
+        vision = new Vision();
         break;
 
       // Replayed robot, disable IO implementations
@@ -79,6 +82,7 @@ public class RobotContainer {
           new ModuleIOSparkMax(2),
           new ModuleIOSparkMax(3)
         );
+        vision = new Vision();
         break;
     }
 
