@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-    NetworkTable tabletable = NetworkTableInstance.getDefault().getTable(NetworkTableInstance.getDefault().toString());
     // Vertical offset from crosshair to target
     NetworkTableEntry tx = table.getEntry("tx");
     NetworkTableEntry ty = table.getEntry("ty");
@@ -35,7 +34,7 @@ public class Vision extends SubsystemBase {
         SmartDashboard.putNumber("tx", x);
         SmartDashboard.putNumber("ty", y);
         SmartDashboard.putString("table", table.toString());
-        
+        SmartDashboard.putNumber("distance", getVerticalDistanceToTarget())
         // System.out.println("BANANA - table: " + table.containsKey("tx") + " / pos: (" + x + ", " + y + ")");
     }
 
@@ -47,7 +46,7 @@ public class Vision extends SubsystemBase {
      * Distance from the point the limelight is looking at to the target (🍩)
      * @return the distance ^
      */
-    public double GetVerticalDistanceToTarget()
+    public double getVerticalDistanceToTarget()
     {
         // angle from crosshair to 🍩 (vertical)
         double targetOffsetAngleVerticalRadians = ty.getDouble(0) * VisionConstants.degreesToRadiansMultiplier;

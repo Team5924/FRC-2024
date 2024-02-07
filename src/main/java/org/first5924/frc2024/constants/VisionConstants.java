@@ -5,7 +5,7 @@ public final class VisionConstants {
 
 
     // distance from limelight to ground - h
-    public static final double limelightHeight = 0.0;
+    public static final double limelightHeight = 28.5;
 
     // how many degrees is limelight rotated from facing perfectly downwards? -a
     public static final double limelightMountAngleDegrees = 0.0;
