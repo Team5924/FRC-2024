@@ -34,7 +34,7 @@ public class Vision extends SubsystemBase {
         SmartDashboard.putNumber("tx", x);
         SmartDashboard.putNumber("ty", y);
         SmartDashboard.putString("table", table.toString());
-        SmartDashboard.putNumber("distance", getVerticalDistanceToTarget())
+        SmartDashboard.putNumber("distance", getVerticalDistanceToTarget());
         // System.out.println("BANANA - table: " + table.containsKey("tx") + " / pos: (" + x + ", " + y + ")");
     }
 
