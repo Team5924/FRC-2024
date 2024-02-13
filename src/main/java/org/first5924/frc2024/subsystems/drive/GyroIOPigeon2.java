@@ -15,11 +15,11 @@ import edu.wpi.first.math.util.Units;
 
 /** IO implementation for Pigeon2 */
 public class GyroIOPigeon2 implements GyroIO {
-  private final Pigeon2 mPigeon2 = new Pigeon2(RobotConstants.kPigeonId);
+  private final Pigeon2 mPigeon2 = new Pigeon2(RobotConstants.kPigeonId, "drive");
 
   public GyroIOPigeon2() {
     MountPoseConfigs mountPoseConfigs = new MountPoseConfigs();
-    mountPoseConfigs.MountPoseYaw = -90;
+    mountPoseConfigs.MountPoseYaw = 180;
     mPigeon2.getConfigurator().apply(mountPoseConfigs);
 
     mPigeon2.setYaw(180);

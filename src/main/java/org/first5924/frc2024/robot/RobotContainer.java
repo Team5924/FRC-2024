@@ -22,7 +22,7 @@ import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.drive.GyroIO;
 import org.first5924.frc2024.subsystems.drive.GyroIOPigeon2;
 import org.first5924.frc2024.subsystems.drive.ModuleIO;
-import org.first5924.frc2024.subsystems.drive.ModuleIOSparkMax;
+import org.first5924.frc2024.subsystems.drive.ModuleIOTalonFX;
 import org.first5924.frc2024.subsystems.vision.Vision;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import com.choreo.lib.Choreo;
@@ -53,10 +53,10 @@ public class RobotContainer {
       case REAL:
         drive = new Drive(
           new GyroIOPigeon2(),
-          new ModuleIOSparkMax(0),
-          new ModuleIOSparkMax(1),
-          new ModuleIOSparkMax(2),
-          new ModuleIOSparkMax(3)
+          new ModuleIOTalonFX(0),
+          new ModuleIOTalonFX(1),
+          new ModuleIOTalonFX(2),
+          new ModuleIOTalonFX(3)
         );
         vision = new Vision();
         break;
@@ -77,10 +77,10 @@ public class RobotContainer {
       default:
         drive = new Drive(
           new GyroIOPigeon2(),
-          new ModuleIOSparkMax(0),
-          new ModuleIOSparkMax(1),
-          new ModuleIOSparkMax(2),
-          new ModuleIOSparkMax(3)
+          new ModuleIOTalonFX(0),
+          new ModuleIOTalonFX(1),
+          new ModuleIOTalonFX(2),
+          new ModuleIOTalonFX(3)
         );
         vision = new Vision();
         break;
