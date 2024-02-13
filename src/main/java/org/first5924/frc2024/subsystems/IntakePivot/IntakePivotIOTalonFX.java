@@ -5,21 +5,30 @@ package org.first5924.frc2024.subsystems.intakePivot;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.RelativeEncoder;
 
 import org.first5924.frc2024.constants.IntakePivotConstants;
+import org.first5924.frc2024.subsystems.intakePivot.IntakePivotIO;
 
 /** Add your docs here. */
-public class IntakePivotIOTalonFX implements IntakePivotIO {
+public class intakePivotIOTalonFX implements IntakePivotIO {
+   private IntakePivotIO io;
+
   private final TalonFX pivotTalon = new TalonFX(IntakePivotConstants.IntakePivotID);
-  private final CANcoder pivotEncoder = new CANcoder(IntakePivotConstants.pivotCancoderID);
 
 
-  public IntakePivotIOTalonFX() {
+  public final void IntakePivot(IntakePivotIO io){
+  this.io = io;
+  }
+  
+   
+  
+
+
+  public intakePivotIOTalonFX() {
     TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
 
     MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
@@ -37,7 +46,18 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
   
     
     pivotTalon.getConfigurator().apply(talonFXConfiguration);
+
   }
+
+
+    @Override
+    public void setBrakeMode(boolean enabled) {
+      MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
+      motorOutputConfigs.NeutralMode = enabled ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+
+      pivotTalon.getConfigurator().apply(motorOutputConfigs);
+    }
+  
 
   @Override
   public void updateInputs(IntakePivotIOInputs inputs) {
@@ -45,6 +65,12 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
     
 
   }
+
+  public void getEncoderPosition(double pivotDegrees) {
+    pivotTalon.getPosition();
+  }
+
+
 
 
 
