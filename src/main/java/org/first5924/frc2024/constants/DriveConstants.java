@@ -8,22 +8,22 @@ import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
 public class DriveConstants {
-  public static final int kLeftFrontDriveSparkId = 2;
-  public static final int kLeftFrontTurnSparkId = 3;
+  public static final int kLeftFrontDriveSparkId = 14;
+  public static final int kLeftFrontTurnSparkId = 12;
 
-  public static final int kRightFrontDriveSparkId = 4;
+  public static final int kRightFrontDriveSparkId = 3;
   public static final int kRightFrontTurnSparkId = 5;
 
-  public static final int kLeftBackDriveSparkId = 6;
-  public static final int kLeftBackTurnSparkId = 7;
+  public static final int kLeftBackDriveSparkId = 11;
+  public static final int kLeftBackTurnSparkId = 9;
 
   public static final int kRightBackDriveSparkId = 8;
-  public static final int kRightBackTurnSparkId = 9;
+  public static final int kRightBackTurnSparkId = 6;
 
-  public static final int kLeftFrontCANCoderId = 10;
-  public static final int kRightFrontCANCoderId = 11;
-  public static final int kLeftBackCANCoderId = 12;
-  public static final int kRightBackCANCoderId = 13;
+  public static final int kLeftFrontCANCoderId = 13;
+  public static final int kRightFrontCANCoderId = 4;
+  public static final int kLeftBackCANCoderId = 10;
+  public static final int kRightBackCANCoderId = 7;
 
   public static final double kLeftFrontAbsoluteEncoderOffsetRad = -2.469;
   public static final double kRightFrontAbsoluteEncoderOffsetRad = -0.2347;
