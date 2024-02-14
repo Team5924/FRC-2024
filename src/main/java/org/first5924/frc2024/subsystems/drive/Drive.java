@@ -7,8 +7,6 @@
 
 package org.first5924.frc2024.subsystems.drive;
 
-//test
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -17,46 +15,52 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.MutableMeasure;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.Velocity;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import org.first5924.frc2024.constants.DriveConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
-  private static final double coastThresholdMetersPerSec =
-      0.05; // Need to be under this to switch to coast when disabling
-  private static final double coastThresholdSecs =
-      10.0; // Need to be under the above speed for this length of time to switch to coast
+  private static final double coastThresholdMetersPerSeconds = 0.05; // Need to be under this to switch to coast when disabling
+  private static final double coastThresholdSeconds = 10.0; // Need to be under the above speed for this length of time to switch to coast
 
   private final GyroIO gyroIO;
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
   private final Module[] modules = new Module[4]; // FL, FR, BL, BR
 
   private SwerveDriveKinematics kinematics =
-      new SwerveDriveKinematics(
-          new Translation2d(DriveConstants.kTrackWidthX / 2, DriveConstants.kTrackWidthY / 2),
-          new Translation2d(DriveConstants.kTrackWidthX / 2, -DriveConstants.kTrackWidthY / 2),
-          new Translation2d(-DriveConstants.kTrackWidthX / 2, DriveConstants.kTrackWidthY / 2),
-          new Translation2d(-DriveConstants.kTrackWidthX / 2, -DriveConstants.kTrackWidthY / 2));
+    new SwerveDriveKinematics(
+      new Translation2d(DriveConstants.kTrackWidthX / 2, DriveConstants.kTrackWidthY / 2),
+      new Translation2d(DriveConstants.kTrackWidthX / 2, -DriveConstants.kTrackWidthY / 2),
+      new Translation2d(-DriveConstants.kTrackWidthX / 2, DriveConstants.kTrackWidthY / 2),
+      new Translation2d(-DriveConstants.kTrackWidthX / 2, -DriveConstants.kTrackWidthY / 2));
 
   private SwerveDriveOdometry odometry;
 
-  private Field2d field2d = new Field2d();
+  // For SysId
+  private final MutableMeasure<Voltage> appliedVoltageMutableMeasure = MutableMeasure.mutable(Units.Volts.of(0));
+  private final MutableMeasure<Distance> distanceMutableMeasure = MutableMeasure.mutable(Units.Meters.of(0));
+  private final MutableMeasure<Velocity<Distance>> velocityMutableMeasure = MutableMeasure.mutable(Units.MetersPerSecond.of(0));
+  private SysIdRoutine routine = new SysIdRoutine(
+    new SysIdRoutine.Config(),
+    new SysIdRoutine.Mechanism(this::driveVoltageForCharacterization, null, this));
 
   private boolean isBrakeMode = false;
   private Timer lastMovementTimer = new Timer();
 
-  public Drive(
-      GyroIO gyroIO,
-      ModuleIO flModuleIO,
-      ModuleIO frModuleIO,
-      ModuleIO blModuleIO,
-      ModuleIO brModuleIO) {
+  public Drive(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO) {
     this.gyroIO = gyroIO;
     modules[0] = new Module(flModuleIO, 0);
     modules[1] = new Module(frModuleIO, 1);
@@ -105,23 +109,16 @@ public class Drive extends SubsystemBase {
     //   },
     //   this // Reference to this subsystem to set requirements
     // );
-
-    SmartDashboard.putData("Field", field2d);
   }
 
-  public void drive(
-      double vxMetersPerSecond,
-      double vyMetersPerSecond,
-      double omegaRadiansPerSecond,
-      boolean fieldCentric) {
-    ChassisSpeeds speeds =
-        fieldCentric
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                vxMetersPerSecond,
-                vyMetersPerSecond,
-                omegaRadiansPerSecond,
-                new Rotation2d(gyroInputs.yawPositionRad))
-            : new ChassisSpeeds(vxMetersPerSecond, vyMetersPerSecond, omegaRadiansPerSecond);
+  public void drive(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean fieldCentric) {
+    ChassisSpeeds speeds = fieldCentric ?
+      ChassisSpeeds.fromFieldRelativeSpeeds(
+        vxMetersPerSecond,
+        vyMetersPerSecond,
+        omegaRadiansPerSecond,
+        new Rotation2d(gyroInputs.yawPositionRad)) :
+      new ChassisSpeeds(vxMetersPerSecond, vyMetersPerSecond, omegaRadiansPerSecond);
     SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DriveConstants.kMaxLinearSpeed);
     for (int i = 0; i < 4; i++) {
@@ -129,12 +126,38 @@ public class Drive extends SubsystemBase {
     }
   }
 
+  public void driveVoltageForCharacterization(Measure<Voltage> voltsMeasure) {
+    double volts = voltsMeasure.in(Units.Volts);
+    for (int i = 0; i < 4; i++) {
+      modules[i].driveVoltage(volts);
+    }
+  }
+
+  public void logDriveForCharacterization(SysIdRoutineLog routineLog) {
+    routineLog.motor("drive-left")
+      .voltage(appliedVoltageMutableMeasure.mut_replace(modules[0].getLastVoltage(), Units.Volts))
+      .linearPosition(distanceMutableMeasure.mut_replace(modules[0].getPositionMeters(), Units.Meters))
+      .linearVelocity(velocityMutableMeasure.mut_replace(modules[0].getVelocityMetersPerSec(), Units.MetersPerSecond));
+    routineLog.motor("drive-right")
+      .voltage(appliedVoltageMutableMeasure.mut_replace(modules[1].getLastVoltage(), Units.Volts))
+      .linearPosition(distanceMutableMeasure.mut_replace(modules[1].getPositionMeters(), Units.Meters))
+      .linearVelocity(velocityMutableMeasure.mut_replace(modules[1].getVelocityMetersPerSec(), Units.MetersPerSecond));
+  }
+
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return routine.quasistatic(direction);
+  }
+
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return routine.dynamic(direction);
+  }
+
   public void robotRelativeDriveFromChassisSpeeds(ChassisSpeeds chassisSpeeds) {
     drive(
-        chassisSpeeds.vxMetersPerSecond,
-        chassisSpeeds.vyMetersPerSecond,
-        chassisSpeeds.omegaRadiansPerSecond,
-        false);
+      chassisSpeeds.vxMetersPerSecond,
+      chassisSpeeds.vyMetersPerSecond,
+      chassisSpeeds.omegaRadiansPerSecond,
+      false);
   }
 
   public void periodic() {
@@ -153,7 +176,7 @@ public class Drive extends SubsystemBase {
       // Update brake mode
       boolean stillMoving = false;
       for (int i = 0; i < 4; i++) {
-        if (Math.abs(modules[i].getVelocityMetersPerSec()) > coastThresholdMetersPerSec) {
+        if (Math.abs(modules[i].getVelocityMetersPerSec()) > coastThresholdMetersPerSeconds) {
           stillMoving = true;
         }
       }
@@ -166,7 +189,7 @@ public class Drive extends SubsystemBase {
           }
         }
       } else {
-        if (isBrakeMode && lastMovementTimer.hasElapsed(coastThresholdSecs)) {
+        if (isBrakeMode && lastMovementTimer.hasElapsed(coastThresholdSeconds)) {
           isBrakeMode = false;
           for (var module : modules) {
             module.setBrakeMode(false);
@@ -176,14 +199,13 @@ public class Drive extends SubsystemBase {
     }
 
     odometry.update(
-        new Rotation2d(gyroInputs.yawPositionRad),
-        new SwerveModulePosition[] {
-          modules[0].getPosition(),
-          modules[1].getPosition(),
-          modules[2].getPosition(),
-          modules[3].getPosition(),
-        });
-    field2d.setRobotPose(odometry.getPoseMeters());
+      new Rotation2d(gyroInputs.yawPositionRad),
+      new SwerveModulePosition[] {
+        modules[0].getPosition(),
+        modules[1].getPosition(),
+        modules[2].getPosition(),
+        modules[3].getPosition(),
+      });
 
     SmartDashboard.putNumber("X", odometry.getPoseMeters().getX());
     SmartDashboard.putNumber("Y", odometry.getPoseMeters().getY());
