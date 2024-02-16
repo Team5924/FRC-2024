@@ -16,13 +16,20 @@ import org.first5924.frc2024.subsystems.intakePivot.IntakePivotIO;
 /** Add your docs here. */
 public class IntakePivotIOTalonFX implements IntakePivotIO {
    private IntakePivotIO io;
+   public double volts;
 
   private final TalonFX pivotTalon = new TalonFX(IntakePivotConstants.IntakePivotID);
 
 
   public final void IntakePivot(IntakePivotIO io){
   this.io = io;
+
   }
+
+  public final void setVoltage(double volts) {
+    pivotTalon.setVoltage(volts);
+  }
+  
   
    
   
@@ -75,7 +82,7 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
   }
 
   public void setPivotPosition(double position){
-    
+
 
   }
 
