@@ -21,7 +21,7 @@ import org.first5924.frc2024.subsystems.intake.IntakeIO;
 import org.first5924.frc2024.subsystems.intake.IntakeIOTalonFX;
 import org.first5924.frc2024.subsystems.intakePivot.IntakePivot;
 import org.first5924.frc2024.subsystems.intakePivot.IntakePivotIO;
-import org.first5924.frc2024.subsystems.intakePivot.intakePivotIOTalonFX;
+import org.first5924.frc2024.subsystems.intakePivot.IntakePivotIOTalonFX;
 import org.first5924.frc2024.constants.Constants;
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.drive.GyroIO;
@@ -61,8 +61,8 @@ public class RobotContainer {
                 new ModuleIOSparkMax(1),
                 new ModuleIOSparkMax(2),
                 new ModuleIOSparkMax(3));
-        intakePivot = new IntakePivot(new intakePivotIOTalonFX());
-        intake = new Intake( new IntakeIOTalonFX());
+        intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
+        intake = new Intake(new IntakeIOTalonFX());
         break;
 
         // Sim robot, instantiate physics sim IO implementations

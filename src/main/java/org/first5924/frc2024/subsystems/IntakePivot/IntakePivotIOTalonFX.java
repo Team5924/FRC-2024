@@ -14,7 +14,7 @@ import org.first5924.frc2024.constants.IntakePivotConstants;
 import org.first5924.frc2024.subsystems.intakePivot.IntakePivotIO;
 
 /** Add your docs here. */
-public class intakePivotIOTalonFX implements IntakePivotIO {
+public class IntakePivotIOTalonFX implements IntakePivotIO {
    private IntakePivotIO io;
 
   private final TalonFX pivotTalon = new TalonFX(IntakePivotConstants.IntakePivotID);
@@ -28,7 +28,7 @@ public class intakePivotIOTalonFX implements IntakePivotIO {
   
 
 
-  public intakePivotIOTalonFX() {
+  public IntakePivotIOTalonFX() {
     TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
 
     MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
@@ -68,6 +68,15 @@ public class intakePivotIOTalonFX implements IntakePivotIO {
 
   public void getEncoderPosition(double pivotDegrees) {
     pivotTalon.getPosition();
+  }
+
+  public void getEncoderVelocity(double pivtoVelocity) {
+    pivotTalon.getVelocity();
+  }
+
+  public void setPivotPosition(double position){
+    
+
   }
 
 

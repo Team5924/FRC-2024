@@ -6,7 +6,7 @@ package org.first5924.frc2024.subsystems.intake;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import org.first5924.frc2024.subsystems.intakePivot.IntakePivotIOInputsAutoLogged;
+import org.first5924.frc2024.subsystems.intake.IntakeIOInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
@@ -34,8 +34,4 @@ public class Intake extends SubsystemBase {
     return inputs.supplyCurrent;
   }
 
-//public static void setRollerVoltage(double voltage) {
-	// TODO Auto-generated method stub
-	//throw new UnsupportedOperationException("Unimplemented method 'setRollerVoltage'");
-//}
 }

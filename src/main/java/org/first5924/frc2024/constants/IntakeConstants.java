@@ -9,4 +9,8 @@ public class IntakeConstants {
 
      public static final int rollerTalonID = 1;
      public static final double percentSpeed = 1.0;
+
+     // these will not be zero in case you cant tell
+     public static final double groundPickup = 0.0;
+     public static final double sourcePickup = 0.0;
 }

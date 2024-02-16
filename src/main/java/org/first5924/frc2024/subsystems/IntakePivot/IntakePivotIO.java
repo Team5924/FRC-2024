@@ -16,18 +16,29 @@ public interface IntakePivotIO {
     public double pivotMotorEncoderPosition = 0.0;
     public double pivotMotorCurrentAmps = 0.0;
     public double pivotMotorTempCelsius = 0.0;
+    public double pivotPositionAngle = 0.0;
     
-  }// make metghod for pivot position
-    //make 
+  }
+    //make pivot position
     public default void updateInputs(IntakePivotIOInputs inputs) {}
 
     public default void pivotMotorEncoderPosition(double voltage) {}
 
     public default void pivotMotorCurrentAmps(double amps) {}
 
-    public default void pivotMotorTempCelsius(double temp) {}
+    //public default void pivotMotorTempCelsius(double temp) {}
 
     public default void setVoltage(double volts) {}
+
+    public default void setBrakeMode(boolean enable) {}
+
+    public default void getEncoderPosition(double pivotPosition) {}
+
+    public default void setPivotPosition(double position) {}
+
+    public default void getEncoderVelocity(double pivotVelocity) {}
+
+
 
 
 
