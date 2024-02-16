@@ -34,7 +34,7 @@ public class ModuleIOTalonFX implements ModuleIO {
   private final boolean isTurnMotorInverted;
   private final double absoluteEncoderOffsetRad;
 
-  private final VoltageOut voltageOut = new VoltageOut(0);
+  private final VoltageOut voltageOut;
 
   public ModuleIOTalonFX(int index) {
     switch (index) {
@@ -92,10 +92,12 @@ public class ModuleIOTalonFX implements ModuleIO {
     FeedbackConfigs driveFeedbackConfigs = new FeedbackConfigs();
     driveFeedbackConfigs.SensorToMechanismRatio = DriveConstants.kEncoderToDriveRatio;
 
-    driveTalon.getConfigurator().apply(new TalonFXConfiguration()
+    driveTalon.getConfigurator().apply(
+      new TalonFXConfiguration()
       .withMotorOutput(driveMotorOutputConfigs)
       .withCurrentLimits(driveCurrentLimitsConfigs)
-      .withFeedback(driveFeedbackConfigs));
+      .withFeedback(driveFeedbackConfigs)
+    );
 
     MotorOutputConfigs turnMotorOutputConfigs = new MotorOutputConfigs();
     turnMotorOutputConfigs.Inverted = isTurnMotorInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
@@ -113,11 +115,14 @@ public class ModuleIOTalonFX implements ModuleIO {
     turnFeedbackConfigs.RotorToSensorRatio = 1;
     turnFeedbackConfigs.SensorToMechanismRatio = DriveConstants.kEncoderToTurnRatio;
 
-    turnTalon.getConfigurator().apply(new TalonFXConfiguration()
+    turnTalon.getConfigurator().apply(
+      new TalonFXConfiguration()
       .withMotorOutput(turnMotorOutputConfigs)
       .withCurrentLimits(turnCurrentLimitsConfigs)
-      .withFeedback(turnFeedbackConfigs));
+      .withFeedback(turnFeedbackConfigs)
+    );
 
+    voltageOut = new VoltageOut(0);
     voltageOut.EnableFOC = true;
   }
 
@@ -140,11 +145,17 @@ public class ModuleIOTalonFX implements ModuleIO {
     turnTalon.setControl(voltageOut.withOutput(volts));
   }
 
-  public void setDriveBrakeMode(boolean enable) {
-    // driveSparkMax.setIdleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
+  public void setDriveBrakeMode(boolean brake) {
+    MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
+    motorOutputConfigs.Inverted = isDriveMotorInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+    motorOutputConfigs.NeutralMode = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+    driveTalon.getConfigurator().apply(motorOutputConfigs);
   }
 
-  public void setTurnBrakeMode(boolean enable) {
-    // turnSparkMax.setIdleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
+  public void setTurnBrakeMode(boolean brake) {
+    MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
+    motorOutputConfigs.Inverted = isTurnMotorInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+    motorOutputConfigs.NeutralMode = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+    turnTalon.getConfigurator().apply(motorOutputConfigs);
   }
 }

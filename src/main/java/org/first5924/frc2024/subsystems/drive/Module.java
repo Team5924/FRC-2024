@@ -22,12 +22,9 @@ public class Module {
   private final ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
   private final int index;
 
-  private final SimpleMotorFeedforward driveFeedforward =
-      new SimpleMotorFeedforward(DriveConstants.kDriveKs, DriveConstants.kDriveKv);
-  private final PIDController driveFeedback =
-      new PIDController(DriveConstants.kDriveKp, 0.0, DriveConstants.kDriveKd);
-  private final PIDController turnFeedback =
-      new PIDController(DriveConstants.kTurnKp, 0.0, DriveConstants.kTurnKd);
+  private final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(DriveConstants.kDriveKs, DriveConstants.kDriveKv);
+  private final PIDController driveFeedback = new PIDController(DriveConstants.kDriveKp, 0.0, DriveConstants.kDriveKd);
+  private final PIDController turnFeedback = new PIDController(DriveConstants.kTurnKp, 0.0, DriveConstants.kTurnKd);
 
   private double lastVoltage = -1;
 
@@ -62,8 +59,7 @@ public class Module {
     SwerveModuleState optimizedState = SwerveModuleState.optimize(state, getAngle());
 
     // Run turn controller
-    io.setTurnVoltage(
-        turnFeedback.calculate(getAngle().getRadians(), optimizedState.angle.getRadians()));
+    io.setTurnVoltage(turnFeedback.calculate(getAngle().getRadians(), optimizedState.angle.getRadians()));
 
     // Update velocity based on turn error
     optimizedState.speedMetersPerSecond *= Math.cos(turnFeedback.getPositionError());
@@ -71,8 +67,9 @@ public class Module {
     // Run drive controller
     double velocityRadPerSec = optimizedState.speedMetersPerSecond / DriveConstants.kWheelRadius;
     io.setDriveVoltage(
-        driveFeedforward.calculate(velocityRadPerSec)
-            + driveFeedback.calculate(inputs.driveVelocityRadPerSec, velocityRadPerSec));
+      driveFeedforward.calculate(velocityRadPerSec)
+      + driveFeedback.calculate(inputs.driveVelocityRadPerSec, velocityRadPerSec)
+    );
 
     return optimizedState;
   }

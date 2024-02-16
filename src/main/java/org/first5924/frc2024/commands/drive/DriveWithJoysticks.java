@@ -24,12 +24,7 @@ public class DriveWithJoysticks extends Command {
   private final BooleanSupplier fieldCentricSupplier;
 
   /** Creates a new DriveWithJoysticks. */
-  public DriveWithJoysticks(
-      Drive drive,
-      DoubleSupplier leftXSupplier,
-      DoubleSupplier leftYSupplier,
-      DoubleSupplier rightXSupplier,
-      BooleanSupplier fieldCentricSupplier) {
+  public DriveWithJoysticks(Drive drive, DoubleSupplier leftXSupplier, DoubleSupplier leftYSupplier, DoubleSupplier rightXSupplier, BooleanSupplier fieldCentricSupplier) {
     this.drive = drive;
     this.leftJoystickXSupplier = leftXSupplier;
     this.leftJoystickYSupplier = leftYSupplier;
@@ -49,29 +44,23 @@ public class DriveWithJoysticks extends Command {
     double leftYJoystick = leftJoystickYSupplier.getAsDouble();
     double rightXJoystick = rightJoystickXSupplier.getAsDouble();
 
-    double deadbandedLeftXJoystick =
-        MathUtil.applyDeadband(leftXJoystick, InputConstants.kDriveDeadband);
-    double deadbandedLeftYJoystick =
-        MathUtil.applyDeadband(leftYJoystick, InputConstants.kDriveDeadband);
-    double deadbandedRightXJoystick =
-        MathUtil.applyDeadband(rightXJoystick, InputConstants.kDriveDeadband);
+    double deadbandedLeftXJoystick = MathUtil.applyDeadband(leftXJoystick, InputConstants.kDriveDeadband);
+    double deadbandedLeftYJoystick = MathUtil.applyDeadband(leftYJoystick, InputConstants.kDriveDeadband);
+    double deadbandedRightXJoystick = MathUtil.applyDeadband(rightXJoystick, InputConstants.kDriveDeadband);
 
     // xPercent takes leftY and yPercent takes leftX because for ChassisSpeeds x is forward/backward
     // and y is left/right
     // Negative signs because y joystick up is - and because x joystick left is -
-    double xPercent =
-        -Math.copySign(deadbandedLeftYJoystick * deadbandedLeftYJoystick, deadbandedLeftYJoystick);
-    double yPercent =
-        -Math.copySign(deadbandedLeftXJoystick * deadbandedLeftXJoystick, deadbandedLeftXJoystick);
-    double rotationPercent =
-        -Math.copySign(
-                deadbandedRightXJoystick * deadbandedRightXJoystick, deadbandedRightXJoystick)
-            * DriveConstants.kAngularSpeedMultiplier;
+    double xPercent = -Math.copySign(deadbandedLeftYJoystick * deadbandedLeftYJoystick, deadbandedLeftYJoystick);
+    double yPercent = -Math.copySign(deadbandedLeftXJoystick * deadbandedLeftXJoystick, deadbandedLeftXJoystick);
+    double rotationPercent = -Math.copySign(deadbandedRightXJoystick * deadbandedRightXJoystick, deadbandedRightXJoystick) * DriveConstants.kAngularSpeedMultiplier;
+
     drive.drive(
-        xPercent * DriveConstants.kMaxLinearSpeed,
-        yPercent * DriveConstants.kMaxLinearSpeed,
-        rotationPercent * DriveConstants.kMaxAngularSpeedRad,
-        fieldCentricSupplier.getAsBoolean());
+      xPercent * DriveConstants.kMaxLinearSpeed,
+      yPercent * DriveConstants.kMaxLinearSpeed,
+      rotationPercent * DriveConstants.kMaxAngularSpeedRad,
+      fieldCentricSupplier.getAsBoolean()
+    );
   }
 
   @Override
