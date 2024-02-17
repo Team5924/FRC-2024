@@ -14,16 +14,21 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
+import org.first5924.frc2024.commands.wrist.RotateWrist;
 import org.first5924.frc2024.constants.DriveConstants;
 import org.first5924.frc2024.constants.RobotConstants;
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.drive.GyroIO;
 import org.first5924.frc2024.subsystems.drive.GyroIOPigeon2;
 import org.first5924.frc2024.subsystems.drive.ModuleIO;
+
+import org.first5924.frc2024.subsystems.wrist.Wrist;
+import org.first5924.frc2024.subsystems.wrist.WristIO;
+import org.first5924.frc2024.subsystems.wrist.WristIOTalonFX;
 import org.first5924.frc2024.subsystems.drive.ModuleIOTalonFX;
 import org.first5924.frc2024.subsystems.vision.Vision;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import com.choreo.lib.Choreo;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -33,8 +38,13 @@ import com.choreo.lib.Choreo;
  */
 public class RobotContainer {
   // Subsystems
+
+ // private final Drive drive;
+  private final Wrist wrist;
+  //private final Vision vision;
   private final Drive drive;
   private final Vision vision;
+
 
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
@@ -47,6 +57,7 @@ public class RobotContainer {
     switch (RobotConstants.kCurrentMode) {
       // Real robot, instantiate hardware IO implementations
       case REAL:
+        wrist = new Wrist(new WristIOTalonFX() {});
         drive = new Drive(
           new GyroIOPigeon2(),
           new ModuleIOTalonFX(0),
@@ -59,6 +70,7 @@ public class RobotContainer {
 
       // Sim robot, instantiate physics sim IO implementations
       case SIM:
+        wrist = new Wrist(new WristIO() {});
         drive = new Drive(
           new GyroIO() {},
           new ModuleIO() {},
@@ -71,6 +83,7 @@ public class RobotContainer {
 
       // Replayed robot, disable IO implementations
       default:
+        wrist = new Wrist(new WristIO() {});
         drive = new Drive(
           new GyroIOPigeon2(),
           new ModuleIOTalonFX(0),
@@ -86,6 +99,7 @@ public class RobotContainer {
     swerveModeChooser.addOption("Robot Centric", false);
 
     autoModeChooser = null;
+
     //SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
 
     // Configure the button bindings
@@ -99,6 +113,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    wrist.setDefaultCommand(new RotateWrist(wrist, driverController::getLeftY));
     drive.setDefaultCommand(new DriveWithJoysticks(
       drive,
       driverController::getLeftX,
@@ -107,29 +122,30 @@ public class RobotContainer {
       swerveModeChooser::get
     ));
     driverController.a().onTrue(new SetGyroYaw(drive, 0));
-    driverController.y().onTrue(FollowPath());
+    //driverController.y().onTrue(FollowPath());
   }
 
-  public Command FollowPath()
-  {
-    return Choreo.choreoSwerveCommand
-    (Choreo.getTrajectory("NewPath"), //will need to make sendable chooser in the future
-    () -> drive.getPose(),
-    Choreo.choreoSwerveController(
-      new PIDController(DriveConstants.kDriveKp, 0, 0), 
-      new PIDController(DriveConstants.kDriveKp, 0, 0),
-      new PIDController(DriveConstants.kDriveKp, 0, 0)),
-    (ChassisSpeeds speeds) ->
-      drive.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false), 
-    () -> false,
-    drive);
-  }
+  //public Command FollowPath()
+  //{
+  //  return Choreo.choreoSwerveCommand
+  //  (Choreo.getTrajectory("NewPath"), //will need to make sendable chooser in the future
+  //  () -> drive.getPose(),
+  //  Choreo.choreoSwerveController(
+  //    new PIDController(DriveConstants.kDriveKp, 0, 0), 
+  //    new PIDController(DriveConstants.kDriveKp, 0, 0),
+  //    new PIDController(DriveConstants.kDriveKp, 0, 0)),
+  //  (ChassisSpeeds speeds) ->
+  //    drive.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false), 
+  //  () -> false,
+  //  drive);
+  //}
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
+
   public Command getAutonomousCommand() {
     // return Choreo.choreoSwerveCommand
     // (Choreo.getTrajectory("NewPath"), //will need to make sendable chooser in the future
