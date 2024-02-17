@@ -15,11 +15,11 @@ import edu.wpi.first.math.util.Units;
 
 /** IO implementation for Pigeon2 */
 public class GyroIOPigeon2 implements GyroIO {
-  private final Pigeon2 mPigeon2 = new Pigeon2(RobotConstants.kPigeonId);
+  private final Pigeon2 mPigeon2 = new Pigeon2(RobotConstants.kPigeonId, "drive");
 
   public GyroIOPigeon2() {
     MountPoseConfigs mountPoseConfigs = new MountPoseConfigs();
-    mountPoseConfigs.MountPoseYaw = -90;
+    mountPoseConfigs.MountPoseYaw = 180;
     mPigeon2.getConfigurator().apply(mountPoseConfigs);
 
     mPigeon2.setYaw(180);
@@ -29,11 +29,9 @@ public class GyroIOPigeon2 implements GyroIO {
     inputs.pitchPositionRad = Units.degreesToRadians(mPigeon2.getPitch().getValue());
     inputs.yawPositionRad = Units.degreesToRadians(mPigeon2.getYaw().getValue());
     inputs.rollPositionRad = Units.degreesToRadians(mPigeon2.getYaw().getValue());
-    inputs.pitchVelocityRadPerSec =
-        Units.degreesToRadians(mPigeon2.getAngularVelocityXWorld().getValue());
+    inputs.pitchVelocityRadPerSec = Units.degreesToRadians(mPigeon2.getAngularVelocityXWorld().getValue());
     inputs.yawVelocityRadPerSec = Units.degreesToRadians(mPigeon2.getAngularVelocityYWorld().getValue());
-    inputs.rollVelocityRadPerSec =
-        Units.degreesToRadians(mPigeon2.getAngularVelocityZWorld().getValue());
+    inputs.rollVelocityRadPerSec = Units.degreesToRadians(mPigeon2.getAngularVelocityZWorld().getValue());
   }
 
   public void setGyroYaw(double yaw) {
