@@ -4,28 +4,36 @@
 
 package org.first5924.frc2024.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
 import org.first5924.frc2024.commands.feeder.FeederSlow;
+import org.first5924.frc2024.commands.wrist.RotateWrist;
+import org.first5924.frc2024.constants.DriveConstants;
 import org.first5924.frc2024.constants.RobotConstants;
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.drive.GyroIO;
 import org.first5924.frc2024.subsystems.drive.GyroIOPigeon2;
 import org.first5924.frc2024.subsystems.drive.ModuleIO;
-import org.first5924.frc2024.subsystems.drive.ModuleIOSparkMax;
 import org.first5924.frc2024.subsystems.feeder.Feeder;
 import org.first5924.frc2024.subsystems.feeder.FeederIO;
 import org.first5924.frc2024.subsystems.feeder.FeederIOTalonFX;
 import org.littletonrobotics.junction.Logger;
+
+import org.first5924.frc2024.subsystems.wrist.Wrist;
+import org.first5924.frc2024.subsystems.wrist.WristIO;
+import org.first5924.frc2024.subsystems.wrist.WristIOTalonFX;
+import org.first5924.frc2024.subsystems.drive.ModuleIOTalonFX;
+import org.first5924.frc2024.subsystems.vision.Vision;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -35,9 +43,11 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
-  private final Drive drive;
   private final Feeder feeder;
-  //private final Vision vision;
+  private final Wrist wrist;
+  private final Drive drive;
+  private final Vision vision;
+
 
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
@@ -51,18 +61,22 @@ public class RobotContainer {
     switch (RobotConstants.kCurrentMode) {
       // Real robot, instantiate hardware IO implementations
       case REAL:
+        wrist = new Wrist(new WristIOTalonFX() {});
         drive = new Drive(
           new GyroIOPigeon2(),
-          new ModuleIOSparkMax(0),
-          new ModuleIOSparkMax(1),
-          new ModuleIOSparkMax(2),
-          new ModuleIOSparkMax(3)
+          new ModuleIOTalonFX(0),
+          new ModuleIOTalonFX(1),
+          new ModuleIOTalonFX(2),
+          new ModuleIOTalonFX(3)
         );
+
         feeder = new Feeder(new FeederIOTalonFX());
+        vision = new Vision();
         break;
 
       // Sim robot, instantiate physics sim IO implementations
       case SIM:
+        wrist = new Wrist(new WristIO() {});
         drive = new Drive(
           new GyroIO() {},
           new ModuleIO() {},
@@ -71,18 +85,21 @@ public class RobotContainer {
           new ModuleIO() {}
         );
         feeder = new Feeder(new FeederIO() {});
+        vision = new Vision();
         break;
 
       // Replayed robot, disable IO implementations
       default:
+        wrist = new Wrist(new WristIO() {});
         drive = new Drive(
           new GyroIOPigeon2(),
-          new ModuleIOSparkMax(0),
-          new ModuleIOSparkMax(1),
-          new ModuleIOSparkMax(2),
-          new ModuleIOSparkMax(3)
+          new ModuleIOTalonFX(0),
+          new ModuleIOTalonFX(1),
+          new ModuleIOTalonFX(2),
+          new ModuleIOTalonFX(3)
         );
         feeder = new Feeder(new FeederIO() {});
+        vision = new Vision();
         break;
     }
 
@@ -91,7 +108,7 @@ public class RobotContainer {
     Logger.recordOutput("Is Note In", feeder.isNoteIn());
     autoModeChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
-
+    autoModeChooser = null;
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -103,6 +120,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    wrist.setDefaultCommand(new RotateWrist(wrist, driverController::getLeftY));
     drive.setDefaultCommand(new DriveWithJoysticks(
       drive,
       driverController::getLeftX,
@@ -112,14 +130,45 @@ public class RobotContainer {
     ));
     driverController.a().onTrue(new SetGyroYaw(drive, 0));
     feeder.setDefaultCommand(new FeederSlow(feeder));
+
+    //driverController.y().onTrue(FollowPath());
+
   }
+
+  //public Command FollowPath()
+  //{
+  //  return Choreo.choreoSwerveCommand
+  //  (Choreo.getTrajectory("NewPath"), //will need to make sendable chooser in the future
+  //  () -> drive.getPose(),
+  //  Choreo.choreoSwerveController(
+  //    new PIDController(DriveConstants.kDriveKp, 0, 0), 
+  //    new PIDController(DriveConstants.kDriveKp, 0, 0),
+  //    new PIDController(DriveConstants.kDriveKp, 0, 0)),
+  //  (ChassisSpeeds speeds) ->
+  //    drive.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false), 
+  //  () -> false,
+  //  drive);
+  //}
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
+
   public Command getAutonomousCommand() {
-    return autoModeChooser.getSelected();
+    // return Choreo.choreoSwerveCommand
+    // (Choreo.getTrajectory("NewPath"), //will need to make sendable chooser in the future
+    // () -> drive.getPose(),
+    // Choreo.choreoSwerveController(
+    //   new PIDController(DriveConstants.kDriveKp, 0, 0),
+    //   new PIDController(DriveConstants.kDriveKp, 0, 0),
+    //   new PIDController(DriveConstants.kDriveKp, 0, 0)),
+    // (ChassisSpeeds speeds) ->
+    //   drive.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false), 
+    // () -> false,
+    // drive);
+    return null;
   }
 }
+

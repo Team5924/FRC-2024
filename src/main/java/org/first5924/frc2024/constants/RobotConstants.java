@@ -8,7 +8,7 @@ package org.first5924.frc2024.constants;
 public class RobotConstants {
   public static final double kNominalVoltage = 12.0;
 
-  public static final int kPigeonId = 14;
+  public static final int kPigeonId = 2;
 
   public static final Mode kCurrentMode = Mode.REAL;
 
