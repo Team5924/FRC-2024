@@ -14,7 +14,7 @@ public class Wrist extends SubsystemBase {
   /** Creates a new Wrist. */
   private final WristIO io;
   private final WristIOInputsAutoLogged inputs = new WristIOInputsAutoLogged();
-  private final PIDController mPID = new PIDController(10, 0, 0);
+  //private final PIDController mPID = new PIDController(10, 0, 0);
 
   public Wrist(WristIO io) {
     this.io = io;
@@ -43,9 +43,9 @@ public class Wrist extends SubsystemBase {
     io.setPercent(percent);
   }
 
-  public void setAngle(double angle) {
-    io.setVoltage(mPID.calculate(inputs.encoderPosition/360, angle));
-  }
+  //public void setAngle(double angle) {
+  //  io.setVoltage(mPID.calculate(inputs.encoderPosition/360, angle));
+  //}
 
 
   

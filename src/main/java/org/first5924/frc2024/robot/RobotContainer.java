@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -117,9 +118,9 @@ public class RobotContainer {
 
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
-    Logger.recordOutput("Is Note In", feeder.isNoteIn());
-    SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
-    autoModeChooser = null;
+    //Logger.recordOutput("Is Note In", feeder.isNoteIn());
+    // SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
+    // autoModeChooser = null;
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -132,7 +133,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     operatorController.a().whileTrue(new ShooterOn(shooter));
-    wrist.setDefaultCommand(new RotateWrist(wrist, driverController::getLeftY));
+    wrist.setDefaultCommand(new RotateWrist(wrist, operatorController::getLeftY));
     drive.setDefaultCommand(new DriveWithJoysticks(
       drive,
       driverController::getLeftX,
@@ -141,7 +142,9 @@ public class RobotContainer {
       swerveModeChooser::get
     ));
     driverController.a().onTrue(new SetGyroYaw(drive, 0));
-    feeder.setDefaultCommand(new FeederSlow(feeder));
+    //feeder.setDefaultCommand(new FeederSlow(feeder));
+    operatorController.b().whileTrue(new FeederSlow(feeder, operatorController::getRightY));
+    //feeder.setDefaultCommand(new FeederSlow(feeder, operatorController::getRightY));
 
     //driverController.y().onTrue(FollowPath());
 
