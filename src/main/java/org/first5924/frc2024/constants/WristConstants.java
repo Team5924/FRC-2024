@@ -7,5 +7,5 @@ package org.first5924.frc2024.constants;
 /** Add your docs here. */
 public class WristConstants {
 
-    public static final int motorID = 0;
-    public static final int encoderID = 0;}
+    public static final int motorID = 54;
+    public static final int encoderID = 12;}
