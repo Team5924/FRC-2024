@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
+import org.first5924.frc2024.commands.feeder.FeederSlow;
 
 import org.first5924.frc2024.commands.shooter.ShooterOn;
 import org.first5924.frc2024.commands.wrist.RotateWrist;
@@ -24,6 +25,10 @@ import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.drive.GyroIO;
 import org.first5924.frc2024.subsystems.drive.GyroIOPigeon2;
 import org.first5924.frc2024.subsystems.drive.ModuleIO;
+import org.first5924.frc2024.subsystems.feeder.Feeder;
+import org.first5924.frc2024.subsystems.feeder.FeederIO;
+import org.first5924.frc2024.subsystems.feeder.FeederIOTalonFX;
+import org.littletonrobotics.junction.Logger;
 import org.first5924.frc2024.subsystems.shooter.Shooter;
 import org.first5924.frc2024.subsystems.shooter.ShooterIO;
 import org.first5924.frc2024.subsystems.shooter.ShooterIOTalonFX;
@@ -44,7 +49,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
-
+  private final Feeder feeder;
   private final Shooter shooter;
   private final Wrist wrist;
   private final Drive drive;
@@ -59,6 +64,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    
     switch (RobotConstants.kCurrentMode) {
       // Real robot, instantiate hardware IO implementations
       case REAL:
@@ -71,6 +77,8 @@ public class RobotContainer {
           new ModuleIOTalonFX(2),
           new ModuleIOTalonFX(3)
         );
+
+        feeder = new Feeder(new FeederIOTalonFX());
         vision = new Vision();
 
         break;
@@ -86,6 +94,7 @@ public class RobotContainer {
           new ModuleIO() {},
           new ModuleIO() {}
         );
+        feeder = new Feeder(new FeederIO() {});
         shooter = new Shooter(new ShooterIO() {});
         vision = new Vision();
         break;
@@ -101,18 +110,16 @@ public class RobotContainer {
           new ModuleIOTalonFX(2),
           new ModuleIOTalonFX(3)
         );
+        feeder = new Feeder(new FeederIO() {});
         vision = new Vision();
         break;
     }
 
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
-
-
+    Logger.recordOutput("Is Note In", feeder.isNoteIn());
+    SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
     autoModeChooser = null;
-
-    //SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
-
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -134,7 +141,10 @@ public class RobotContainer {
       swerveModeChooser::get
     ));
     driverController.a().onTrue(new SetGyroYaw(drive, 0));
+    feeder.setDefaultCommand(new FeederSlow(feeder));
+
     //driverController.y().onTrue(FollowPath());
+
   }
 
   //public Command FollowPath()
