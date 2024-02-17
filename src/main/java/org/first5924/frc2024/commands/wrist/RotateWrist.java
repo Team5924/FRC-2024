@@ -5,16 +5,17 @@ import java.util.function.DoubleSupplier;
 
 import org.first5924.frc2024.subsystems.wrist.Wrist;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class RotateWrist extends Command {
   /** Creates a new SetWristAngle. */
   private final Wrist wrist;
-  private final double mJoystick;
+  private final DoubleSupplier mJoystick;
 
   public RotateWrist(Wrist wrist, DoubleSupplier joystickY) {
     this.wrist = wrist;
-    mJoystick = joystickY.getAsDouble();
+    mJoystick = joystickY;
     addRequirements(wrist);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -26,13 +27,15 @@ public class RotateWrist extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    wrist.setPercent(mJoystick);
+    wrist.setPercent(mJoystick.getAsDouble());
+    System.out.println("im running!");
+    SmartDashboard.putNumber("joystick", mJoystick.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    wrist.setPercent(0);
+    // wrist.setPercent(0);
   }
 
   // Returns true when the command should end.
