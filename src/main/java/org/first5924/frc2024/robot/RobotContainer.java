@@ -14,13 +14,19 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
+
+import org.first5924.frc2024.commands.shooter.ShooterOn;
 import org.first5924.frc2024.commands.wrist.RotateWrist;
 import org.first5924.frc2024.constants.DriveConstants;
+
 import org.first5924.frc2024.constants.RobotConstants;
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.drive.GyroIO;
 import org.first5924.frc2024.subsystems.drive.GyroIOPigeon2;
 import org.first5924.frc2024.subsystems.drive.ModuleIO;
+import org.first5924.frc2024.subsystems.shooter.Shooter;
+import org.first5924.frc2024.subsystems.shooter.ShooterIO;
+import org.first5924.frc2024.subsystems.shooter.ShooterIOTalonFX;
 
 import org.first5924.frc2024.subsystems.wrist.Wrist;
 import org.first5924.frc2024.subsystems.wrist.WristIO;
@@ -39,9 +45,8 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
 
- // private final Drive drive;
+  private final Shooter shooter;
   private final Wrist wrist;
-  //private final Vision vision;
   private final Drive drive;
   private final Vision vision;
 
@@ -50,13 +55,14 @@ public class RobotContainer {
   private final CommandXboxController operatorController = new CommandXboxController(1);
 
   private final LoggedDashboardChooser<Boolean> swerveModeChooser = new LoggedDashboardChooser<>("Swerve Mode Chooser");
-  private final SendableChooser<Command> autoModeChooser;
+ // private final SendableChooser<Command> autoModeChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (RobotConstants.kCurrentMode) {
       // Real robot, instantiate hardware IO implementations
       case REAL:
+        shooter = new Shooter(new ShooterIOTalonFX());
         wrist = new Wrist(new WristIOTalonFX() {});
         drive = new Drive(
           new GyroIOPigeon2(),
@@ -66,23 +72,27 @@ public class RobotContainer {
           new ModuleIOTalonFX(3)
         );
         vision = new Vision();
+
         break;
 
       // Sim robot, instantiate physics sim IO implementations
       case SIM:
         wrist = new Wrist(new WristIO() {});
         drive = new Drive(
+
           new GyroIO() {},
           new ModuleIO() {},
           new ModuleIO() {},
           new ModuleIO() {},
           new ModuleIO() {}
         );
+        shooter = new Shooter(new ShooterIO() {});
         vision = new Vision();
         break;
 
       // Replayed robot, disable IO implementations
       default:
+        shooter = new Shooter(new ShooterIO() {});
         wrist = new Wrist(new WristIO() {});
         drive = new Drive(
           new GyroIOPigeon2(),
@@ -97,6 +107,7 @@ public class RobotContainer {
 
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
+
 
     autoModeChooser = null;
 
@@ -113,6 +124,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    operatorController.a().whileTrue(new ShooterOn(shooter));
     wrist.setDefaultCommand(new RotateWrist(wrist, driverController::getLeftY));
     drive.setDefaultCommand(new DriveWithJoysticks(
       drive,
@@ -145,6 +157,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+
 
   public Command getAutonomousCommand() {
     // return Choreo.choreoSwerveCommand
