@@ -13,8 +13,8 @@ public interface WristIO {
         public double motorTempCelsius = 0.0;
         public double motorCurrentAmps = 0.0;
         public double motorCurrentVelocity = 0.0;
-        //public double encoderPosition = 0.0;
-        //public double wristAngle = 0.0;
+        public double encoderPosition = 0.0;
+        public double wristAngle = 0.0;
     }
 
     /** Updates the set of loggable inputs. */

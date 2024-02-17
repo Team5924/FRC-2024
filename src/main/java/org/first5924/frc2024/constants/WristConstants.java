@@ -8,4 +8,4 @@ package org.first5924.frc2024.constants;
 public class WristConstants {
 
     public static final int motorID = 54;
-    public static final int encoderID = 12;}
+    public static final int encoderID = 15;}

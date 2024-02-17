@@ -28,8 +28,6 @@ public class RotateWrist extends Command {
   @Override
   public void execute() {
     wrist.setPercent(mJoystick.getAsDouble());
-    System.out.println("im running!");
-    SmartDashboard.putNumber("joystick", mJoystick.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

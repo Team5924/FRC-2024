@@ -41,12 +41,11 @@ public class Wrist extends SubsystemBase {
 
   public void setPercent(double percent) {
     io.setPercent(percent);
-    System.out.println("im running too!!");
   }
 
-  //public void setAngle(double angle) {
-    //io.setVoltage(mPID.calculate(inputs.encoderPosition/360, angle));
-  //}
+  public void setAngle(double angle) {
+    io.setVoltage(mPID.calculate(inputs.encoderPosition/360, angle));
+  }
 
 
   

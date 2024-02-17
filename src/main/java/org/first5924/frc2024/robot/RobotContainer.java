@@ -21,14 +21,14 @@ import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.drive.GyroIO;
 import org.first5924.frc2024.subsystems.drive.GyroIOPigeon2;
 import org.first5924.frc2024.subsystems.drive.ModuleIO;
-import org.first5924.frc2024.subsystems.drive.ModuleIOSparkMax;
+
 import org.first5924.frc2024.subsystems.wrist.Wrist;
 import org.first5924.frc2024.subsystems.wrist.WristIO;
 import org.first5924.frc2024.subsystems.wrist.WristIOTalonFX;
 import org.first5924.frc2024.subsystems.drive.ModuleIOTalonFX;
 import org.first5924.frc2024.subsystems.vision.Vision;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import com.choreo.lib.Choreo;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -50,7 +50,7 @@ public class RobotContainer {
   private final CommandXboxController operatorController = new CommandXboxController(1);
 
   private final LoggedDashboardChooser<Boolean> swerveModeChooser = new LoggedDashboardChooser<>("Swerve Mode Chooser");
-  //private final SendableChooser<Command> autoModeChooser;
+  private final SendableChooser<Command> autoModeChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -122,23 +122,23 @@ public class RobotContainer {
       swerveModeChooser::get
     ));
     driverController.a().onTrue(new SetGyroYaw(drive, 0));
-    driverController.y().onTrue(FollowPath());
+    //driverController.y().onTrue(FollowPath());
   }
 
-  public Command FollowPath()
-  {
-    return Choreo.choreoSwerveCommand
-    (Choreo.getTrajectory("NewPath"), //will need to make sendable chooser in the future
-    () -> drive.getPose(),
-    Choreo.choreoSwerveController(
-      new PIDController(DriveConstants.kDriveKp, 0, 0), 
-      new PIDController(DriveConstants.kDriveKp, 0, 0),
-      new PIDController(DriveConstants.kDriveKp, 0, 0)),
-    (ChassisSpeeds speeds) ->
-      drive.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false), 
-    () -> false,
-    drive);
-  }
+  //public Command FollowPath()
+  //{
+  //  return Choreo.choreoSwerveCommand
+  //  (Choreo.getTrajectory("NewPath"), //will need to make sendable chooser in the future
+  //  () -> drive.getPose(),
+  //  Choreo.choreoSwerveController(
+  //    new PIDController(DriveConstants.kDriveKp, 0, 0), 
+  //    new PIDController(DriveConstants.kDriveKp, 0, 0),
+  //    new PIDController(DriveConstants.kDriveKp, 0, 0)),
+  //  (ChassisSpeeds speeds) ->
+  //    drive.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false), 
+  //  () -> false,
+  //  drive);
+  //}
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
