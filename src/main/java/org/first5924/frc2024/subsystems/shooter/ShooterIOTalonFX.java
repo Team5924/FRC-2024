@@ -29,7 +29,7 @@ public class ShooterIOTalonFX implements ShooterIO {
 
     @Override
     public void setPercent(double percent) {
-        mUpperMotor.set(percent);
+        mUpperMotor.set(-percent);
         mLowerMotor.set(percent);
     }
 }

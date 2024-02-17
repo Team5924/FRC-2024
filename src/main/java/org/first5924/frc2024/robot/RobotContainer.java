@@ -34,7 +34,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
-  private final Drive drive;
+  //private final Drive drive;
   private final Shooter shooter;
   //private final Vision vision;
 
@@ -42,44 +42,44 @@ public class RobotContainer {
   private final CommandXboxController operatorController = new CommandXboxController(1);
 
   private final LoggedDashboardChooser<Boolean> swerveModeChooser = new LoggedDashboardChooser<>("Swerve Mode Chooser");
-  private final SendableChooser<Command> autoModeChooser;
+ // private final SendableChooser<Command> autoModeChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (RobotConstants.kCurrentMode) {
       // Real robot, instantiate hardware IO implementations
       case REAL:
-        drive = new Drive(
-          new GyroIOPigeon2(),
-          new ModuleIOSparkMax(0),
-          new ModuleIOSparkMax(1),
-          new ModuleIOSparkMax(2),
-          new ModuleIOSparkMax(3)
-        );
+       // drive = new Drive(
+         // new GyroIOPigeon2(),
+         // new ModuleIOSparkMax(0),
+        //  new ModuleIOSparkMax(1),
+         // new ModuleIOSparkMax(2),
+        //  new ModuleIOSparkMax(3)
+       // );
         shooter = new Shooter(new ShooterIOTalonFX());
         break;
 
       // Sim robot, instantiate physics sim IO implementations
       case SIM:
-        drive = new Drive(
+    /*     drive = new Drive(
           new GyroIO() {},
           new ModuleIO() {},
           new ModuleIO() {},
           new ModuleIO() {},
           new ModuleIO() {}
         );
-        shooter = new Shooter(new ShooterIO() {});
+*/        shooter = new Shooter(new ShooterIO() {});
         break;
 
       // Replayed robot, disable IO implementations
       default:
-        drive = new Drive(
+     /*    drive = new Drive(
           new GyroIOPigeon2(),
           new ModuleIOSparkMax(0),
           new ModuleIOSparkMax(1),
           new ModuleIOSparkMax(2),
           new ModuleIOSparkMax(3)
-        );
+        ); */
         shooter = new Shooter(new ShooterIO() {});
         break;
     }
@@ -87,8 +87,8 @@ public class RobotContainer {
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
 
-    autoModeChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
+   // autoModeChooser = AutoBuilder.buildAutoChooser();
+    //SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -101,15 +101,15 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    drive.setDefaultCommand(new DriveWithJoysticks(
-      drive,
-      driverController::getLeftX,
-      driverController::getLeftY,
-      driverController::getRightX,
-      swerveModeChooser::get
-    ));
-    driverController.a().onTrue(new SetGyroYaw(drive, 0));
-    operatorController.a().onTrue(new ShooterOn(shooter));
+   // drive.setDefaultCommand(new DriveWithJoysticks(
+   //   drive,
+   //   driverController::getLeftX,
+   //   driverController::getLeftY,
+   //   driverController::getRightX,
+   //   swerveModeChooser::get
+   // ));
+   // driverController.a().onTrue(new SetGyroYaw(drive, 0));
+    operatorController.a().whileTrue(new ShooterOn(shooter));
   }
 
   /**
@@ -117,7 +117,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    return autoModeChooser.getSelected();
-  }
+  //public Command getAutonomousCommand() {
+   // return autoModeChooser.getSelected();
+  //}
 }
