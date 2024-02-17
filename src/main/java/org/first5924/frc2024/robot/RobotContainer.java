@@ -22,6 +22,7 @@ import org.first5924.frc2024.subsystems.drive.GyroIOPigeon2;
 import org.first5924.frc2024.subsystems.drive.ModuleIO;
 import org.first5924.frc2024.subsystems.drive.ModuleIOSparkMax;
 import org.first5924.frc2024.subsystems.wrist.Wrist;
+import org.first5924.frc2024.subsystems.wrist.WristIO;
 import org.first5924.frc2024.subsystems.wrist.WristIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -67,7 +68,7 @@ public class RobotContainer {
        ////   new ModuleIO() {},
        ////   new ModuleIO() {}
         //);
-        wrist = new Wrist(new WristIOTalonFX() {});
+        wrist = new Wrist(new WristIO() {});
         break;
 
       // Replayed robot, disable IO implementations
@@ -79,7 +80,7 @@ public class RobotContainer {
         ////  new ModuleIOSparkMax(2),
         ////  new ModuleIOSparkMax(3)
         //);
-        wrist = new Wrist(new WristIOTalonFX() {});
+        wrist = new Wrist(new WristIO() {});
         break;
     }
 
