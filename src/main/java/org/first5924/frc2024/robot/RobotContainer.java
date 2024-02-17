@@ -14,12 +14,15 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
+import org.first5924.frc2024.commands.wrist.RotateWrist;
 import org.first5924.frc2024.constants.RobotConstants;
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.drive.GyroIO;
 import org.first5924.frc2024.subsystems.drive.GyroIOPigeon2;
 import org.first5924.frc2024.subsystems.drive.ModuleIO;
 import org.first5924.frc2024.subsystems.drive.ModuleIOSparkMax;
+import org.first5924.frc2024.subsystems.wrist.Wrist;
+import org.first5924.frc2024.subsystems.wrist.WristIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -30,57 +33,61 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
-  private final Drive drive;
+ // private final Drive drive;
+  private final Wrist wrist;
   //private final Vision vision;
 
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
 
   private final LoggedDashboardChooser<Boolean> swerveModeChooser = new LoggedDashboardChooser<>("Swerve Mode Chooser");
-  private final SendableChooser<Command> autoModeChooser;
+  //private final SendableChooser<Command> autoModeChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (RobotConstants.kCurrentMode) {
       // Real robot, instantiate hardware IO implementations
       case REAL:
-        drive = new Drive(
-          new GyroIOPigeon2(),
-          new ModuleIOSparkMax(0),
-          new ModuleIOSparkMax(1),
-          new ModuleIOSparkMax(2),
-          new ModuleIOSparkMax(3)
-        );
+      //  drive = new Drive(
+      ////    new GyroIOPigeon2(),
+      ////    new ModuleIOSparkMax(0),
+      ////    new ModuleIOSparkMax(1),
+      ////    new ModuleIOSparkMax(2),
+      ////    new ModuleIOSparkMax(3)
+       // );
+        wrist = new Wrist(new WristIOTalonFX() {});
         break;
 
       // Sim robot, instantiate physics sim IO implementations
       case SIM:
-        drive = new Drive(
-          new GyroIO() {},
-          new ModuleIO() {},
-          new ModuleIO() {},
-          new ModuleIO() {},
-          new ModuleIO() {}
-        );
+       // drive = new Drive(
+       ////   new GyroIO() {},
+       ////   new ModuleIO() {},
+       ////   new ModuleIO() {},
+       ////   new ModuleIO() {},
+       ////   new ModuleIO() {}
+        //);
+        wrist = new Wrist(new WristIOTalonFX() {});
         break;
 
       // Replayed robot, disable IO implementations
       default:
-        drive = new Drive(
-          new GyroIOPigeon2(),
-          new ModuleIOSparkMax(0),
-          new ModuleIOSparkMax(1),
-          new ModuleIOSparkMax(2),
-          new ModuleIOSparkMax(3)
-        );
+        //drive = new Drive(
+        ////  new GyroIOPigeon2(),
+        ////  new ModuleIOSparkMax(0),
+        ////  new ModuleIOSparkMax(1),
+        ////  new ModuleIOSparkMax(2),
+        ////  new ModuleIOSparkMax(3)
+        //);
+        wrist = new Wrist(new WristIOTalonFX() {});
         break;
     }
 
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
 
-    autoModeChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
+    //autoModeChooser = AutoBuilder.buildAutoChooser();
+    //SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -93,14 +100,16 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    drive.setDefaultCommand(new DriveWithJoysticks(
-      drive,
-      driverController::getLeftX,
-      driverController::getLeftY,
-      driverController::getRightX,
-      swerveModeChooser::get
-    ));
-    driverController.a().onTrue(new SetGyroYaw(drive, 0));
+    //drive.setDefaultCommand(new DriveWithJoysticks(
+    //  drive,
+    //  driverController::getLeftX,
+    //  driverController::getLeftY,
+    //  driverController::getRightX,
+    //  swerveModeChooser::get
+    //));
+    //driverController.a().onTrue(new SetGyroYaw(drive, 0));
+    wrist.setDefaultCommand(new RotateWrist(wrist, driverController::getLeftY));
+
   }
 
   /**
@@ -108,7 +117,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    return autoModeChooser.getSelected();
-  }
+  //public Command getAutonomousCommand() {
+  //  return autoModeChooser.getSelected();
+  //}
 }
