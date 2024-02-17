@@ -6,28 +6,34 @@ package org.first5924.frc2024.commands.wrist;
 
 import org.first5924.frc2024.subsystems.wrist.Wrist;
 
+import java.util.function.DoubleSupplier;
+
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class SetWristAngle extends Command {
+public class AutoAimWrist extends Command {
   /** Creates a new SetWristAngle. */
   private final Wrist wrist;
-  private final double Angle;
+  private final DoubleSupplier angle;
+  PIDController wristController;
 
-  public SetWristAngle(Wrist wrist, double angle) {
+  public AutoAimWrist(Wrist wrist, DoubleSupplier angle) {
     this.wrist = wrist;
-    Angle = angle;
+    this.angle = angle;
+    
     addRequirements(wrist);
+    wristController = new PIDController(.1, 0, 0);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //wrist.setAngle(Angle);
+    wrist.setPercent(wristController.calculate(angle.getAsDouble()));
   }
 
   // Called once the command ends or is interrupted.

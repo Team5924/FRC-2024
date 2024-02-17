@@ -10,6 +10,8 @@ public class FieldConstants {
 
     //this value is to be tested
     public static final double shooterExitVeloMPS = 32.6;
+
+    //this should not be a constant. Instead, we should read the encoder from the elevator
     public static final double exampleShooterHeight = .7;
 
     public static final double speakerHeight = 2.0828041656;

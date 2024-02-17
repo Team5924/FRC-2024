@@ -24,12 +24,15 @@ public class DetectorCam extends SubsystemBase {
     // Vertical offset from crosshair to target
     NetworkTableEntry tx = table.getEntry("tx");
     NetworkTableEntry ty = table.getEntry("ty");
+    NetworkTableEntry tv = table.getEntry("tv");
+
 
     LimelightResults llresults;
 
 
-    double x;
-    double y;
+    private double x;
+    private double y;
+    private double v;
     public DetectorCam() {
         
     }
@@ -39,11 +42,30 @@ public class DetectorCam extends SubsystemBase {
         // This method will be called once per scheduler run
         x = tx.getDouble(0.0);
         y = ty.getDouble(0.0);
+        v = tv.getDouble(v);
         SmartDashboard.putString("table", table.toString());
         SmartDashboard.putNumber("distance", getDistanceToTargetInches());
         SmartDashboard.putNumber("nomuber of targets in view", GetNumberOfTargets());
         // System.out.println("BANANA - table: " + table.containsKey("tx") + " / pos: (" + x + ", " + y + ")");
     }
+
+    public double getNoteX(){
+        return x;
+    }
+
+    public double getNoteY(){
+        return y;
+    }
+
+    public boolean hasTarget(){
+        if (v==1) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
 
     public int GetNumberOfTargets()
     {
@@ -51,10 +73,6 @@ public class DetectorCam extends SubsystemBase {
 
         LimelightTarget_Detector[] targets = llresults.targetingResults.targets_Detector;
         return targets.length;
-    }
-
-    public final Pose2d robotPose() {
-        return LimelightHelpers.getBotPose2d(getName());
     }
 
     /**
