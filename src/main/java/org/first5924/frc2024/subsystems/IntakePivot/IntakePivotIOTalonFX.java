@@ -86,6 +86,10 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
 
   }
 
+  public final void setPercent(double percent) {
+    pivotTalon.set(-percent);
+  }
+
 
 
 

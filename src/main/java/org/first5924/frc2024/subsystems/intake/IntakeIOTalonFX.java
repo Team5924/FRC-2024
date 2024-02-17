@@ -45,4 +45,7 @@ public class IntakeIOTalonFX implements IntakeIO {
   public void setRollerVoltage(double percentSpeed) {
     rollerTalon.setVoltage(percentSpeed);
   }
+  public void setPercent(double percent) {
+    rollerTalon.set(percent);
+  }
 }

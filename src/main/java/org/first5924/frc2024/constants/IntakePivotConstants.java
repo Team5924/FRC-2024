@@ -7,7 +7,7 @@ package org.first5924.frc2024.constants;
 /** Add your docs here. */
 public class IntakePivotConstants {
     public static final double kGearRatio = 0.0;
-    public static final int IntakePivotID = 1;
+    public static final int IntakePivotID = 51;
     public static final int pivotCancoderID = 0;
     public static final double PivotVoltage = 0.0;
     public static final double FloorAngle = 0.0;

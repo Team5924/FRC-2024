@@ -63,7 +63,10 @@ public class IntakePivot extends SubsystemBase {
     io.setVoltage(volts);
   }
 
-
+  public final void setPercent(double percent){
+    io.setPercent(-percent);
+    System.out.println("im running too!! (inside)");
+  }
   
   
 }

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
 import org.first5924.frc2024.commands.intake.Spin;
+import org.first5924.frc2024.commands.intakePivot.SetPercent;
 import org.first5924.frc2024.subsystems.intake.Intake;
 import org.first5924.frc2024.subsystems.intake.IntakeIO;
 import org.first5924.frc2024.subsystems.intake.IntakeIOTalonFX;
@@ -39,7 +40,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
-  private final Drive drive;
+  // private final Drive drive;
   private final Intake intake;
   private final IntakePivot intakePivot; 
   //private final Vision vision;
@@ -48,32 +49,32 @@ public class RobotContainer {
   // private final CommandXboxController operatorController = new CommandXboxController(1);
   private final LoggedDashboardChooser<Boolean> swerveModeChooser =
       new LoggedDashboardChooser<>("Swerve Mode Chooser");
-  private final SendableChooser<Command> autoModeChooser;
+  // private final SendableChooser<Command> autoModeChooser;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
         // Real robot, instantiate hardware IO implementations
       case REAL:
-        drive =
-            new Drive(
-                new GyroIOPigeon2(),
-                new ModuleIOSparkMax(0),
-                new ModuleIOSparkMax(1),
-                new ModuleIOSparkMax(2),
-                new ModuleIOSparkMax(3));
+        // drive =
+        //     new Drive(
+        //         new GyroIOPigeon2(),
+        //         new ModuleIOSparkMax(0),
+        //         new ModuleIOSparkMax(1),
+        //         new ModuleIOSparkMax(2),
+        //         new ModuleIOSparkMax(3));
         intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
         intake = new Intake(new IntakeIOTalonFX());
         break;
 
         // Sim robot, instantiate physics sim IO implementations
       case SIM:
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {});
+        // drive =
+        //     new Drive(
+        //         new GyroIO() {},
+        //         new ModuleIO() {},
+        //         new ModuleIO() {},
+        //         new ModuleIO() {},
+        //         new ModuleIO() {});
         intakePivot = new IntakePivot(new IntakePivotIO() {});
         intake = new Intake(new IntakeIO() {});
 
@@ -81,13 +82,13 @@ public class RobotContainer {
 
         // Replayed robot, disable IO implementations
       default:
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {});
+        // drive =
+        //     new Drive(
+        //         new GyroIO() {},
+        //         new ModuleIO() {},
+        //         new ModuleIO() {},
+        //         new ModuleIO() {},
+        //         new ModuleIO() {});
         intakePivot = new IntakePivot(new IntakePivotIO() {});
         intake = new Intake(new IntakeIO() {});
         break;
@@ -98,8 +99,8 @@ public class RobotContainer {
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
 
-    autoModeChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
+    // autoModeChooser = AutoBuilder.buildAutoChooser();
+    // SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -112,15 +113,16 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    drive.setDefaultCommand(
-        new DriveWithJoysticks(
-            drive,
-            driverController::getLeftX,
-            driverController::getLeftY,
-            driverController::getRightX,
-            swerveModeChooser::get));
-    driverController.a().onTrue(new SetGyroYaw(drive, 0));
-    driverController.rightBumper().onTrue(new Spin(intake));
+   //drive.setDefaultCommand(
+     //   new DriveWithJoysticks(
+       //     drive,
+         //   driverController::getLeftX,
+           // driverController::getLeftY,
+          //  driverController::getRightX,
+           // swerveModeChooser::get));
+    // driverController.a().onTrue(new SetGyroYaw(drive, 0));
+    driverController.rightBumper().whileTrue(new Spin(intake));
+    intakePivot.setDefaultCommand(new SetPercent(intakePivot, driverController::getRightY));
   }
 
   /**
@@ -129,6 +131,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoModeChooser.getSelected();
+    // return autoModeChooser.getSelected();
+    return null;
   }
 }

@@ -30,6 +30,10 @@ public class Intake extends SubsystemBase {
     io.setRollerVoltage(percentSpeed);
   }
 
+  public void setPercent(double percent) {
+    io.setPercent(percent);
+  }
+
   public double getOutputCurrent() {
     return inputs.supplyCurrent;
   }

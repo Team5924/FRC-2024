@@ -19,4 +19,6 @@ public interface IntakeIO {
   public default void updateInputs(IntakeIOInputs inputs) {}
 
   public default void setRollerVoltage(double voltage) {}
+
+  public default void setPercent(double percent) {}
 }
