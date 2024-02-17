@@ -52,7 +52,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
-  private final Feeder feeder;
+  // private final Feeder feeder;
   private final Shooter shooter;
   private final Wrist wrist;
   private final Drive drive;
@@ -81,7 +81,7 @@ public class RobotContainer {
           new ModuleIOTalonFX(3)
         );
 
-        feeder = new Feeder(new FeederIOTalonFX());
+        // feeder = new Feeder(new FeederIOTalonFX());
         vision = new Vision();
 
         break;
@@ -97,7 +97,7 @@ public class RobotContainer {
           new ModuleIO() {},
           new ModuleIO() {}
         );
-        feeder = new Feeder(new FeederIO() {});
+        // feeder = new Feeder(new FeederIO() {});
         shooter = new Shooter(new ShooterIO() {});
         vision = new Vision();
         break;
@@ -113,16 +113,16 @@ public class RobotContainer {
           new ModuleIOTalonFX(2),
           new ModuleIOTalonFX(3)
         );
-        feeder = new Feeder(new FeederIO() {});
+        // feeder = new Feeder(new FeederIO() {});
         vision = new Vision();
         break;
     }
 
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
-    Logger.recordOutput("Is Note In", feeder.isNoteIn());
-    SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
-    autoModeChooser = null;
+    // Logger.recordOutput("Is Note In", feeder.isNoteIn());
+    // SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
+    // autoModeChooser = null;
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -135,17 +135,25 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     operatorController.a().whileTrue(new ShooterOn(shooter));
-    wrist.setDefaultCommand(new RotateWrist(wrist, driverController::getLeftY));
+    // wrist.setDefaultCommand(new RotateWrist(wrist, driverController::getRightY));
     drive.setDefaultCommand(new DriveWithJoysticks(
       drive,
       driverController::getLeftX,
       driverController::getLeftY,
       driverController::getRightX,
       swerveModeChooser::get,
-      () -> driverController.rightBumper().getAsBoolean()
+      () -> false
+    ));
+    driverController.rightBumper().onTrue(new DriveWithJoysticks(
+      drive,
+      driverController::getLeftX,
+      driverController::getLeftY,
+      driverController::getRightX,
+      swerveModeChooser::get,
+      () -> true
     ));
     driverController.a().onTrue(new SetGyroYaw(drive, 0));
-    feeder.setDefaultCommand(new FeederSlow(feeder));
+    // feeder.setDefaultCommand(new FeederSlow(feeder));
 
     //driverController.y().onTrue(FollowPath());
 

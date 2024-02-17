@@ -116,7 +116,7 @@ public class Drive extends SubsystemBase {
         new Rotation2d(gyroInputs.yawPositionRad)) :
       new ChassisSpeeds(vxMetersPerSecond * speedMult, vyMetersPerSecond * speedMult, omegaRadiansPerSecond * rotationMult);
     SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DriveConstants.kMaxLinearSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DriveConstants.kMaxLinearSpeed * speedMult);
     for (int i = 0; i < 4; i++) {
       modules[i].runSetpoint(moduleStates[i]);
     }
