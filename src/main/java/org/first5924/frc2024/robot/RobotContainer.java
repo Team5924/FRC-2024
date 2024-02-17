@@ -18,6 +18,7 @@ import org.first5924.frc2024.commands.drive.SetGyroYaw;
 import org.first5924.frc2024.commands.feeder.FeederSlow;
 
 import org.first5924.frc2024.commands.shooter.ShooterOn;
+import org.first5924.frc2024.commands.vision.DriveToNote;
 import org.first5924.frc2024.commands.wrist.RotateWrist;
 import org.first5924.frc2024.constants.DriveConstants;
 
@@ -142,6 +143,14 @@ public class RobotContainer {
       swerveModeChooser::get
     ));
     driverController.a().onTrue(new SetGyroYaw(drive, 0));
+
+    
+    //
+    // THIS IS TEMPORARY, IT WILL BE IN AUTONOMOUS
+    driverController.b().onTrue(new DriveToNote(drive));
+
+
+
     //feeder.setDefaultCommand(new FeederSlow(feeder));
     operatorController.b().whileTrue(new FeederSlow(feeder, operatorController::getRightY));
     //feeder.setDefaultCommand(new FeederSlow(feeder, operatorController::getRightY));
