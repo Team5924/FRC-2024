@@ -49,6 +49,6 @@ public class DriveConstants {
   public static final double kEncoderToDriveRatio = 5.14;
   public static final double kEncoderToTurnRatio = 396/35;
 
-  public static final double kSlowModeMovementMultiplier = 0.5;
-  public static final double kSlowModeRotationMultiplier = 1;
+  public static final double kSlowModeMovementMultiplier = 0.25;
+  public static final double kSlowModeRotationMultiplier = 0.25;
 }
