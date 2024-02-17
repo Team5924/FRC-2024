@@ -32,7 +32,7 @@ public class SetPercent extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intakePivot.setPercent(-mJoystick);
+    intakePivot.setPercent(mJoystick);
     System.out.println("im executing!!!");
   }
 
