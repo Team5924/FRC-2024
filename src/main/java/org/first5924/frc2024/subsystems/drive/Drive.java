@@ -104,14 +104,17 @@ public class Drive extends SubsystemBase {
     // );
   }
 
-  public void drive(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean fieldCentric) {
+  public void drive(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean fieldCentric, boolean slowMode) {
+    double speedMult = slowMode ? DriveConstants.kSlowModeMovementMultiplier : 1;
+    double rotationMult = slowMode ? DriveConstants.kSlowModeRotationMultiplier : 1;
+    
     ChassisSpeeds speeds = fieldCentric ?
       ChassisSpeeds.fromFieldRelativeSpeeds(
-        vxMetersPerSecond,
-        vyMetersPerSecond,
-        omegaRadiansPerSecond,
+        vxMetersPerSecond * speedMult,
+        vyMetersPerSecond * speedMult,
+        omegaRadiansPerSecond * rotationMult,
         new Rotation2d(gyroInputs.yawPositionRad)) :
-      new ChassisSpeeds(vxMetersPerSecond, vyMetersPerSecond, omegaRadiansPerSecond);
+      new ChassisSpeeds(vxMetersPerSecond * speedMult, vyMetersPerSecond * speedMult, omegaRadiansPerSecond * rotationMult);
     SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DriveConstants.kMaxLinearSpeed);
     for (int i = 0; i < 4; i++) {
@@ -150,6 +153,7 @@ public class Drive extends SubsystemBase {
       chassisSpeeds.vxMetersPerSecond,
       chassisSpeeds.vyMetersPerSecond,
       chassisSpeeds.omegaRadiansPerSecond,
+      false,
       false);
   }
 

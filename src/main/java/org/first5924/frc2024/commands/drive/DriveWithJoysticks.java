@@ -22,14 +22,16 @@ public class DriveWithJoysticks extends Command {
   private final DoubleSupplier leftJoystickYSupplier;
   private final DoubleSupplier rightJoystickXSupplier;
   private final BooleanSupplier fieldCentricSupplier;
+  private final BooleanSupplier slowMode;
 
   /** Creates a new DriveWithJoysticks. */
-  public DriveWithJoysticks(Drive drive, DoubleSupplier leftXSupplier, DoubleSupplier leftYSupplier, DoubleSupplier rightXSupplier, BooleanSupplier fieldCentricSupplier) {
+  public DriveWithJoysticks(Drive drive, DoubleSupplier leftXSupplier, DoubleSupplier leftYSupplier, DoubleSupplier rightXSupplier, BooleanSupplier fieldCentricSupplier, BooleanSupplier slowMode) {
     this.drive = drive;
     this.leftJoystickXSupplier = leftXSupplier;
     this.leftJoystickYSupplier = leftYSupplier;
     this.rightJoystickXSupplier = rightXSupplier;
     this.fieldCentricSupplier = fieldCentricSupplier;
+    this.slowMode = slowMode;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drive);
   }
@@ -59,7 +61,8 @@ public class DriveWithJoysticks extends Command {
       xPercent * DriveConstants.kMaxLinearSpeed,
       yPercent * DriveConstants.kMaxLinearSpeed,
       rotationPercent * DriveConstants.kMaxAngularSpeedRad,
-      fieldCentricSupplier.getAsBoolean()
+      fieldCentricSupplier.getAsBoolean(),
+      slowMode.getAsBoolean()
     );
   }
 
