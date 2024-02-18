@@ -14,10 +14,13 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.controller.PIDController;
+
 /** Add your docs here. */
 public class WristIOTalonFX implements WristIO {
     private final TalonFX mMotor = new TalonFX(WristConstants.motorID);
     // private final CANcoder mEncoder = new CANcoder(WristConstants.encoderID);
+    PIDController wristController = new PIDController(.1, 0, 0);
 
     public WristIOTalonFX() {
     }
@@ -39,5 +42,7 @@ public class WristIOTalonFX implements WristIO {
     public void setVoltage(double voltage) {
         mMotor.setVoltage(voltage);
     }
-    
+    public void setAngle(double targetAngle){
+        mMotor.setVoltage(wristController.calculate(((mMotor.getPosition().getValueAsDouble()/363)*360)%360, targetAngle));     
+    }
 }

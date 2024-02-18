@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
 import org.first5924.frc2024.commands.feeder.FeederSlow;
-import org.first5924.frc2024.commands.wrist.AutoAimWrist;
+import org.first5924.frc2024.commands.wrist.AutoAimAndShoot;
 import org.first5924.frc2024.commands.shooter.ShooterOn;
 import org.first5924.frc2024.commands.vision.DriveToNote;
 import org.first5924.frc2024.commands.wrist.RotateWrist;
@@ -158,7 +158,7 @@ public class RobotContainer {
     //feeder.setDefaultCommand(new FeederSlow(feeder));
     operatorController.b().whileTrue(new FeederSlow(feeder, operatorController::getRightY));
     //feeder.setDefaultCommand(new FeederSlow(feeder, operatorController::getRightY));
-    operatorController.y().whileTrue(new AutoAimWrist(wrist, wrist::getWristPosition, fieldCam::getRedShooterAngle));
+    operatorController.y().whileTrue(new AutoAimAndShoot(feeder, shooter, wrist, wrist::getWristPosition, fieldCam::getRedShooterAngle));
     //driverController.y().onTrue(FollowPath());
 
   }

@@ -8,24 +8,31 @@ import org.first5924.frc2024.subsystems.wrist.Wrist;
 
 import java.util.function.DoubleSupplier;
 
+import org.first5924.frc2024.subsystems.feeder.Feeder;
+import org.first5924.frc2024.subsystems.shooter.Shooter;
+
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class AutoAimWrist extends Command {
+public class AutoAimAndShoot extends Command {
   /** Creates a new SetWristAngle. */
   private final Wrist wrist;
   private final DoubleSupplier targetAngle;
   private final DoubleSupplier wristAngle;
+  private final Shooter shooter;
+  private final Feeder feeder;
   PIDController wristController;
 
-  public AutoAimWrist(Wrist wrist, DoubleSupplier wristAngle, DoubleSupplier targetAngle) {
+  public AutoAimAndShoot(Feeder feeder, Shooter shooter, Wrist wrist, DoubleSupplier wristAngle, DoubleSupplier targetAngle) {
     this.wrist = wrist;
+    this.shooter = shooter;
     this.targetAngle = targetAngle;
     this.wristAngle = wristAngle;
+    this.feeder = feeder;
     
-    addRequirements(wrist);
-    wristController = new PIDController(.1, 0, 0);
+    addRequirements(feeder, wrist, shooter);
+    
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -35,7 +42,14 @@ public class AutoAimWrist extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    wrist.setPercent(wristController.calculate(wristAngle.getAsDouble(), targetAngle.getAsDouble()));
+
+    while(wristAngle.getAsDouble() - 1 > targetAngle.getAsDouble() && targetAngle.getAsDouble() < wristAngle.getAsDouble() + 1){
+      wrist.setAngle(targetAngle.getAsDouble());
+      shooter.setPercent(0.875);
+    }
+    feeder.setPercent(0.875);
+
+    
   }
 
   // Called once the command ends or is interrupted.

@@ -25,4 +25,7 @@ public interface WristIO {
     }
     public default void setVoltage(double percent) {
     }
+
+    public default void setAngle(double targetAngle){
+    }
 }
