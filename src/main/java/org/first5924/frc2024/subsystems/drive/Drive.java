@@ -107,6 +107,10 @@ public class Drive extends SubsystemBase {
   public void drive(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean fieldCentric, boolean slowMode) {
     double speedMult = slowMode ? DriveConstants.kSlowModeMovementMultiplier : 1;
     double rotationMult = slowMode ? DriveConstants.kSlowModeRotationMultiplier : 1;
+
+    SmartDashboard.putBoolean("Slow Mode", slowMode);
+    SmartDashboard.putNumber("Speed Multiplier", speedMult);
+    SmartDashboard.putNumber("Rotation Multiplier", rotationMult);
     
     ChassisSpeeds speeds = fieldCentric ?
       ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -116,7 +120,7 @@ public class Drive extends SubsystemBase {
         new Rotation2d(gyroInputs.yawPositionRad)) :
       new ChassisSpeeds(vxMetersPerSecond * speedMult, vyMetersPerSecond * speedMult, omegaRadiansPerSecond * rotationMult);
     SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DriveConstants.kMaxLinearSpeed * speedMult);
+    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DriveConstants.kMaxLinearSpeed);
     for (int i = 0; i < 4; i++) {
       modules[i].runSetpoint(moduleStates[i]);
     }

@@ -141,8 +141,7 @@ public class RobotContainer {
       driverController::getLeftX,
       driverController::getLeftY,
       driverController::getRightX,
-      swerveModeChooser::get,
-      () -> false
+      swerveModeChooser::get
     ));
     driverController.rightBumper().onTrue(new DriveWithJoysticks(
       drive,
@@ -150,8 +149,16 @@ public class RobotContainer {
       driverController::getLeftY,
       driverController::getRightX,
       swerveModeChooser::get,
-      () -> true
+      true
     ));
+    // driverController.rightBumper().onFalse(new DriveWithJoysticks(
+    //   drive,
+    //   driverController::getLeftX,
+    //   driverController::getLeftY,
+    //   driverController::getRightX,
+    //   swerveModeChooser::get,
+    //   () -> false
+    // ));
     driverController.a().onTrue(new SetGyroYaw(drive, 0));
     // feeder.setDefaultCommand(new FeederSlow(feeder));
 
