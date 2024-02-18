@@ -24,6 +24,7 @@ public class FieldCam extends SubsystemBase {
 
   @Override
   public void periodic() {
+    //gets the BotPoseArray periodically
     double[] botPoseArray = botPoseTable.getEntry("botpose").getDoubleArray(new double[6]);
     xBotPose = botPoseArray[0];
     yBotPose = botPoseArray[1];
@@ -33,10 +34,12 @@ public class FieldCam extends SubsystemBase {
   }
 
   public double getBotPoseX(){
+    //returns the x value of the robot with the center of the field as the origin
     return xBotPose;
   }
 
   public double getBotPoseY(){
+    //returns the y value of the robot with the center of the field as the origin
     return yBotPose;
   }
 
