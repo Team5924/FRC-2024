@@ -13,7 +13,7 @@ import au.grapplerobotics.LaserCan;
 public class FeederIOTalonFX implements FeederIO {
     //private final CANSparkMax mLeaderSpark = SparkMaxFactory.createSparkMax(PivotConstants.kLeaderSparkPort, MotorType.kBrushless, IdleMode.kBrake, 42);
     private final TalonFX mMotor = new TalonFX(FeederConstants.motorID);
-    private final LaserCan lc = new LaserCan(FeederConstants.laserID);
+    //private final LaserCan lc = new LaserCan(FeederConstants.laserID);
     public FeederIOTalonFX() {
     
     }
@@ -23,7 +23,7 @@ public class FeederIOTalonFX implements FeederIO {
         inputs.motorTempCelsius = mMotor.getDeviceTemp().getValueAsDouble();
         inputs.motorCurrentAmps = mMotor.getSupplyCurrent().getValueAsDouble();
         inputs.motorCurrentVelocity = mMotor.getVelocity().getValueAsDouble();
-        inputs.distanceToNextObject = lc.getMeasurement().distance_mm;
+        //inputs.distanceToNextObject = lc.getMeasurement().distance_mm;
     
     }
 

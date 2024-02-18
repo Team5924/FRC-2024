@@ -9,18 +9,20 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
 import org.first5924.frc2024.commands.feeder.FeederSlow;
-
+import org.first5924.frc2024.commands.wrist.AutoAimWrist;
 import org.first5924.frc2024.commands.shooter.ShooterOn;
+import org.first5924.frc2024.commands.vision.DriveToNote;
 import org.first5924.frc2024.commands.wrist.RotateWrist;
 import org.first5924.frc2024.constants.DriveConstants;
-
 import org.first5924.frc2024.constants.RobotConstants;
+
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.drive.GyroIO;
 import org.first5924.frc2024.subsystems.drive.GyroIOPigeon2;
@@ -32,12 +34,12 @@ import org.littletonrobotics.junction.Logger;
 import org.first5924.frc2024.subsystems.shooter.Shooter;
 import org.first5924.frc2024.subsystems.shooter.ShooterIO;
 import org.first5924.frc2024.subsystems.shooter.ShooterIOTalonFX;
-
+import org.first5924.frc2024.subsystems.vision.DetectorCam;
+import org.first5924.frc2024.subsystems.vision.FieldCam;
 import org.first5924.frc2024.subsystems.wrist.Wrist;
 import org.first5924.frc2024.subsystems.wrist.WristIO;
 import org.first5924.frc2024.subsystems.wrist.WristIOTalonFX;
 import org.first5924.frc2024.subsystems.drive.ModuleIOTalonFX;
-import org.first5924.frc2024.subsystems.vision.Vision;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 
@@ -53,7 +55,8 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Wrist wrist;
   private final Drive drive;
-  private final Vision vision;
+  private final DetectorCam dCam;
+  private final FieldCam fieldCam;
 
 
   private final CommandXboxController driverController = new CommandXboxController(0);
@@ -79,7 +82,8 @@ public class RobotContainer {
         );
 
         feeder = new Feeder(new FeederIOTalonFX());
-        vision = new Vision();
+        fieldCam = new FieldCam();
+        dCam = new DetectorCam();
 
         break;
 
@@ -96,7 +100,8 @@ public class RobotContainer {
         );
         feeder = new Feeder(new FeederIO() {});
         shooter = new Shooter(new ShooterIO() {});
-        vision = new Vision();
+        fieldCam = new FieldCam();
+        dCam = new DetectorCam();
         break;
 
       // Replayed robot, disable IO implementations
@@ -111,15 +116,16 @@ public class RobotContainer {
           new ModuleIOTalonFX(3)
         );
         feeder = new Feeder(new FeederIO() {});
-        vision = new Vision();
+        fieldCam = new FieldCam();
+        dCam = new DetectorCam();
         break;
     }
 
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
-    Logger.recordOutput("Is Note In", feeder.isNoteIn());
-    SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
-    autoModeChooser = null;
+    //Logger.recordOutput("Is Note In", feeder.isNoteIn());
+    // SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
+    // autoModeChooser = null;
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -132,7 +138,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     operatorController.a().whileTrue(new ShooterOn(shooter));
-    wrist.setDefaultCommand(new RotateWrist(wrist, driverController::getLeftY));
+    wrist.setDefaultCommand(new RotateWrist(wrist, operatorController::getLeftY));
     drive.setDefaultCommand(new DriveWithJoysticks(
       drive,
       driverController::getLeftX,
@@ -141,8 +147,18 @@ public class RobotContainer {
       swerveModeChooser::get
     ));
     driverController.a().onTrue(new SetGyroYaw(drive, 0));
-    feeder.setDefaultCommand(new FeederSlow(feeder));
 
+    
+    //
+    // THIS IS TEMPORARY, IT WILL BE IN AUTONOMOUS
+    driverController.b().onTrue(new DriveToNote(dCam::getNoteX, dCam::getNoteY, dCam.hasTarget(), drive));
+
+
+
+    //feeder.setDefaultCommand(new FeederSlow(feeder));
+    operatorController.b().whileTrue(new FeederSlow(feeder, operatorController::getRightY));
+    //feeder.setDefaultCommand(new FeederSlow(feeder, operatorController::getRightY));
+    operatorController.y().whileTrue(new AutoAimWrist(wrist, wrist::getWristPosition, fieldCam::getRedShooterAngle));
     //driverController.y().onTrue(FollowPath());
 
   }

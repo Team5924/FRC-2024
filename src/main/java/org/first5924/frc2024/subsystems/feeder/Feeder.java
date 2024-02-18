@@ -36,9 +36,9 @@ public class Feeder extends SubsystemBase {
     return inputs.motorCurrentVelocity;
   }
 
-  public Boolean isNoteIn() {
-      return inputs.distanceToNextObject < FeederConstants.distanceToNoteFromLaser;
-    }
+  //public Boolean isNoteIn() {
+  //    return inputs.distanceToNextObject < FeederConstants.distanceToNoteFromLaser;
+   // }
 
   public void setPercent(double percent) {
     io.setPercent(percent);

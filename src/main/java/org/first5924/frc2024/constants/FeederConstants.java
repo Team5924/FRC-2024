@@ -6,10 +6,10 @@ package org.first5924.frc2024.constants;
 
 /** Add your docs here. */
 public class FeederConstants {
-    public static final int motorID = 15;
+    public static final int motorID = 55;
     //for quinn to decide
     public static final int laserID = 2;
     public static final double distanceToNoteFromLaser = 0.0;
-    public static final double slowPercent = -0.3;
+    public static final double slowPercent = -0.8;
     public static final double shootPercent = 1;
 }
