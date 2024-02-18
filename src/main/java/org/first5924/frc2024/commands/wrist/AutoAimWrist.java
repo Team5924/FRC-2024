@@ -15,12 +15,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class AutoAimWrist extends Command {
   /** Creates a new SetWristAngle. */
   private final Wrist wrist;
-  private final DoubleSupplier angle;
+  private final DoubleSupplier targetAngle;
+  private final DoubleSupplier wristAngle;
   PIDController wristController;
 
-  public AutoAimWrist(Wrist wrist, DoubleSupplier angle) {
+  public AutoAimWrist(Wrist wrist, DoubleSupplier wristAngle, DoubleSupplier targetAngle) {
     this.wrist = wrist;
-    this.angle = angle;
+    this.targetAngle = targetAngle;
+    this.wristAngle = wristAngle;
     
     addRequirements(wrist);
     wristController = new PIDController(.1, 0, 0);
@@ -33,7 +35,7 @@ public class AutoAimWrist extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    wrist.setPercent(wristController.calculate(angle.getAsDouble()));
+    wrist.setPercent(wristController.calculate(wristAngle.getAsDouble(), targetAngle.getAsDouble()));
   }
 
   // Called once the command ends or is interrupted.

@@ -27,7 +27,8 @@ public class WristIOTalonFX implements WristIO {
         inputs.motorTempCelsius = mMotor.getDeviceTemp().getValueAsDouble();
         inputs.motorCurrentAmps = mMotor.getSupplyCurrent().getValueAsDouble();
         inputs.motorCurrentVelocity = mMotor.getVelocity().getValueAsDouble();
-        // inputs.encoderPosition = mEncoder.getPosition().getValueAsDouble();
+        inputs.encoderPosition = mMotor.getPosition().getValueAsDouble();
+        //inputs.encoderPosition = mEncoder.getPosition().getValueAsDouble();
         // inputs.wristAngle = mEncoder.getPosition().getValueAsDouble()*360;
     }
 

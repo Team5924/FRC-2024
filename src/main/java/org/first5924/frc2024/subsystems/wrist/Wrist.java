@@ -39,6 +39,12 @@ public class Wrist extends SubsystemBase {
     return inputs.motorCurrentVelocity;
   }
 
+  public double getWristPosition(){
+    double angle = ((inputs.encoderPosition/363)*360)%360;
+    return angle;
+  }
+
+
   public void setPercent(double percent) {
     io.setPercent(percent);
   }

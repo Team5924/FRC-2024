@@ -158,7 +158,7 @@ public class RobotContainer {
     //feeder.setDefaultCommand(new FeederSlow(feeder));
     operatorController.b().whileTrue(new FeederSlow(feeder, operatorController::getRightY));
     //feeder.setDefaultCommand(new FeederSlow(feeder, operatorController::getRightY));
-    operatorController.y().whileTrue(new AutoAimWrist(wrist, fieldCam::getRedShooterAngle));
+    operatorController.y().whileTrue(new AutoAimWrist(wrist, wrist::getWristPosition, fieldCam::getRedShooterAngle));
     //driverController.y().onTrue(FollowPath());
 
   }
