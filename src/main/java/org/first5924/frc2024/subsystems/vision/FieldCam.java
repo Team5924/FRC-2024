@@ -66,7 +66,7 @@ public class FieldCam extends SubsystemBase {
     double drop = .5 * -9.81 * Math.pow(time, 2);
 
     // set the x and y values for the arctan
-    double y = FieldConstants.speakerHeight - FieldConstants.exampleShooterHeight + drop;
+    double y = FieldConstants.speakerHeight - FieldConstants.exampleShooterHeight - drop;
     double x = getDistanceToRedSpeakerMeters();
     return Math.atan(y/x);
   }

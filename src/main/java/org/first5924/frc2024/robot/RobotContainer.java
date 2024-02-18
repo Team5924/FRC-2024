@@ -32,7 +32,6 @@ import org.first5924.frc2024.subsystems.intake.IntakeIOTalonFX;
 import org.first5924.frc2024.subsystems.intakePivot.IntakePivot;
 import org.first5924.frc2024.subsystems.intakePivot.IntakePivotIO;
 import org.first5924.frc2024.subsystems.intakePivot.IntakePivotIOTalonFX;
-import org.first5924.frc2024.constants.Constants;
 
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.drive.GyroIO;
@@ -98,7 +97,7 @@ public class RobotContainer {
         fieldCam = new FieldCam();
         dCam = new DetectorCam();
         intake = new Intake(new IntakeIOTalonFX());
-
+        intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
         break;
 
       // Sim robot, instantiate physics sim IO implementations
@@ -213,6 +212,7 @@ public class RobotContainer {
     //   drive.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false), 
     // () -> false,
     // drive);
+    return null;
   }
 }
 
