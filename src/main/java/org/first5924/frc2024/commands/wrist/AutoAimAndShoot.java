@@ -44,7 +44,7 @@ public class AutoAimAndShoot extends Command {
   public void execute() {
 
     while(wristAngle.getAsDouble() - 1 > targetAngle.getAsDouble() && targetAngle.getAsDouble() < wristAngle.getAsDouble() + 1){
-      wrist.setAngle(targetAngle.getAsDouble());
+      wrist.setAngle(-targetAngle.getAsDouble());
       shooter.setPercent(0.875);
     }
     feeder.setPercent(0.875);
@@ -56,6 +56,7 @@ public class AutoAimAndShoot extends Command {
   @Override
   public void end(boolean interrupted) {
     wrist.setPercent(0);
+    shooter.setPercent(0);
   }
 
   // Returns true when the command should end.

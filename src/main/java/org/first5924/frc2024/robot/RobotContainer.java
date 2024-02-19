@@ -18,6 +18,7 @@ import org.first5924.frc2024.commands.drive.SetGyroYaw;
 
 import org.first5924.frc2024.commands.feeder.FeederSlow;
 import org.first5924.frc2024.commands.wrist.AutoAimAndShoot;
+import org.first5924.frc2024.commands.wrist.PIDTest;
 import org.first5924.frc2024.commands.shooter.ShooterOn;
 import org.first5924.frc2024.commands.vision.DriveToNote;
 import org.first5924.frc2024.commands.wrist.RotateWrist;
@@ -172,10 +173,11 @@ public class RobotContainer {
     operatorController.b().whileTrue(new FeederSlow(feeder, operatorController::getRightY));
     //feeder.setDefaultCommand(new FeederSlow(feeder, operatorController::getRightY));
     operatorController.y().whileTrue(new AutoAimAndShoot(feeder, shooter, wrist, wrist::getWristPosition, fieldCam::getRedShooterAngle));
+    operatorController.x().whileTrue(new PIDTest(wrist));
     //driverController.y().onTrue(FollowPath());
     driverController.rightBumper().whileTrue(new Spin(intake));
     intakePivot.setDefaultCommand(new SetPercent(intakePivot, driverController::getRightY));
-
+    wrist.setDefaultCommand(new RotateWrist(wrist, operatorController::getRightY));
   }
 
   //public Command FollowPath()
