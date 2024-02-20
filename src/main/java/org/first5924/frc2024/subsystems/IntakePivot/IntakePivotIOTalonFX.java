@@ -1,5 +1,5 @@
 
-package org.first5924.frc2024.subsystems.intakePivot;
+package org.first5924.frc2024.subsystems.IntakePivot;
 
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
@@ -11,7 +11,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.RelativeEncoder;
 
 import org.first5924.frc2024.constants.IntakePivotConstants;
-import org.first5924.frc2024.subsystems.intakePivot.IntakePivotIO;
+import org.first5924.frc2024.subsystems.IntakePivot.IntakePivotIO;
 
 /** Add your docs here. */
 public class IntakePivotIOTalonFX implements IntakePivotIO {

@@ -6,7 +6,7 @@ package org.first5924.frc2024.commands.intakePivot;
 
 import java.util.function.DoubleSupplier;
 
-import org.first5924.frc2024.subsystems.intakePivot.IntakePivot;
+import org.first5924.frc2024.subsystems.IntakePivot.IntakePivot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
