@@ -2,27 +2,21 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.first5924.frc2024.commands.intakePivot;
-
-import java.util.function.DoubleSupplier;
-
-import org.first5924.frc2024.subsystems.intakePivot.IntakePivot;
+package org.first5924.frc2024.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class SetPercent extends Command {
-  /** Creates a new SetVoltage. */
-
-  private final double mJoystick;
-  private final IntakePivot intakePivot;
+import org.first5924.frc2024.subsystems.intake.Intake;
 
 
-  public SetPercent(IntakePivot intakePivot, DoubleSupplier JoystickY) {
+public class RunIntake extends Command {
+  private final Intake intake;
 
-    this.mJoystick = JoystickY.getAsDouble();
-    this.intakePivot = intakePivot;
-    addRequirements(intakePivot);
+  /** Creates a new Spin. */
+  public RunIntake(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.intake = intake;
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
@@ -32,8 +26,8 @@ public class SetPercent extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intakePivot.setPercent(mJoystick);
-    System.out.println("im executing!!!");
+    intake.setPivotPosition(intake.getIntakeState().getPivotAngle());
+    intake.setRollerVoltage(intake.getIntakeState().getIntakeVoltage());
   }
 
   // Called once the command ends or is interrupted.

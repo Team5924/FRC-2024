@@ -10,15 +10,17 @@ import org.littletonrobotics.junction.AutoLog;
 public interface IntakeIO {
   @AutoLog
   public static class IntakeIOInputs {
-    public double supplyCurrent = 0.0;
     public double rollerMotorTempCelsius = 0.0;
     public double rollerMotorCurrentAmps = 0.0;
+    public double pivotAngleDegrees = 0.0;
+    public double pivotMotorTempCelsius = 0.0;
+    public double pivotMotorCurrentAmps = 0.0;
   }
 
   /** Updates the set of loggable inputs */
   public default void updateInputs(IntakeIOInputs inputs) {}
 
-  public default void setRollerVoltage(double voltage) {}
+  public default void setRollerVoltage(double volts) {}
 
-  public default void setPercent(double percent) {}
+  public default void setPivotPosition(double volts) {}
 }
