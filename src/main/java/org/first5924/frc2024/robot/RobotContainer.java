@@ -30,9 +30,9 @@ import org.first5924.frc2024.commands.intakePivot.SetPercent;
 import org.first5924.frc2024.subsystems.intake.Intake;
 import org.first5924.frc2024.subsystems.intake.IntakeIO;
 import org.first5924.frc2024.subsystems.intake.IntakeIOTalonFX;
-import org.first5924.frc2024.subsystems.IntakePivot.IntakePivot;
-import org.first5924.frc2024.subsystems.IntakePivot.IntakePivotIO;
-import org.first5924.frc2024.subsystems.IntakePivot.IntakePivotIOTalonFX;
+import org.first5924.frc2024.subsystems.intakePivot.IntakePivot;
+import org.first5924.frc2024.subsystems.intakePivot.IntakePivotIO;
+import org.first5924.frc2024.subsystems.intakePivot.IntakePivotIOTalonFX;
 
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.drive.GyroIO;

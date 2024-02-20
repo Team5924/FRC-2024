@@ -50,7 +50,7 @@ public class DriveToNote extends Command {
 
     //visionController.calculate()
     if(v){
-
+      
       drive.drive(visionControllerX.calculate(y.getAsDouble() + 1, 0), 0, visionControllerTheta.calculate(x.getAsDouble() + 1, 0), false);
     }
     else

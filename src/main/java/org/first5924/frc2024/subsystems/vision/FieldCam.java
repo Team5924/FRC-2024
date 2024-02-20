@@ -27,9 +27,12 @@ public class FieldCam extends SubsystemBase {
     //gets the BotPoseArray periodically
     double[] botPoseArray = botPoseTable.getEntry("botpose").getDoubleArray(new double[6]);
     xBotPose = botPoseArray[0];
-    yBotPose = botPoseArray[1];
+    yBotPose = botPoseArray[1]; 
     SmartDashboard.putNumber("Bot Pose X", xBotPose);
     SmartDashboard.putNumber("Bot Pose y", yBotPose);
+    SmartDashboard.putNumber("Distance to speaker meters", getDistanceToRedSpeakerMeters());
+    SmartDashboard.putNumber("Target angle", getRedShooterAngle());
+
     
   }
 

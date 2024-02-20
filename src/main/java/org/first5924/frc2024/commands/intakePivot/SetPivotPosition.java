@@ -7,7 +7,7 @@ package org.first5924.frc2024.commands.intakePivot;
 import javax.swing.text.Position;
 
 import org.first5924.frc2024.constants.IntakePivotConstants;
-import org.first5924.frc2024.subsystems.IntakePivot.IntakePivot;
+import org.first5924.frc2024.subsystems.intakePivot.IntakePivot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;

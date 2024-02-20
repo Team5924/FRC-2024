@@ -45,7 +45,7 @@ public class DetectorCam extends SubsystemBase {
         v = tv.getDouble(v);
         SmartDashboard.putString("table", table.toString());
         SmartDashboard.putNumber("distance", getDistanceToTargetInches());
-        SmartDashboard.putNumber("nomuber of targets in view", GetNumberOfTargets());
+        SmartDashboard.putNumber("number of targets in view", GetNumberOfTargets());
         // System.out.println("BANANA - table: " + table.containsKey("tx") + " / pos: (" + x + ", " + y + ")");
     }
 
