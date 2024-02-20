@@ -5,8 +5,12 @@
 package org.first5924.frc2024.subsystems.intake;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -14,38 +18,71 @@ import org.first5924.frc2024.constants.IntakeConstants;
 
 /** Add your docs here. */
 public class IntakeIOTalonFX implements IntakeIO {
-  private final TalonFX rollerTalon = new TalonFX(IntakeConstants.rollerTalonID);
-  //private final TalonFX pivotTalon = new TalonFX(IntakeConstants.pivotTalonID);
+  private final TalonFX rollerTalon = new TalonFX(IntakeConstants.kRollerTalonId);
+  private final TalonFX pivotTalon = new TalonFX(IntakeConstants.kPivotTalonId);
+
+  private final VoltageOut voltageOut = new VoltageOut(0).withEnableFOC(true);
+  private final PositionVoltage positionVoltage = new PositionVoltage(0).withEnableFOC(true).withSlot(0);
 
   public IntakeIOTalonFX() {
-    TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
+    MotorOutputConfigs rollerMotorOutputConfigs = new MotorOutputConfigs();
+    rollerMotorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
+    rollerMotorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
 
-    MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
-    motorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
-    motorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
-    talonFXConfiguration.MotorOutput = motorOutputConfigs;
+    CurrentLimitsConfigs rollerCurrentLimitsConfigs = new CurrentLimitsConfigs();
+    rollerCurrentLimitsConfigs.SupplyCurrentLimit = 40;
+    rollerCurrentLimitsConfigs.SupplyCurrentThreshold = 40;
+    rollerCurrentLimitsConfigs.SupplyTimeThreshold = 0;
+    rollerCurrentLimitsConfigs.SupplyCurrentLimitEnable = true;
 
-    CurrentLimitsConfigs currentLimitsConfigs = new CurrentLimitsConfigs();
-    currentLimitsConfigs.SupplyCurrentLimit = 40;
-    currentLimitsConfigs.SupplyCurrentThreshold = 40;
-    currentLimitsConfigs.SupplyTimeThreshold = 0;
-    currentLimitsConfigs.SupplyCurrentLimitEnable = true;
-    talonFXConfiguration.CurrentLimits = currentLimitsConfigs;
+    rollerTalon.getConfigurator().apply(
+      new TalonFXConfiguration()
+        .withMotorOutput(rollerMotorOutputConfigs)
+        .withCurrentLimits(rollerCurrentLimitsConfigs)
+    );
 
-    rollerTalon.getConfigurator().apply(talonFXConfiguration);
-    //pivotTalon.getConfigurator().apply(talonFXConfiguration);
+    MotorOutputConfigs pivotMotorOutputConfigs = new MotorOutputConfigs();
+    rollerMotorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
+    rollerMotorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+
+    CurrentLimitsConfigs pivotCurrentLimitsConfigs = new CurrentLimitsConfigs();
+    rollerCurrentLimitsConfigs.SupplyCurrentLimit = 40;
+    rollerCurrentLimitsConfigs.SupplyCurrentThreshold = 40;
+    rollerCurrentLimitsConfigs.SupplyTimeThreshold = 0;
+    rollerCurrentLimitsConfigs.SupplyCurrentLimitEnable = true;
+
+    FeedbackConfigs pivotFeedbackConfigs = new FeedbackConfigs();
+    pivotFeedbackConfigs.SensorToMechanismRatio = IntakeConstants.kEncoderToPivotRatio;
+
+    Slot0Configs pivotSlot0Configs = new Slot0Configs();
+    pivotSlot0Configs.kP = IntakeConstants.kPivotKp;
+
+    pivotTalon.getConfigurator().apply(
+      new TalonFXConfiguration()
+        .withMotorOutput(pivotMotorOutputConfigs)
+        .withCurrentLimits(pivotCurrentLimitsConfigs)
+        .withFeedback(pivotFeedbackConfigs)
+        .withSlot0(pivotSlot0Configs)
+    );
   }
 
   @Override
   public void updateInputs(IntakeIOInputs inputs) {
-    inputs.supplyCurrent = rollerTalon.getSupplyCurrent().getValue();
+    inputs.rollerMotorTempCelsius = rollerTalon.getDeviceTemp().getValueAsDouble();
+    inputs.rollerMotorCurrentAmps = rollerTalon.getSupplyCurrent().getValueAsDouble();
+    inputs.pivotMotorTempCelsius = pivotTalon.getDeviceTemp().getValueAsDouble();
+    inputs.pivotMotorCurrentAmps = pivotTalon.getSupplyCurrent().getValueAsDouble();
+    inputs.pivotAngleDegrees = pivotTalon.getPosition().getValueAsDouble() / 360;
   }
 
   @Override
-  public void setRollerVoltage(double percentSpeed) {
-    rollerTalon.setVoltage(percentSpeed);
+  public void setRollerVoltage(double volts) {
+    rollerTalon.setControl(voltageOut.withOutput(volts));
   }
-  public void setPercent(double percent) {
-    rollerTalon.set(percent);
+
+  @Override
+  public void setPivotPosition(double degrees) {
+    double rotations = degrees * 360;
+    pivotTalon.setControl(positionVoltage.withPosition(rotations));
   }
 }

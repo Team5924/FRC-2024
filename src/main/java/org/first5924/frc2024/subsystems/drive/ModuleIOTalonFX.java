@@ -34,7 +34,7 @@ public class ModuleIOTalonFX implements ModuleIO {
   private final boolean isTurnMotorInverted;
   private final double absoluteEncoderOffsetRad;
 
-  private final VoltageOut voltageOut;
+  private final VoltageOut voltageOut = new VoltageOut(0).withEnableFOC(true);
 
   public ModuleIOTalonFX(int index) {
     switch (index) {
@@ -94,9 +94,9 @@ public class ModuleIOTalonFX implements ModuleIO {
 
     driveTalon.getConfigurator().apply(
       new TalonFXConfiguration()
-      .withMotorOutput(driveMotorOutputConfigs)
-      .withCurrentLimits(driveCurrentLimitsConfigs)
-      .withFeedback(driveFeedbackConfigs)
+        .withMotorOutput(driveMotorOutputConfigs)
+        .withCurrentLimits(driveCurrentLimitsConfigs)
+        .withFeedback(driveFeedbackConfigs)
     );
 
     MotorOutputConfigs turnMotorOutputConfigs = new MotorOutputConfigs();
@@ -117,13 +117,10 @@ public class ModuleIOTalonFX implements ModuleIO {
 
     turnTalon.getConfigurator().apply(
       new TalonFXConfiguration()
-      .withMotorOutput(turnMotorOutputConfigs)
-      .withCurrentLimits(turnCurrentLimitsConfigs)
-      .withFeedback(turnFeedbackConfigs)
+        .withMotorOutput(turnMotorOutputConfigs)
+        .withCurrentLimits(turnCurrentLimitsConfigs)
+        .withFeedback(turnFeedbackConfigs)
     );
-
-    voltageOut = new VoltageOut(0);
-    voltageOut.EnableFOC = true;
   }
 
   public void updateInputs(ModuleIOInputs inputs) {
