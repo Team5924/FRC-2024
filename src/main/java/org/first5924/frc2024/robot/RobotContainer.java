@@ -172,7 +172,7 @@ public class RobotContainer {
     //feeder.setDefaultCommand(new FeederSlow(feeder));
     operatorController.b().whileTrue(new FeederSlow(feeder, operatorController::getRightY));
     //feeder.setDefaultCommand(new FeederSlow(feeder, operatorController::getRightY));
-    operatorController.y().whileTrue(new AutoAimAndShoot(feeder, shooter, wrist, wrist::getWristPosition, fieldCam::getRedShooterAngle));
+    operatorController.y().whileTrue(new AutoAimAndShoot(feeder, shooter, wrist, wrist::getWristAngle, fieldCam::getRedShooterAngle));
     operatorController.x().whileTrue(new PIDTest(wrist));
     //driverController.y().onTrue(FollowPath());
     driverController.rightBumper().whileTrue(new Spin(intake));
