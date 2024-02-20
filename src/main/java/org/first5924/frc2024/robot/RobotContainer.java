@@ -21,6 +21,7 @@ import org.first5924.frc2024.commands.wrist.AutoAimAndShoot;
 import org.first5924.frc2024.commands.wrist.PIDTest;
 import org.first5924.frc2024.commands.shooter.ShooterOn;
 import org.first5924.frc2024.commands.vision.DriveToNote;
+import org.first5924.frc2024.commands.vision.TurnToSpeaker;
 import org.first5924.frc2024.commands.wrist.RotateWrist;
 import org.first5924.frc2024.constants.DriveConstants;
 import org.first5924.frc2024.constants.RobotConstants;
@@ -176,6 +177,7 @@ public class RobotContainer {
     operatorController.x().whileTrue(new PIDTest(wrist));
     //driverController.y().onTrue(FollowPath());
     driverController.rightBumper().whileTrue(new Spin(intake));
+    driverController.leftTrigger().whileTrue(new TurnToSpeaker(drive, fieldCam::getBotYaw, fieldCam::getYawToRedSpeaker));
     intakePivot.setDefaultCommand(new SetPercent(intakePivot, driverController::getRightY));
     wrist.setDefaultCommand(new RotateWrist(wrist, operatorController::getRightY));
   }

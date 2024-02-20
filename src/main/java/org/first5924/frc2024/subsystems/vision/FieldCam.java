@@ -18,6 +18,7 @@ public class FieldCam extends SubsystemBase {
 
   private double xBotPose = -1;
   private double yBotPose = -1;
+  private double yawBotPose = -1;
 
     LimelightResults llresults;
   public FieldCam() {}
@@ -28,6 +29,7 @@ public class FieldCam extends SubsystemBase {
     double[] botPoseArray = botPoseTable.getEntry("botpose").getDoubleArray(new double[6]);
     xBotPose = botPoseArray[0];
     yBotPose = botPoseArray[1]; 
+    yawBotPose = botPoseArray[5];
     SmartDashboard.putNumber("Bot Pose X", xBotPose);
     SmartDashboard.putNumber("Bot Pose y", yBotPose);
     SmartDashboard.putNumber("Distance to speaker meters", getDistanceToRedSpeakerMeters());
@@ -83,6 +85,22 @@ public class FieldCam extends SubsystemBase {
     // set the x and y values for the arctan
     double y = FieldConstants.speakerHeight - FieldConstants.exampleShooterHeight + drop;
     double x = getDistanceToBlueSpeakerMeters();
+    return Math.atan(y/x);
+  }
+
+  public double getBotYaw(){
+    return yawBotPose;
+  }
+
+  public double getYawToRedSpeaker(){
+    double x = FieldConstants.xRedSpeakerMeters - xBotPose;
+    double y = FieldConstants.ySpeakerMeters - yBotPose;
+    return Math.atan(y/x);
+  }
+  
+  public double getYawToBlueSpeaker(){
+    double x = FieldConstants.xBlueSpeakerMeters - xBotPose;
+    double y = FieldConstants.ySpeakerMeters - yBotPose;
     return Math.atan(y/x);
   }
   
