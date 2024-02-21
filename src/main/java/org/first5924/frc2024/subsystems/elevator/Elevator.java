@@ -28,12 +28,12 @@ public class Elevator extends SubsystemBase {
   }
 
   public double getMotorTempCelsius() {
-    return inputs.motorTempCelsius;
+    return inputs.leftMotorTempCelsius;
   } 
 
 
   public double getMotorCurrentAmps() {
-    return inputs.motorCurrentAmps;
+    return inputs.leftMotorCurrentAmps;
   } 
 
 
@@ -43,7 +43,7 @@ public class Elevator extends SubsystemBase {
 
 
   public double getMotorPosition() {
-    return inputs.motorPosition;
+    return inputs.laserCanElevatorHeightMeters;
   } 
 
 

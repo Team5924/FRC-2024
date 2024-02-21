@@ -6,27 +6,27 @@ package org.first5924.frc2024.subsystems.elevator;
 
 import org.littletonrobotics.junction.AutoLog;
 
-import au.grapplerobotics.LaserCan.Measurement;
-
 public interface ElevatorIO {
-    @AutoLog
-    public static class ElevatorIOInputs {
-        public double motorTempCelsius = 0.0;
-        public double motorCurrentAmps = 0.0;
-        public double motorCurrentVelocity = 0.0;
-        public double motorPosition = 0.0;
-        public double lastAxleEncoderPosition = 0.0;
-        public double height = 0;
-    }
+  @AutoLog
+  public static class ElevatorIOInputs {
+    public double leftMotorTempCelsius = 0.0;
+    public double leftMotorCurrentAmps = 0.0;
+    public double rightMotorTempCelsius = 0.0;
+    public double rightMotorCurrentAmps = 0.0;
+    public double spoolPosition = 0.0;
+    public double laserCanElevatorHeightMeters = 0.0;
+  }
 
-    
-    /** Updates the set of loggable inputs. */
-    public default void updateInputs(ElevatorIOInputs inputs) {
-    }
+  /** Updates the set of loggable inputs. */
+  public default void updateInputs(ElevatorIOInputs inputs) {
+  }
 
-    public default void setPercent(double percent) {
-    }
+  public default void setElevatorHeight(double meters) {
+  }
 
-    public default void setVoltage(double volts) {
-    }
+  public default void setVoltage(double volts) {
+  }
+
+  public default void setEncoder(double spoolRotations) {
+  }
 }
