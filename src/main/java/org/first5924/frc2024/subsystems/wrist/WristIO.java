@@ -12,20 +12,16 @@ public interface WristIO {
     public static class WristIOInputs {
         public double motorTempCelsius = 0.0;
         public double motorCurrentAmps = 0.0;
-        public double motorCurrentVelocity = 0.0;
-        public double encoderPosition = 0.0;
-        public double wristAngle = 0.0;
+        public double wristAngleDegrees = 0.0;
     }
 
     /** Updates the set of loggable inputs. */
     public default void updateInputs(WristIOInputs inputs) {
     }
 
-    public default void setPercent(double percent) {
-    }
-    public default void setVoltage(double percent) {
+    public default void setVoltage(double volts) {
     }
 
-    public default void setAngle(double targetAngle){
+    public default void setAngle(double degrees) {
     }
 }

@@ -28,7 +28,7 @@ public class ModuleIOTalonFX implements ModuleIO {
   private final TalonFX driveTalon;
   private final TalonFX turnTalon;
 
-  private final CANcoder turnAbsoluteEncoder;
+  private final CANcoder turnCanCoder;
 
   private final boolean isDriveMotorInverted;
   private final boolean isTurnMotorInverted;
@@ -39,45 +39,45 @@ public class ModuleIOTalonFX implements ModuleIO {
   public ModuleIOTalonFX(int index) {
     switch (index) {
       case 0:
-        driveTalon = new TalonFX(DriveConstants.kLeftFrontDriveSparkId, "drive");
-        turnTalon = new TalonFX(DriveConstants.kLeftFrontTurnSparkId, "drive");
-        turnAbsoluteEncoder = new CANcoder(DriveConstants.kLeftFrontCANCoderId, "drive");
+        driveTalon = new TalonFX(DriveConstants.kLeftFrontDriveTalonId, "drive");
+        turnTalon = new TalonFX(DriveConstants.kLeftFrontTurnTalonId, "drive");
+        turnCanCoder = new CANcoder(DriveConstants.kLeftFrontCanCoderId, "drive");
         isDriveMotorInverted = false;
         isTurnMotorInverted = true;
-        absoluteEncoderOffsetRad = DriveConstants.kLeftFrontAbsoluteEncoderOffsetRad;
+        absoluteEncoderOffsetRad = DriveConstants.kLeftFrontCanCoderOffsetRad;
         break;
       case 1:
-        driveTalon = new TalonFX(DriveConstants.kRightFrontDriveSparkId, "drive");
-        turnTalon = new TalonFX(DriveConstants.kRightFrontTurnSparkId, "drive");
-        turnAbsoluteEncoder = new CANcoder(DriveConstants.kRightFrontCANCoderId, "drive");
+        driveTalon = new TalonFX(DriveConstants.kRightFrontDriveTalonId, "drive");
+        turnTalon = new TalonFX(DriveConstants.kRightFrontTurnTalonId, "drive");
+        turnCanCoder = new CANcoder(DriveConstants.kRightFrontCanCoderId, "drive");
         isDriveMotorInverted = true;
         isTurnMotorInverted = true;
-        absoluteEncoderOffsetRad = DriveConstants.kRightFrontAbsoluteEncoderOffsetRad;
+        absoluteEncoderOffsetRad = DriveConstants.kRightFrontCanCoderOffsetRad;
         break;
       case 2:
-        driveTalon = new TalonFX(DriveConstants.kLeftBackDriveSparkId, "drive");
-        turnTalon = new TalonFX(DriveConstants.kLeftBackTurnSparkId, "drive");
-        turnAbsoluteEncoder = new CANcoder(DriveConstants.kLeftBackCANCoderId, "drive");
+        driveTalon = new TalonFX(DriveConstants.kLeftBackDriveTalonId, "drive");
+        turnTalon = new TalonFX(DriveConstants.kLeftBackTurnTalonId, "drive");
+        turnCanCoder = new CANcoder(DriveConstants.kLeftBackCanCoderId, "drive");
         isDriveMotorInverted = false;
         isTurnMotorInverted = true;
-        absoluteEncoderOffsetRad = DriveConstants.kLeftBackAbsoluteEncoderOffsetRad;
+        absoluteEncoderOffsetRad = DriveConstants.kLeftBackCanCoderOffsetRad;
         break;
       case 3:
-        driveTalon = new TalonFX(DriveConstants.kRightBackDriveSparkId, "drive");
-        turnTalon = new TalonFX(DriveConstants.kRightBackTurnSparkId, "drive");
-        turnAbsoluteEncoder = new CANcoder(DriveConstants.kRightBackCANCoderId, "drive");
+        driveTalon = new TalonFX(DriveConstants.kRightBackDriveTalonId, "drive");
+        turnTalon = new TalonFX(DriveConstants.kRightBackTurnTalonId, "drive");
+        turnCanCoder = new CANcoder(DriveConstants.kRightBackCanCoderId, "drive");
         isDriveMotorInverted = true;
         isTurnMotorInverted = true;
-        absoluteEncoderOffsetRad = DriveConstants.kRightBackAbsoluteEncoderOffsetRad;
+        absoluteEncoderOffsetRad = DriveConstants.kRightBackCanCoderOffsetRad;
         break;
       default:
-        throw new RuntimeException("Invalid module index for ModuleIOSparkMax");
+        throw new RuntimeException("Invalid module index for ModuleIOTalonFX");
     }
 
     MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
     magnetSensorConfigs.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
     magnetSensorConfigs.MagnetOffset = -Units.radiansToRotations(absoluteEncoderOffsetRad);
-    turnAbsoluteEncoder.getConfigurator().apply(magnetSensorConfigs);
+    turnCanCoder.getConfigurator().apply(magnetSensorConfigs);
 
     MotorOutputConfigs driveMotorOutputConfigs = new MotorOutputConfigs();
     driveMotorOutputConfigs.Inverted = isDriveMotorInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
@@ -110,10 +110,10 @@ public class ModuleIOTalonFX implements ModuleIO {
     turnCurrentLimitsConfigs.SupplyTimeThreshold = 0.15;
 
     FeedbackConfigs turnFeedbackConfigs = new FeedbackConfigs();
-    turnFeedbackConfigs.FeedbackRemoteSensorID = turnAbsoluteEncoder.getDeviceID();
+    turnFeedbackConfigs.FeedbackRemoteSensorID = turnCanCoder.getDeviceID();
     turnFeedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-    turnFeedbackConfigs.RotorToSensorRatio = 1;
-    turnFeedbackConfigs.SensorToMechanismRatio = DriveConstants.kEncoderToTurnRatio;
+    turnFeedbackConfigs.RotorToSensorRatio = DriveConstants.kEncoderToTurnRatio;
+    turnFeedbackConfigs.SensorToMechanismRatio = 1;
 
     turnTalon.getConfigurator().apply(
       new TalonFXConfiguration()
@@ -129,7 +129,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     inputs.driveCurrentAmps = driveTalon.getSupplyCurrent().getValueAsDouble();
     inputs.driveTempCelcius = driveTalon.getDeviceTemp().getValueAsDouble();
 
-    inputs.turnAbsolutePositionRad = Units.rotationsToRadians(turnAbsoluteEncoder.getAbsolutePosition().getValueAsDouble());
+    inputs.turnAbsolutePositionRad = Units.rotationsToRadians(turnCanCoder.getAbsolutePosition().getValueAsDouble());
     inputs.turnCurrentAmps = turnTalon.getSupplyCurrent().getValueAsDouble();
     inputs.turnTempCelcius = turnTalon.getDeviceTemp().getValueAsDouble();
   }

@@ -11,7 +11,7 @@ public class IntakeConstants {
 
   public static final double kEncoderToPivotRatio = 0.0;
 
-  public static final double kPivotKp = 1.0;
+  public static final double kPivotKP = 1.0;
 
   public static final double kFloorPivotAngleDegrees = 0;
   public static final double kFloorRollerVoltage = 0;
