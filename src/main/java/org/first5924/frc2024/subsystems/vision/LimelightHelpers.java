@@ -1,5 +1,6 @@
-package org.first5924.lib;
 //LimelightHelpers v1.2.1 (March 1, 2023)
+
+package org.first5924.frc2024.subsystems.vision;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;

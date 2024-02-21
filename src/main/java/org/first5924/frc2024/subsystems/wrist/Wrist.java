@@ -23,7 +23,20 @@ public class Wrist extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  public double getAngleDegrees() {
+    return inputs.wristAngleDegrees;
+  }
+
   public void setAngle(double degrees) {
     io.setAngle(degrees);
   }
+
+  public void setVoltage(double volts) {
+    io.setVoltage(volts);
+  }
+
+  public void setPercent(double percent) {
+    io.setPercent(percent);
+  }  
+
 }

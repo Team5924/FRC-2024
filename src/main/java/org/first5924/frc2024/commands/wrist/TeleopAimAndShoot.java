@@ -13,10 +13,9 @@ import org.first5924.frc2024.subsystems.shooter.Shooter;
 
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class AutoAimAndShoot extends Command {
+public class TeleopAimAndShoot extends Command {
   /** Creates a new SetWristAngle. */
   private final Wrist wrist;
   private final DoubleSupplier targetAngle;
@@ -25,7 +24,7 @@ public class AutoAimAndShoot extends Command {
   private final Feeder feeder;
   PIDController wristController;
 
-  public AutoAimAndShoot(Feeder feeder, Shooter shooter, Wrist wrist, DoubleSupplier wristAngle, DoubleSupplier targetAngle) {
+  public TeleopAimAndShoot(Feeder feeder, Shooter shooter, Wrist wrist, DoubleSupplier wristAngle, DoubleSupplier targetAngle) {
     this.wrist = wrist;
     this.shooter = shooter;
     this.targetAngle = targetAngle;
@@ -57,17 +56,14 @@ public class AutoAimAndShoot extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    wrist.setPercent(0);
+    wrist.setVoltage(0);
     shooter.setPercent(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (feeder.isNoteIn()) {
-      return false;
-    } else { 
-      return true;
-    }
+    
+    return false;
   }
 }

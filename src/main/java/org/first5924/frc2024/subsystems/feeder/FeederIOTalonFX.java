@@ -8,14 +8,19 @@ import org.first5924.frc2024.constants.FeederConstants;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import au.grapplerobotics.LaserCan;
+import au.grapplerobotics.LaserCan.RangingMode;
 
 /** Add your docs here. */
 public class FeederIOTalonFX implements FeederIO {
     //private final CANSparkMax mLeaderSpark = SparkMaxFactory.createSparkMax(PivotConstants.kLeaderSparkPort, MotorType.kBrushless, IdleMode.kBrake, 42);
     private final TalonFX mMotor = new TalonFX(FeederConstants.motorID);
-    //private final LaserCan lc = new LaserCan(FeederConstants.laserID);
+    private final LaserCan lc = new LaserCan(FeederConstants.laserID);
     public FeederIOTalonFX() {
-    
+        try {
+            lc.setRangingMode(RangingMode.LONG);
+        } catch(Exception e) {
+            System.out.println("ERR: " + e.toString());
+        }
     }
 
     @Override
@@ -23,7 +28,12 @@ public class FeederIOTalonFX implements FeederIO {
         inputs.motorTempCelsius = mMotor.getDeviceTemp().getValueAsDouble();
         inputs.motorCurrentAmps = mMotor.getSupplyCurrent().getValueAsDouble();
         inputs.motorCurrentVelocity = mMotor.getVelocity().getValueAsDouble();
-        //inputs.distanceToNextObject = lc.getMeasurement().distance_mm;
+        // inputs.distanceToNextObject = 400;
+        if(lc.getMeasurement() != null && lc.getMeasurement().status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
+            inputs.distanceToNextObject = lc.getMeasurement().distance_mm;
+        } else {
+            inputs.distanceToNextObject = 400;
+        }
     
     }
 

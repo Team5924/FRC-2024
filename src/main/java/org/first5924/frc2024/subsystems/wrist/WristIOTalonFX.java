@@ -72,5 +72,9 @@ public class WristIOTalonFX implements WristIO {
     double rotations = degrees / 360;
     talon.setControl(positionVoltage.withPosition(rotations));
   }
+  
+  public void setPercent(double percent) {
+    talon.set(percent);
+  }
 }
 

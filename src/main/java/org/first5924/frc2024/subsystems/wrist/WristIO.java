@@ -24,4 +24,8 @@ public interface WristIO {
 
     public default void setAngle(double degrees) {
     }
+
+    public default void setPercent(double percent) {
+        
+    }
 }
