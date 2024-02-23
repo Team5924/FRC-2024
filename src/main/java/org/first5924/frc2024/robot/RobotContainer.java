@@ -17,6 +17,7 @@ import org.first5924.frc2024.commands.wrist.AutoAimWrist;
 import org.first5924.frc2024.commands.shooter.ShooterOn;
 import org.first5924.frc2024.commands.vision.DriveToNote;
 import org.first5924.frc2024.commands.wrist.RotateWrist;
+import org.first5924.frc2024.commands.elevator.RunElevator;
 import org.first5924.frc2024.constants.RobotConstants;
 import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
 import org.first5924.frc2024.commands.intake.RunIntake;
@@ -41,6 +42,9 @@ import org.first5924.frc2024.subsystems.wrist.Wrist;
 import org.first5924.frc2024.subsystems.wrist.WristIO;
 import org.first5924.frc2024.subsystems.wrist.WristIOTalonFX;
 import org.first5924.frc2024.subsystems.drive.ModuleIOTalonFX;
+import org.first5924.frc2024.subsystems.elevator.Elevator;
+import org.first5924.frc2024.subsystems.elevator.ElevatorIO;
+import org.first5924.frc2024.subsystems.elevator.ElevatorIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 
@@ -60,6 +64,8 @@ public class RobotContainer {
   private final DetectorCam dCam;
   private final FieldCam fieldCam;
   private final Intake intake;
+  private final Elevator elevator;
+  //private final Vision vision;
 
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
@@ -84,6 +90,7 @@ public class RobotContainer {
         fieldCam = new FieldCam();
         dCam = new DetectorCam();
         intake = new Intake(new IntakeIOTalonFX());
+        elevator = new Elevator(new ElevatorIOTalonFX());
         break;
 
       // Sim robot, instantiate physics sim IO implementations
@@ -101,6 +108,7 @@ public class RobotContainer {
         fieldCam = new FieldCam();
         dCam = new DetectorCam();
         intake = new Intake(new IntakeIO() {});
+        elevator = new Elevator(new ElevatorIO() {});
         break;
 
       // Replayed robot, disable IO implementations
@@ -118,6 +126,7 @@ public class RobotContainer {
         fieldCam = new FieldCam();
         dCam = new DetectorCam();
         intake = new Intake(new IntakeIO() {});
+        elevator = new Elevator(new ElevatorIO() {});
         break;
     }
 
@@ -161,6 +170,7 @@ public class RobotContainer {
     operatorController.rightBumper().onTrue(new SetIntakeState(intake, IntakeState.FLOOR));
     operatorController.rightTrigger(0.75).onTrue(new SetIntakeState(intake, IntakeState.EJECT));
     operatorController.rightTrigger(0.75).onFalse(new SetIntakeState(intake, intake.getIntakeStateBeforeEject()));
+    elevator.setDefaultCommand(new RunElevator(elevator, operatorController::getLeftY));
   }
 
   //public Command FollowPath()
