@@ -2,23 +2,23 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.first5924.frc2024.commands.elevator;
-
-import java.util.function.DoubleSupplier;
-
-import org.first5924.frc2024.subsystems.elevator.Elevator;
+package org.first5924.frc2024.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class RunElevator extends Command {
-  /** Creates a new SetPercent. (still need joystick y setup) */
-  private final Elevator elevator;
-  private final DoubleSupplier mJoystickY;
-  public RunElevator(Elevator elevator, DoubleSupplier joystickY) {
-    this.elevator = elevator;
-    mJoystickY = joystickY;
+import org.first5924.frc2024.subsystems.intake.Intake;
+
+
+public class SetRollerVoltage extends Command {
+  private final Intake intake;
+  private final double volts;
+
+  /** Creates a new Spin. */
+  public SetRollerVoltage(Intake intake, double volts) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(elevator);
+    this.intake = intake;
+    this.volts = volts;
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
@@ -28,12 +28,14 @@ public class RunElevator extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // elevator.setPercent(mJoystickY.getAsDouble());
+    intake.setRollerVoltage(volts);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    intake.setRollerVoltage(0);
+  }
 
   // Returns true when the command should end.
   @Override

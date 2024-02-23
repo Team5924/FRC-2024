@@ -7,7 +7,6 @@ package org.first5924.frc2024.subsystems.intake;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
-import org.first5924.frc2024.subsystems.intake.IntakeIOInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
@@ -49,5 +48,9 @@ public class Intake extends SubsystemBase {
 
   public void setPivotPosition(double degrees) {
     io.setPivotPosition(degrees);
+  }
+
+  public void setPivotVoltage(double volts) {
+    io.setPivotVoltage(volts);
   }
 }

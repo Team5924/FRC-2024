@@ -22,6 +22,8 @@ import org.first5924.frc2024.constants.RobotConstants;
 import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
 import org.first5924.frc2024.commands.intake.RunIntake;
 import org.first5924.frc2024.commands.intake.SetIntakeState;
+import org.first5924.frc2024.commands.intake.SetPivotVoltage;
+import org.first5924.frc2024.commands.intake.SetRollerVoltage;
 import org.first5924.frc2024.subsystems.intake.Intake;
 import org.first5924.frc2024.subsystems.intake.IntakeIO;
 import org.first5924.frc2024.subsystems.intake.IntakeIOTalonFX;
@@ -165,11 +167,14 @@ public class RobotContainer {
     //feeder.setDefaultCommand(new FeederSlow(feeder, operatorController::getRightY));
     operatorController.y().whileTrue(new AutoAimWrist(wrist, wrist::getWristPosition, fieldCam::getRedShooterAngle));
     //driverController.y().onTrue(FollowPath());
-    intake.setDefaultCommand(new RunIntake(intake));
-    operatorController.leftBumper().onTrue(new SetIntakeState(intake, IntakeState.RETRACT));
-    operatorController.rightBumper().onTrue(new SetIntakeState(intake, IntakeState.FLOOR));
-    operatorController.rightTrigger(0.75).onTrue(new SetIntakeState(intake, IntakeState.EJECT));
-    operatorController.rightTrigger(0.75).onFalse(new SetIntakeState(intake, intake.getIntakeStateBeforeEject()));
+    // intake.setDefaultCommand(new RunIntake(intake));
+    // operatorController.leftBumper().onTrue(new SetIntakeState(intake, IntakeState.RETRACT));
+    // operatorController.rightBumper().onTrue(new SetIntakeState(intake, IntakeState.FLOOR));
+    // operatorController.rightTrigger(0.75).onTrue(new SetIntakeState(intake, IntakeState.EJECT));
+    // operatorController.rightTrigger(0.75).onFalse(new SetIntakeState(intake, intake.getIntakeStateBeforeEject()));
+    operatorController.a().whileTrue(new SetRollerVoltage(intake, 2));
+    operatorController.b().whileTrue(new SetPivotVoltage(intake, 2));
+    operatorController.x().whileTrue(new SetPivotVoltage(intake, -2));
     elevator.setDefaultCommand(new RunElevator(elevator, operatorController::getLeftY));
   }
 
