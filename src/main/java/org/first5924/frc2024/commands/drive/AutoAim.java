@@ -2,21 +2,13 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.first5924.frc2024.commands.wrist;
-
-import org.first5924.frc2024.subsystems.wrist.Wrist;
+package org.first5924.frc2024.commands.drive;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class SetWristAngle extends Command {
-  /** Creates a new SetWristAngle. */
-  private final Wrist wrist;
-  private final double Angle;
-
-  public SetWristAngle(Wrist wrist, double angle) {
-    this.wrist = wrist;
-    Angle = angle;
-    addRequirements(wrist);
+public class AutoAim extends Command {
+  /** Creates a new AutoAim. */
+  public AutoAim() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -26,15 +18,11 @@ public class SetWristAngle extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    wrist.setAngle(Angle);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    wrist.setPercent(0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

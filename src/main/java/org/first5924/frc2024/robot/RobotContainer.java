@@ -4,8 +4,6 @@
 
 package org.first5924.frc2024.robot;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -17,13 +15,23 @@ import java.util.function.BooleanSupplier;
 
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
+
 import org.first5924.frc2024.commands.feeder.FeederSlow;
-
+import org.first5924.frc2024.commands.wrist.AutoAimWrist;
 import org.first5924.frc2024.commands.shooter.ShooterOn;
+import org.first5924.frc2024.commands.vision.DriveToNote;
 import org.first5924.frc2024.commands.wrist.RotateWrist;
-import org.first5924.frc2024.constants.DriveConstants;
-
+import org.first5924.frc2024.commands.elevator.RunElevator;
 import org.first5924.frc2024.constants.RobotConstants;
+import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
+import org.first5924.frc2024.commands.intake.RunIntake;
+import org.first5924.frc2024.commands.intake.SetIntakeState;
+import org.first5924.frc2024.commands.intake.SetPivotVoltage;
+import org.first5924.frc2024.commands.intake.SetRollerVoltage;
+import org.first5924.frc2024.subsystems.intake.Intake;
+import org.first5924.frc2024.subsystems.intake.IntakeIO;
+import org.first5924.frc2024.subsystems.intake.IntakeIOTalonFX;
+
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.drive.GyroIO;
 import org.first5924.frc2024.subsystems.drive.GyroIOPigeon2;
@@ -31,16 +39,18 @@ import org.first5924.frc2024.subsystems.drive.ModuleIO;
 import org.first5924.frc2024.subsystems.feeder.Feeder;
 import org.first5924.frc2024.subsystems.feeder.FeederIO;
 import org.first5924.frc2024.subsystems.feeder.FeederIOTalonFX;
-import org.littletonrobotics.junction.Logger;
 import org.first5924.frc2024.subsystems.shooter.Shooter;
 import org.first5924.frc2024.subsystems.shooter.ShooterIO;
 import org.first5924.frc2024.subsystems.shooter.ShooterIOTalonFX;
-
+import org.first5924.frc2024.subsystems.vision.DetectorCam;
+import org.first5924.frc2024.subsystems.vision.FieldCam;
 import org.first5924.frc2024.subsystems.wrist.Wrist;
 import org.first5924.frc2024.subsystems.wrist.WristIO;
 import org.first5924.frc2024.subsystems.wrist.WristIOTalonFX;
 import org.first5924.frc2024.subsystems.drive.ModuleIOTalonFX;
-import org.first5924.frc2024.subsystems.vision.Vision;
+import org.first5924.frc2024.subsystems.elevator.Elevator;
+import org.first5924.frc2024.subsystems.elevator.ElevatorIO;
+import org.first5924.frc2024.subsystems.elevator.ElevatorIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 
@@ -52,22 +62,24 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
+
   // private final Feeder feeder;
   private final Shooter shooter;
   private final Wrist wrist;
   private final Drive drive;
-  private final Vision vision;
-
+  private final DetectorCam dCam;
+  private final FieldCam fieldCam;
+  private final Intake intake;
+  private final Elevator elevator;
+  // private final Vision vision;
 
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
-
   private final LoggedDashboardChooser<Boolean> swerveModeChooser = new LoggedDashboardChooser<>("Swerve Mode Chooser");
- // private final SendableChooser<Command> autoModeChooser;
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    
     switch (RobotConstants.kCurrentMode) {
       // Real robot, instantiate hardware IO implementations
       case REAL:
@@ -82,15 +94,19 @@ public class RobotContainer {
         );
 
         // feeder = new Feeder(new FeederIOTalonFX());
-        vision = new Vision();
+        // vision = new Vision();
 
+        // feeder = new Feeder(new FeederIOTalonFX());
+        fieldCam = new FieldCam();
+        dCam = new DetectorCam();
+        intake = new Intake(new IntakeIOTalonFX());
+        elevator = new Elevator(new ElevatorIOTalonFX());
         break;
 
       // Sim robot, instantiate physics sim IO implementations
       case SIM:
         wrist = new Wrist(new WristIO() {});
         drive = new Drive(
-
           new GyroIO() {},
           new ModuleIO() {},
           new ModuleIO() {},
@@ -99,7 +115,10 @@ public class RobotContainer {
         );
         // feeder = new Feeder(new FeederIO() {});
         shooter = new Shooter(new ShooterIO() {});
-        vision = new Vision();
+        fieldCam = new FieldCam();
+        dCam = new DetectorCam();
+        intake = new Intake(new IntakeIO() {});
+        elevator = new Elevator(new ElevatorIO() {});
         break;
 
       // Replayed robot, disable IO implementations
@@ -114,13 +133,20 @@ public class RobotContainer {
           new ModuleIOTalonFX(3)
         );
         // feeder = new Feeder(new FeederIO() {});
-        vision = new Vision();
+        // vision = new Vision();
+        // feeder = new Feeder(new FeederIO() {});
+        fieldCam = new FieldCam();
+        dCam = new DetectorCam();
+        intake = new Intake(new IntakeIO() {});
+        elevator = new Elevator(new ElevatorIO() {});
         break;
     }
 
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
     // Logger.recordOutput("Is Note In", feeder.isNoteIn());
+
+    //Logger.recordOutput("Is Note In", feeder.isNoteIn());
     // SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
     // autoModeChooser = null;
     // Configure the button bindings
@@ -135,7 +161,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     operatorController.a().whileTrue(new ShooterOn(shooter));
-    // wrist.setDefaultCommand(new RotateWrist(wrist, driverController::getRightY));
+    wrist.setDefaultCommand(new RotateWrist(wrist, operatorController::getLeftY));
     drive.setDefaultCommand(new DriveWithJoysticks(
       drive,
       driverController::getLeftX,
@@ -162,8 +188,23 @@ public class RobotContainer {
     driverController.a().onTrue(new SetGyroYaw(drive, 0));
     // feeder.setDefaultCommand(new FeederSlow(feeder));
 
+    //
+    // THIS IS TEMPORARY, IT WILL BE IN AUTONOMOUS
+    driverController.b().onTrue(new DriveToNote(dCam::getNoteX, dCam::getNoteY, dCam.hasTarget(), drive));
+    //feeder.setDefaultCommand(new FeederSlow(feeder));
+    // operatorController.b().whileTrue(new FeederSlow(feeder, operatorController::getRightY));
+    //feeder.setDefaultCommand(new FeederSlow(feeder, operatorController::getRightY));
+    operatorController.y().whileTrue(new AutoAimWrist(wrist, wrist::getWristPosition, fieldCam::getRedShooterAngle));
     //driverController.y().onTrue(FollowPath());
-
+    // intake.setDefaultCommand(new RunIntake(intake));
+    // operatorController.leftBumper().onTrue(new SetIntakeState(intake, IntakeState.RETRACT));
+    // operatorController.rightBumper().onTrue(new SetIntakeState(intake, IntakeState.FLOOR));
+    // operatorController.rightTrigger(0.75).onTrue(new SetIntakeState(intake, IntakeState.EJECT));
+    // operatorController.rightTrigger(0.75).onFalse(new SetIntakeState(intake, intake.getIntakeStateBeforeEject()));
+    operatorController.a().whileTrue(new SetRollerVoltage(intake, 2));
+    operatorController.b().whileTrue(new SetPivotVoltage(intake, 2));
+    operatorController.x().whileTrue(new SetPivotVoltage(intake, -2));
+    elevator.setDefaultCommand(new RunElevator(elevator, operatorController::getLeftY));
   }
 
   //public Command FollowPath()

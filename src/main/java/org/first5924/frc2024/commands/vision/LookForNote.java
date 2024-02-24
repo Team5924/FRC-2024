@@ -2,19 +2,27 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.first5924.frc2024.commands.shooter;
+package org.first5924.frc2024.commands.vision;
+
+import org.first5924.frc2024.subsystems.drive.Drive;
+import org.first5924.frc2024.subsystems.vision.DetectorCam;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import org.first5924.frc2024.subsystems.shooter.Shooter;
 
-public class ShooterOn extends Command {
-  /** Creates a new ShooterOn. */
-  private final Shooter shooter;
 
-  public ShooterOn(Shooter shooter) {
-    this.shooter = shooter;
+public class LookForNote extends Command {
+  /** Creates a new LookForNote. */
+
+  private final Drive drive;
+  private final DetectorCam dCam;
+
+  public LookForNote(DetectorCam dCam, Drive drive) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter);
+    this.dCam = dCam;
+    this.drive = drive;
+
+    addRequirements(dCam, drive);
+
   }
 
   // Called when the command is initially scheduled.
@@ -24,14 +32,18 @@ public class ShooterOn extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setPercent(1);
+    drive.drive(
+      0,
+      0,
+     0.3,
+      false
+    );
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    shooter.setPercent(0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

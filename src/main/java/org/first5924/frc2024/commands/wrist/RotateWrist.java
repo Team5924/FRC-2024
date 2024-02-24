@@ -1,8 +1,8 @@
-
 package org.first5924.frc2024.commands.wrist;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.math.MathUtil;
 import org.first5924.frc2024.subsystems.wrist.Wrist;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,7 +27,7 @@ public class RotateWrist extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    wrist.setPercent(mJoystick.getAsDouble());
+    wrist.setPercent(MathUtil.applyDeadband(mJoystick.getAsDouble(), 0.2));
   }
 
   // Called once the command ends or is interrupted.
