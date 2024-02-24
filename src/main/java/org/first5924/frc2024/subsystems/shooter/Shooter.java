@@ -23,34 +23,8 @@ public class Shooter extends SubsystemBase {
     Logger.processInputs("Shooter", inputs);
     // This method will be called once per scheduler run
   }
-  
-  public double getUpperMotorTempCelsius() {
-    return inputs.upperMotorTempCelsius;
-  }
-
-    public double getLowerMotorTempCelsius() {
-    return inputs.lowerMotorTempCelsius;
-  }
-
-    public double getUpperMotorCurrentAmps() {
-    return inputs.upperMotorCurrentAmps;
-  }
-
-    public double getLowerMotorCurrentAmps() {
-    return inputs.lowerMotorCurrentAmps;
-  }
-
-    public double getUpperMotorCurrentVelocity() {
-    return inputs.upperMotorCurrentVelocity;
-  }
-
-    public double getLowerMotorCurrentVelocity() {
-    return inputs.lowerMotorCurrentVelocity;
-  }
 
   public void setPercent(double percent) {
     io.setPercent(percent);
   }
-
-
 }

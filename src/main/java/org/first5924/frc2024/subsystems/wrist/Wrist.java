@@ -5,16 +5,12 @@
 package org.first5924.frc2024.subsystems.wrist;
 
 import org.littletonrobotics.junction.Logger;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Wrist extends SubsystemBase {
   /** Creates a new Wrist. */
   private final WristIO io;
   private final WristIOInputsAutoLogged inputs = new WristIOInputsAutoLogged();
-  //private final PIDController mPID = new PIDController(10, 0, 0);
 
   public Wrist(WristIO io) {
     this.io = io;
@@ -26,33 +22,21 @@ public class Wrist extends SubsystemBase {
     Logger.processInputs("Wrist", inputs);
     // This method will be called once per scheduler run
   }
-  
-  public double getMotorTempCelsius() {
-    return inputs.motorTempCelsius;
+
+  public double getAngleDegrees() {
+    return inputs.wristAngleDegrees;
   }
 
-  public double getUpperMotorCurrentAmps() {
-    return inputs.motorCurrentAmps;
+  public void setAngle(double degrees) {
+    io.setAngle(degrees);
   }
 
-  public double getMotorCurrentVelocity() {
-    return inputs.motorCurrentVelocity;
+  public void setVoltage(double volts) {
+    io.setVoltage(volts);
   }
-
-  public double getWristPosition(){
-    double angle = ((inputs.encoderPosition/363)*360)%360;
-    return angle;
-  }
-
 
   public void setPercent(double percent) {
     io.setPercent(percent);
-  }
+  }  
 
-  //public void setAngle(double angle) {
-  //  io.setVoltage(mPID.calculate(inputs.encoderPosition/360, angle));
-  //}
-
-
-  
 }

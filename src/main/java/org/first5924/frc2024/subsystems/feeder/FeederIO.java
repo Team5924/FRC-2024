@@ -13,7 +13,7 @@ public interface FeederIO {
         public double motorTempCelsius = 0.0;
         public double motorCurrentAmps = 0.0;
         public double motorCurrentVelocity = 0.0;
-        public int distanceToNextObject = 0;
+        public double distanceToNextObject = 0;
     }
 
     

@@ -7,6 +7,7 @@ package org.first5924.frc2024.subsystems.feeder;
 import org.first5924.frc2024.constants.FeederConstants;
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Feeder extends SubsystemBase {
@@ -21,6 +22,8 @@ public class Feeder extends SubsystemBase {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Feeder", inputs);
+    SmartDashboard.putBoolean("is note in", isNoteIn());
+    SmartDashboard.putNumber("distance to next obj", distanceToNextObject());
     // This method will be called once per scheduler run
   }
   
@@ -36,9 +39,17 @@ public class Feeder extends SubsystemBase {
     return inputs.motorCurrentVelocity;
   }
 
-  //public Boolean isNoteIn() {
-  //    return inputs.distanceToNextObject < FeederConstants.distanceToNoteFromLaser;
-   // }
+    public double distanceToNextObject() {
+      return inputs.distanceToNextObject;
+    }
+
+  public Boolean isNoteIn() {
+      if (inputs.distanceToNextObject < FeederConstants.distanceToNoteFromLaser) {
+        return true;
+      } else {
+        return false;
+      }
+    }
 
   public void setPercent(double percent) {
     io.setPercent(percent);

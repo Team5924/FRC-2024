@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import java.util.function.BooleanSupplier;
@@ -17,9 +18,12 @@ import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
 
 import org.first5924.frc2024.commands.feeder.FeederSlow;
-import org.first5924.frc2024.commands.wrist.AutoAimWrist;
+import org.first5924.frc2024.commands.wrist.TeleopAimAndShoot;
+import org.first5924.frc2024.commands.wrist.AutoAimAndShoot;
+import org.first5924.frc2024.commands.wrist.PIDTest;
 import org.first5924.frc2024.commands.shooter.ShooterOn;
 import org.first5924.frc2024.commands.vision.DriveToNote;
+import org.first5924.frc2024.commands.vision.TurnToSpeaker;
 import org.first5924.frc2024.commands.wrist.RotateWrist;
 import org.first5924.frc2024.commands.elevator.RunElevator;
 import org.first5924.frc2024.constants.RobotConstants;
@@ -144,10 +148,10 @@ public class RobotContainer {
 
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
-    // Logger.recordOutput("Is Note In", feeder.isNoteIn());
 
     //Logger.recordOutput("Is Note In", feeder.isNoteIn());
     // SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
+    //SmartDashboard.putBoolean("is note in feeder?", feeder.isNoteIn());
     // autoModeChooser = null;
     // Configure the button bindings
     configureButtonBindings();
@@ -190,12 +194,20 @@ public class RobotContainer {
 
     //
     // THIS IS TEMPORARY, IT WILL BE IN AUTONOMOUS
-    driverController.b().onTrue(new DriveToNote(dCam::getNoteX, dCam::getNoteY, dCam.hasTarget(), drive));
+    // driverController.b().onTrue(new DriveToNote(dCam::getNoteX, dCam::getNoteY, dCam.hasTarget(), drive));
     //feeder.setDefaultCommand(new FeederSlow(feeder));
     // operatorController.b().whileTrue(new FeederSlow(feeder, operatorController::getRightY));
     //feeder.setDefaultCommand(new FeederSlow(feeder, operatorController::getRightY));
-    operatorController.y().whileTrue(new AutoAimWrist(wrist, wrist::getWristPosition, fieldCam::getRedShooterAngle));
+    // operatorController.y().whileTrue(new TeleopAimAndShoot(feeder, shooter, wrist, wrist::getAngleDegrees, fieldCam::getRedShooterAngle));
+    operatorController.x().whileTrue(new PIDTest(wrist));
     //driverController.y().onTrue(FollowPath());
+    driverController.leftTrigger().whileTrue(new TurnToSpeaker(drive, fieldCam::getBotYaw, fieldCam::getYawToRedSpeaker));
+    wrist.setDefaultCommand(new RotateWrist(wrist, operatorController::getRightY));
+    intake.setDefaultCommand(new RunIntake(intake));
+    operatorController.leftBumper().onTrue(new SetIntakeState(intake, IntakeState.RETRACT));
+    operatorController.rightBumper().onTrue(new SetIntakeState(intake, IntakeState.FLOOR));
+    operatorController.rightTrigger(0.75).onTrue(new SetIntakeState(intake, IntakeState.EJECT));
+    operatorController.rightTrigger(0.75).onFalse(new SetIntakeState(intake, intake.getIntakeStateBeforeEject()));
     // intake.setDefaultCommand(new RunIntake(intake));
     // operatorController.leftBumper().onTrue(new SetIntakeState(intake, IntakeState.RETRACT));
     // operatorController.rightBumper().onTrue(new SetIntakeState(intake, IntakeState.FLOOR));
@@ -241,6 +253,8 @@ public class RobotContainer {
     //   drive.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false), 
     // () -> false,
     // drive);
+
+    // return new SequentialCommandGroup(new AutoAimAndShoot(feeder, shooter, wrist, wrist::getAngleDegrees, fieldCam::getRedShooterAngle));
     return null;
   }
 }

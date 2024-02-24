@@ -8,27 +8,27 @@ import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
 public class DriveConstants {
-  public static final int kLeftFrontDriveSparkId = 14;
-  public static final int kLeftFrontTurnSparkId = 12;
+  public static final int kLeftFrontDriveTalonId = 14;
+  public static final int kLeftFrontTurnTalonId = 12;
 
-  public static final int kRightFrontDriveSparkId = 3;
-  public static final int kRightFrontTurnSparkId = 5;
+  public static final int kRightFrontDriveTalonId = 3;
+  public static final int kRightFrontTurnTalonId = 5;
 
-  public static final int kLeftBackDriveSparkId = 11;
-  public static final int kLeftBackTurnSparkId = 9;
+  public static final int kLeftBackDriveTalonId = 11;
+  public static final int kLeftBackTurnTalonId = 9;
 
-  public static final int kRightBackDriveSparkId = 8;
-  public static final int kRightBackTurnSparkId = 6;
+  public static final int kRightBackDriveTalonId = 8;
+  public static final int kRightBackTurnTalonId = 6;
 
-  public static final int kLeftFrontCANCoderId = 13;
-  public static final int kRightFrontCANCoderId = 4;
-  public static final int kLeftBackCANCoderId = 10;
-  public static final int kRightBackCANCoderId = 7;
+  public static final int kLeftFrontCanCoderId = 13;
+  public static final int kRightFrontCanCoderId = 4;
+  public static final int kLeftBackCanCoderId = 10;
+  public static final int kRightBackCanCoderId = 7;
 
-  public static final double kLeftFrontAbsoluteEncoderOffsetRad = -2.469;
-  public static final double kRightFrontAbsoluteEncoderOffsetRad = -0.2347;
-  public static final double kLeftBackAbsoluteEncoderOffsetRad = 1.6904;
-  public static final double kRightBackAbsoluteEncoderOffsetRad = -2.1514;
+  public static final double kLeftFrontCanCoderOffsetRad = -2.469;
+  public static final double kRightFrontCanCoderOffsetRad = -0.2347;
+  public static final double kLeftBackCanCoderOffsetRad = 1.6904;
+  public static final double kRightBackCanCoderOffsetRad = -2.1514;
 
   public static final double kTrackWidthX = Units.inchesToMeters(22.75);
   public static final double kTrackWidthY = Units.inchesToMeters(22.75);

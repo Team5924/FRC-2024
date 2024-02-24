@@ -42,20 +42,20 @@ public class IntakeIOTalonFX implements IntakeIO {
     );
 
     MotorOutputConfigs pivotMotorOutputConfigs = new MotorOutputConfigs();
-    rollerMotorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
-    rollerMotorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+    pivotMotorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
+    pivotMotorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
 
     CurrentLimitsConfigs pivotCurrentLimitsConfigs = new CurrentLimitsConfigs();
-    rollerCurrentLimitsConfigs.SupplyCurrentLimit = 40;
-    rollerCurrentLimitsConfigs.SupplyCurrentThreshold = 40;
-    rollerCurrentLimitsConfigs.SupplyTimeThreshold = 0;
-    rollerCurrentLimitsConfigs.SupplyCurrentLimitEnable = true;
+    pivotCurrentLimitsConfigs.SupplyCurrentLimit = 40;
+    pivotCurrentLimitsConfigs.SupplyCurrentThreshold = 40;
+    pivotCurrentLimitsConfigs.SupplyTimeThreshold = 0;
+    pivotCurrentLimitsConfigs.SupplyCurrentLimitEnable = true;
 
     FeedbackConfigs pivotFeedbackConfigs = new FeedbackConfigs();
     pivotFeedbackConfigs.SensorToMechanismRatio = IntakeConstants.kEncoderToPivotRatio;
 
     Slot0Configs pivotSlot0Configs = new Slot0Configs();
-    pivotSlot0Configs.kP = IntakeConstants.kPivotKp;
+    pivotSlot0Configs.kP = IntakeConstants.kPivotKP;
 
     pivotTalon.getConfigurator().apply(
       new TalonFXConfiguration()
@@ -72,7 +72,7 @@ public class IntakeIOTalonFX implements IntakeIO {
     inputs.rollerMotorCurrentAmps = rollerTalon.getSupplyCurrent().getValueAsDouble();
     inputs.pivotMotorTempCelsius = pivotTalon.getDeviceTemp().getValueAsDouble();
     inputs.pivotMotorCurrentAmps = pivotTalon.getSupplyCurrent().getValueAsDouble();
-    inputs.pivotAngleDegrees = pivotTalon.getPosition().getValueAsDouble() / 360;
+    inputs.pivotAngleDegrees = pivotTalon.getPosition().getValueAsDouble() * 360;
   }
 
   @Override
@@ -82,7 +82,7 @@ public class IntakeIOTalonFX implements IntakeIO {
 
   @Override
   public void setPivotPosition(double degrees) {
-    double rotations = degrees * 360;
+    double rotations = degrees / 360;
     pivotTalon.setControl(positionVoltage.withPosition(rotations));
   }
 
