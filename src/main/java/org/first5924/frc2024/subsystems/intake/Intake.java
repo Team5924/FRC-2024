@@ -49,4 +49,8 @@ public class Intake extends SubsystemBase {
   public void setPivotPosition(double degrees) {
     io.setPivotPosition(degrees);
   }
+
+  public void setPivotVoltage(double volts) {
+    io.setPivotVoltage(volts);
+  }
 }

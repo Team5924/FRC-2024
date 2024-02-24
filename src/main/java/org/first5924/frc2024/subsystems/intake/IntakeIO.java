@@ -22,5 +22,7 @@ public interface IntakeIO {
 
   public default void setRollerVoltage(double volts) {}
 
-  public default void setPivotPosition(double volts) {}
+  public default void setPivotPosition(double degrees) {}
+
+  public default void setPivotVoltage(double volts) {}
 }

@@ -1,0 +1,95 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package org.first5924.frc2024.subsystems.elevator;
+
+import org.first5924.frc2024.constants.ElevatorConstants;
+
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.StrictFollower;
+import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import au.grapplerobotics.LaserCan;
+
+/** Add your docs here. */
+public class ElevatorIOTalonFX implements ElevatorIO {
+  private final TalonFX leftTalon = new TalonFX(ElevatorConstants.kLeftTalonId);
+  private final TalonFX rightTalon = new TalonFX(ElevatorConstants.kLeftTalonId);
+  private final LaserCan laserCan = new LaserCan(ElevatorConstants.kLaserCanId);
+
+  private final VoltageOut voltageOut = new VoltageOut(0).withEnableFOC(true);
+  private final PositionVoltage positionVoltage = new PositionVoltage(0).withEnableFOC(true).withSlot(0);
+
+  public ElevatorIOTalonFX() {
+    MotorOutputConfigs leftMotorOutputConfigs = new MotorOutputConfigs();
+    leftMotorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
+    leftMotorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+
+    FeedbackConfigs leftFeedbackConfigs = new FeedbackConfigs();
+    leftFeedbackConfigs.SensorToMechanismRatio = ElevatorConstants.kEncoderToSpoolRatio;
+
+    CurrentLimitsConfigs bothCurrentLimitsConfigs = new CurrentLimitsConfigs();
+    bothCurrentLimitsConfigs.SupplyCurrentLimit = 40;
+    bothCurrentLimitsConfigs.SupplyCurrentThreshold = 40;
+    bothCurrentLimitsConfigs.SupplyTimeThreshold = 0;
+    bothCurrentLimitsConfigs.SupplyCurrentLimitEnable = true;
+
+    Slot0Configs slot0Configs = new Slot0Configs();
+    slot0Configs.kP = ElevatorConstants.kP;
+
+    leftTalon.getConfigurator().apply(
+      new TalonFXConfiguration()
+        .withMotorOutput(leftMotorOutputConfigs)
+        .withCurrentLimits(bothCurrentLimitsConfigs)
+        .withFeedback(leftFeedbackConfigs)
+        .withSlot0(slot0Configs)
+    );
+
+    MotorOutputConfigs rightMotorOutputConfigs = new MotorOutputConfigs();
+    rightMotorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
+    rightMotorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+
+    rightTalon.getConfigurator().apply(
+      new TalonFXConfiguration()
+        .withMotorOutput(rightMotorOutputConfigs)
+        .withCurrentLimits(bothCurrentLimitsConfigs)
+    );
+  }
+
+  @Override
+  public void updateInputs(ElevatorIOInputs inputs) {
+    inputs.leftMotorTempCelsius = leftTalon.getDeviceTemp().getValueAsDouble();
+    inputs.leftMotorCurrentAmps = leftTalon.getSupplyCurrent().getValueAsDouble();
+    inputs.rightMotorTempCelsius = rightTalon.getDeviceTemp().getValueAsDouble();
+    inputs.rightMotorCurrentAmps = rightTalon.getSupplyCurrent().getValueAsDouble();
+    inputs.spoolPosition = leftTalon.getPosition().getValueAsDouble();
+    inputs.laserCanElevatorHeightMeters = 0;
+  }
+
+  @Override
+  public void setElevatorHeight(double meters) {
+    double spoolRotations = meters / ElevatorConstants.kSpoolCircumference;
+    leftTalon.setControl(positionVoltage.withPosition(spoolRotations));
+    rightTalon.setControl(new StrictFollower(leftTalon.getDeviceID()));
+  }
+
+  @Override
+  public void setVoltage(double volts) {
+    leftTalon.setControl(voltageOut.withOutput(volts));
+    rightTalon.setControl(new StrictFollower(leftTalon.getDeviceID()));
+  }
+
+  @Override
+  public void setEncoder(double spoolRotations) {
+    leftTalon.setPosition(spoolRotations);
+  }
+}

@@ -85,4 +85,9 @@ public class IntakeIOTalonFX implements IntakeIO {
     double rotations = degrees / 360;
     pivotTalon.setControl(positionVoltage.withPosition(rotations));
   }
+
+  @Override
+  public void setPivotVoltage(double volts) {
+    pivotTalon.setControl(voltageOut.withOutput(volts));
+  }
 }
