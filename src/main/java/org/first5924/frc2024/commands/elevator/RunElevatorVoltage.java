@@ -12,11 +12,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class RunElevatorVoltage extends Command {
   Elevator elevator;
-  DoubleSupplier operatorJoystickY;
+  DoubleSupplier operatorJoystickLeftY;
   /** Creates a new RunElevatorVoltage. */
-  public RunElevatorVoltage(Elevator elevator, DoubleSupplier operatorJoystickY) {
+  public RunElevatorVoltage(Elevator elevator, DoubleSupplier operatorJoystickLeftY) {
     this.elevator = elevator;
-    this.operatorJoystickY = operatorJoystickY;
+    this.operatorJoystickLeftY = operatorJoystickLeftY;
     addRequirements(elevator);
   }
 
@@ -27,12 +27,14 @@ public class RunElevatorVoltage extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elevator.setVoltage()
+    elevator.setVoltage(operatorJoystickLeftY.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    elevator.setVoltage(0);
+  }
 
   // Returns true when the command should end.
   @Override

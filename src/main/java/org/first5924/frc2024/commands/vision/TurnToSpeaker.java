@@ -32,13 +32,13 @@ public class TurnToSpeaker extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mDrive.drive(0,0,controller.calculate(robotYaw.getAsDouble(), targetYaw.getAsDouble()), true);
+    mDrive.drive(0,0,controller.calculate(robotYaw.getAsDouble(), targetYaw.getAsDouble()), true, false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    mDrive.drive(0,0,0,true);
+    mDrive.drive(0,0,0,true, false);
   }
 
   // Returns true when the command should end.

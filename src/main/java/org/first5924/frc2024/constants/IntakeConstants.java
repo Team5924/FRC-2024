@@ -7,7 +7,7 @@ package org.first5924.frc2024.constants;
 /** Add your docs here. */
 public class IntakeConstants {
   public static final int kRollerTalonId = 58;
-  public static final int kPivotTalonId = 51;
+  public static final int kPivotTalonId = 53;
 
   public static final double kEncoderToPivotRatio = 0.0;
 

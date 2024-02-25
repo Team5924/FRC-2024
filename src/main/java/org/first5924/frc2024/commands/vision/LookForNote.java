@@ -36,6 +36,7 @@ public class LookForNote extends Command {
       0,
       0,
      0.3,
+      false,
       false
     );
     

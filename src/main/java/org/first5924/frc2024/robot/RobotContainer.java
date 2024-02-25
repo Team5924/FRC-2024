@@ -26,6 +26,7 @@ import org.first5924.frc2024.commands.vision.DriveToNote;
 import org.first5924.frc2024.commands.vision.TurnToSpeaker;
 import org.first5924.frc2024.commands.wrist.RotateWrist;
 import org.first5924.frc2024.commands.elevator.RunElevator;
+import org.first5924.frc2024.commands.elevator.RunElevatorVoltage;
 import org.first5924.frc2024.constants.RobotConstants;
 import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
 import org.first5924.frc2024.commands.intake.RunIntake;
@@ -165,13 +166,13 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     operatorController.a().whileTrue(new ShooterOn(shooter));
-    wrist.setDefaultCommand(new RotateWrist(wrist, operatorController::getLeftY));
     drive.setDefaultCommand(new DriveWithJoysticks(
       drive,
       driverController::getLeftX,
       driverController::getLeftY,
       driverController::getRightX,
-      swerveModeChooser::get
+      swerveModeChooser::get,
+      false
     ));
     driverController.rightBumper().onTrue(new DriveWithJoysticks(
       drive,
@@ -216,7 +217,7 @@ public class RobotContainer {
     operatorController.a().whileTrue(new SetRollerVoltage(intake, 2));
     operatorController.b().whileTrue(new SetPivotVoltage(intake, 2));
     operatorController.x().whileTrue(new SetPivotVoltage(intake, -2));
-    elevator.setDefaultCommand(new RunElevator(elevator, operatorController::getLeftY));
+    elevator.setDefaultCommand(new RunElevatorVoltage(elevator, operatorController::getLeftY));
   }
 
   //public Command FollowPath()

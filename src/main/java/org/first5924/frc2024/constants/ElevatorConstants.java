@@ -8,7 +8,8 @@ import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
 public class ElevatorConstants {
-  public static final int kLeftTalonId = 2;
+  public static final int kLeftTalonId = 52;
+  public static final int kRightTalonId = 51;
   public static final int kLaserCanId = 0;
 
   public static final double kEncoderToSpoolRatio = 1;

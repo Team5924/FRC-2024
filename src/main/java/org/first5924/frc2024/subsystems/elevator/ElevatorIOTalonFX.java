@@ -23,7 +23,7 @@ import au.grapplerobotics.LaserCan;
 /** Add your docs here. */
 public class ElevatorIOTalonFX implements ElevatorIO {
   private final TalonFX leftTalon = new TalonFX(ElevatorConstants.kLeftTalonId);
-  private final TalonFX rightTalon = new TalonFX(ElevatorConstants.kLeftTalonId);
+  private final TalonFX rightTalon = new TalonFX(ElevatorConstants.kRightTalonId);
   private final LaserCan laserCan = new LaserCan(ElevatorConstants.kLaserCanId);
 
   private final VoltageOut voltageOut = new VoltageOut(0).withEnableFOC(true);
