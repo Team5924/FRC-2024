@@ -24,4 +24,13 @@ public class Elevator extends SubsystemBase {
     Logger.processInputs("Elevator", inputs);
     // This method will be called once per scheduler run
   }
+
+  public void setVoltage(double volts){
+    io.setVoltage(mPID.calculate(volts));
+  }
+
+  public void setHeight(double height){
+    io.setElevatorHeight(height);
+  }
+
 }

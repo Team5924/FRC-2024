@@ -10,14 +10,13 @@ import org.first5924.frc2024.subsystems.elevator.Elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class RunElevator extends Command {
-  /** Creates a new SetPercent. (still need joystick y setup) */
-  private final Elevator elevator;
-  private final DoubleSupplier mJoystickY;
-  public RunElevator(Elevator elevator, DoubleSupplier joystickY) {
+public class RunElevatorVoltage extends Command {
+  Elevator elevator;
+  DoubleSupplier operatorJoystickLeftY;
+  /** Creates a new RunElevatorVoltage. */
+  public RunElevatorVoltage(Elevator elevator, DoubleSupplier operatorJoystickLeftY) {
     this.elevator = elevator;
-    mJoystickY = joystickY;
-    // Use addRequirements() here to declare subsystem dependencies.
+    this.operatorJoystickLeftY = operatorJoystickLeftY;
     addRequirements(elevator);
   }
 
@@ -28,12 +27,14 @@ public class RunElevator extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //elevator.setPercent(mJoystickY.getAsDouble());
+    elevator.setVoltage(operatorJoystickLeftY.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    elevator.setVoltage(0);
+  }
 
   // Returns true when the command should end.
   @Override
