@@ -59,8 +59,8 @@ public class IntakeIOTalonFX implements IntakeIO {
     pivotFeedbackConfigs.SensorToMechanismRatio = IntakeConstants.kEncoderToPivotRatio;
 
     VoltageConfigs pivotVoltageConfigs = new VoltageConfigs();
-    pivotVoltageConfigs.PeakForwardVoltage = 7;
-    pivotVoltageConfigs.PeakReverseVoltage = -7;
+    pivotVoltageConfigs.PeakForwardVoltage = IntakeConstants.kPivotPeakVoltage;
+    pivotVoltageConfigs.PeakReverseVoltage = -IntakeConstants.kPivotPeakVoltage;
 
     Slot0Configs pivotSlot0Configs = new Slot0Configs();
     pivotSlot0Configs.kP = IntakeConstants.kPivotKP;

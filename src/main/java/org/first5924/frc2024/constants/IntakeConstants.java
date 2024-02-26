@@ -13,7 +13,7 @@ public class IntakeConstants {
 
   public static final double kPivotKP = 30.0;
 
-  public static final double kPivotPeakVoltage = 4;
+  public static final double kPivotPeakVoltage = 3;
 
   public static final double kFloorPivotAngleDegrees = 90;
   public static final double kFloorRollerVoltage = 0;

@@ -213,7 +213,7 @@ public class RobotContainer {
     operatorController.rightBumper().onTrue(new SetIntakeState(intake, IntakeState.FLOOR));
     operatorController.rightTrigger(0.75).onTrue(new SetIntakeState(intake, IntakeState.EJECT));
     // operatorController.rightTrigger(0.75).onFalse(new SetIntakeState(intake, intake.getIntakeStateBeforeEject()));
-    // operatorController.a().whileTrue(new SetRollerVoltage(intake, 4));
+    operatorController.a().whileTrue(new SetRollerVoltage(intake, 4));
     operatorController.b().whileTrue(new SetPivotVoltage(intake, 1));
     operatorController.x().whileTrue(new SetPivotVoltage(intake, -1));
     // elevator.setDefaultCommand(new RunElevator(elevator, operatorController::getLeftY));
