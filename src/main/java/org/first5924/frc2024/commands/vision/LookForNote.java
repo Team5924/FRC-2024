@@ -32,13 +32,12 @@ public class LookForNote extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drive.drive(
-      0,
-      0,
-     0.3,
-      false
-    );
-    
+    // drive.drive(
+    //   0,
+    //   0,
+    //  0.3,
+    //   false
+    // );
   }
 
   // Called once the command ends or is interrupted.

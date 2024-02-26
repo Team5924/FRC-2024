@@ -50,12 +50,11 @@ public class DriveToNote extends Command {
 
     //visionController.calculate()
     if(v){
-      
-      drive.drive(visionControllerX.calculate(y.getAsDouble() + 1, 0), 0, visionControllerTheta.calculate(x.getAsDouble() + 1, 0), false);
+      // drive.drive(visionControllerX.calculate(y.getAsDouble() + 1, 0), 0, visionControllerTheta.calculate(x.getAsDouble() + 1, 0), false);
     }
     else
     {
-      drive.drive(0, 0, 0, false);
+      // drive.drive(0, 0, 0, false);
     }
 
   }
@@ -63,7 +62,7 @@ public class DriveToNote extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drive.drive(0,0,0,false);
+    // drive.drive(0,0,0,false);
   }
 
   // Returns true when the command should end.

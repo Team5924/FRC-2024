@@ -9,11 +9,15 @@ import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.VoltageConfigs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.first5924.frc2024.constants.IntakeConstants;
 
 /** Add your docs here. */
@@ -54,16 +58,25 @@ public class IntakeIOTalonFX implements IntakeIO {
     FeedbackConfigs pivotFeedbackConfigs = new FeedbackConfigs();
     pivotFeedbackConfigs.SensorToMechanismRatio = IntakeConstants.kEncoderToPivotRatio;
 
+    VoltageConfigs pivotVoltageConfigs = new VoltageConfigs();
+    pivotVoltageConfigs.PeakForwardVoltage = 7;
+    pivotVoltageConfigs.PeakReverseVoltage = -7;
+
     Slot0Configs pivotSlot0Configs = new Slot0Configs();
     pivotSlot0Configs.kP = IntakeConstants.kPivotKP;
+    pivotSlot0Configs.kI = 0;
+    pivotSlot0Configs.kD = 0;
 
     pivotTalon.getConfigurator().apply(
       new TalonFXConfiguration()
         .withMotorOutput(pivotMotorOutputConfigs)
         .withCurrentLimits(pivotCurrentLimitsConfigs)
         .withFeedback(pivotFeedbackConfigs)
+        .withVoltage(pivotVoltageConfigs)
         .withSlot0(pivotSlot0Configs)
     );
+
+    pivotTalon.setPosition(0);
   }
 
   @Override
@@ -73,6 +86,7 @@ public class IntakeIOTalonFX implements IntakeIO {
     inputs.pivotMotorTempCelsius = pivotTalon.getDeviceTemp().getValueAsDouble();
     inputs.pivotMotorCurrentAmps = pivotTalon.getSupplyCurrent().getValueAsDouble();
     inputs.pivotAngleDegrees = pivotTalon.getPosition().getValueAsDouble() * 360;
+    SmartDashboard.putNumber("Intake Pivot Rotations", pivotTalon.getPosition().getValueAsDouble());
   }
 
   @Override
@@ -84,6 +98,8 @@ public class IntakeIOTalonFX implements IntakeIO {
   public void setPivotPosition(double degrees) {
     double rotations = degrees / 360;
     pivotTalon.setControl(positionVoltage.withPosition(rotations));
+    SmartDashboard.putNumber("Rotations Goal", rotations);
+    SmartDashboard.putNumber("Volts", pivotTalon.getMotorVoltage().getValueAsDouble());
   }
 
   @Override
