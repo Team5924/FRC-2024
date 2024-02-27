@@ -13,8 +13,9 @@ public interface ElevatorIO {
     public double leftMotorCurrentAmps = 0.0;
     public double rightMotorTempCelsius = 0.0;
     public double rightMotorCurrentAmps = 0.0;
-    public double spoolPosition = 0.0;
-    public double laserCanElevatorHeightMeters = 0.0;
+    public double drumPosition = 0.0;
+    public double elevatorHeightMeters = 0.0;
+    public double laserCanMillimetersAboveLowest = 0.0;
   }
 
   /** Updates the set of loggable inputs. */
@@ -27,6 +28,6 @@ public interface ElevatorIO {
   public default void setVoltage(double volts) {
   }
 
-  public default void setEncoder(double spoolRotations) {
+  public default void setEncoder(double drumRotations) {
   }
 }

@@ -10,6 +10,7 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -56,6 +57,6 @@ public class ShooterIOTalonFX implements ShooterIO {
   @Override
   public void setPercent(double percent) {
     upperTalon.setControl(dutyCycleOut.withOutput(percent));
-    lowerTalon.setControl(dutyCycleOut.withOutput(percent));
+    lowerTalon.setControl(new StrictFollower(upperTalon.getDeviceID()));
   }
 }

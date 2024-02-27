@@ -30,7 +30,7 @@ public class IntakeIOTalonFX implements IntakeIO {
 
   public IntakeIOTalonFX() {
     MotorOutputConfigs rollerMotorOutputConfigs = new MotorOutputConfigs();
-    rollerMotorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
+    rollerMotorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
     rollerMotorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
 
     CurrentLimitsConfigs rollerCurrentLimitsConfigs = new CurrentLimitsConfigs();

@@ -12,11 +12,10 @@ public interface FeederIO {
     public static class FeederIOInputs {
         public double motorTempCelsius = 0.0;
         public double motorCurrentAmps = 0.0;
-        public double motorCurrentVelocity = 0.0;
-        public double distanceToNextObject = 0;
+        public double motorVelocityRotationsPerSecond = 0.0;
+        public double laserCanMeasurementMillimeters = 0;
     }
 
-    
     /** Updates the set of loggable inputs. */
     public default void updateInputs(FeederIOInputs inputs) {
     }

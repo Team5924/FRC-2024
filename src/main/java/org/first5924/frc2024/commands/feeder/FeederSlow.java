@@ -15,12 +15,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class FeederSlow extends Command {
   /** Creates a new slowFeeder. */
   private final Feeder feeder;
-  private final DoubleSupplier mJoystickY;
 
 
-  public FeederSlow(Feeder feeder, DoubleSupplier joystickY) {
+  public FeederSlow(Feeder feeder) {
     this.feeder = feeder;
-    mJoystickY = joystickY;
     addRequirements(feeder);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -33,7 +31,7 @@ public class FeederSlow extends Command {
   @Override
   public void execute() {
     //feeder.setPercent(MathUtil.applyDeadband(mJoystickY.getAsDouble(), 0.2));
-    feeder.setPercent(.5);
+    feeder.setPercent(.7);
   }
 
   // Called once the command ends or is interrupted.

@@ -11,21 +11,21 @@ public class IntakeConstants {
 
   public static final double kEncoderToPivotRatio = 59.4;
 
-  public static final double kPivotKP = 30.0;
+  public static final double kPivotKP = 50.0;
 
-  public static final double kPivotPeakVoltage = 3;
+  public static final double kPivotPeakVoltage = 6;
 
   public static final double kFloorPivotAngleDegrees = 90;
-  public static final double kFloorRollerVoltage = 0;
+  public static final double kFloorRollerVoltage = 6;
 
-  public static final double kFeederPivotAngleDegrees = 0;
-  public static final double kFeederRollerVoltage = 0;
+  public static final double kFeederPivotAngleDegrees = 45;
+  public static final double kFeederRollerVoltage = 6;
 
   public static final double kRetractPivotAngleDegrees = 0;
   public static final double kRetractRollerVoltage = 0;
 
   public static final double kEjectPivotAngleDegrees = 45;
-  public static final double kEjectRollerVoltage = 0;
+  public static final double kEjectRollerVoltage = -4;
 
   public static enum IntakeState {
     FLOOR(kFloorPivotAngleDegrees, kFloorRollerVoltage),

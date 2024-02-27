@@ -18,9 +18,9 @@ public class Wrist extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // This method will be called once per scheduler run
     io.updateInputs(inputs);
     Logger.processInputs("Wrist", inputs);
-    // This method will be called once per scheduler run
   }
 
   public double getAngleDegrees() {
@@ -34,9 +34,4 @@ public class Wrist extends SubsystemBase {
   public void setVoltage(double volts) {
     io.setVoltage(volts);
   }
-
-  public void setPercent(double percent) {
-    io.setPercent(percent);
-  }  
-
 }

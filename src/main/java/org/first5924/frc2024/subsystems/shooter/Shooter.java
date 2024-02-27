@@ -19,9 +19,9 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // This method will be called once per scheduler run
     io.updateInputs(inputs);
     Logger.processInputs("Shooter", inputs);
-    // This method will be called once per scheduler run
   }
 
   public void setPercent(double percent) {

@@ -57,17 +57,17 @@ public class AutoAimAndShoot extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    wrist.setPercent(0);
+    // wrist.setPercent(0);
     shooter.setPercent(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (feeder.isNoteIn()) {
-      return false;
-    } else { 
+    // if (feeder.isNoteIn()) {
+    //   return false;
+    // } else { 
       return true;
-    }
+    // }
   }
 }

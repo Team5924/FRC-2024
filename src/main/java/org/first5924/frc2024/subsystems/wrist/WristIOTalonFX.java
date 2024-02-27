@@ -29,7 +29,7 @@ public class WristIOTalonFX implements WristIO {
 
   public WristIOTalonFX() {
     MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
-    magnetSensorConfigs.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+    magnetSensorConfigs.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
     magnetSensorConfigs.MagnetOffset = WristConstants.kCanCoderOffset;
     canCoder.getConfigurator().apply(magnetSensorConfigs);
 
@@ -68,13 +68,15 @@ public class WristIOTalonFX implements WristIO {
     inputs.wristAngleDegrees = talon.getPosition().getValueAsDouble() * 360;
   }
 
+  @Override
   public void setAngle(double degrees){
     double rotations = degrees / 360;
     talon.setControl(positionVoltage.withPosition(rotations));
   }
-  
-  public void setPercent(double percent) {
-    talon.set(percent);
+
+  @Override
+  public void setVoltage(double volts) {
+    talon.set(volts);
   }
 }
 

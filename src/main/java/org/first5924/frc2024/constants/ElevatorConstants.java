@@ -10,11 +10,15 @@ import edu.wpi.first.math.util.Units;
 public class ElevatorConstants {
   public static final int kLeftTalonId = 52;
   public static final int kRightTalonId = 51;
-  public static final int kLaserCanId = 0;
+  public static final int kLaserCanId = 15;
 
-  public static final double kEncoderToSpoolRatio = 1;
-  public static final double kSpoolRadiusMeters = Units.inchesToMeters(2);
-  public static final double kSpoolCircumference = 2 * Math.PI * kSpoolRadiusMeters;
+  public static final double kEncoderToSpoolRatio = 24.31;
+  public static final double kSpoolDiameterMeters = Units.inchesToMeters(1.75);
+  public static final double kSpoolCircumferenceMeters = Math.PI * kSpoolDiameterMeters;
+
+  public static final double kLaserCanReadingAtLowestPointMillimeters = 0;
 
   public static final double kP = 1;
+
+  public static final double kPeakVoltage = 8;
 }

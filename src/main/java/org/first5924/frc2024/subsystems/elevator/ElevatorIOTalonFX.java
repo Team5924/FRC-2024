@@ -11,6 +11,7 @@ import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.VoltageConfigs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -18,13 +19,17 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
+import au.grapplerobotics.LaserCan.RangingMode;
+import au.grapplerobotics.LaserCan.RegionOfInterest;
+import au.grapplerobotics.LaserCan.TimingBudget;
 
 /** Add your docs here. */
 public class ElevatorIOTalonFX implements ElevatorIO {
   private final TalonFX leftTalon = new TalonFX(ElevatorConstants.kLeftTalonId);
   private final TalonFX rightTalon = new TalonFX(ElevatorConstants.kRightTalonId);
-  private final LaserCan laserCan = new LaserCan(ElevatorConstants.kLaserCanId);
+  private LaserCan laserCan;
 
   private final VoltageOut voltageOut = new VoltageOut(0).withEnableFOC(true);
   private final PositionVoltage positionVoltage = new PositionVoltage(0).withEnableFOC(true).withSlot(0);
@@ -43,6 +48,10 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     bothCurrentLimitsConfigs.SupplyTimeThreshold = 0;
     bothCurrentLimitsConfigs.SupplyCurrentLimitEnable = true;
 
+    VoltageConfigs bothVoltageConfigs = new VoltageConfigs();
+    bothVoltageConfigs.PeakForwardVoltage = ElevatorConstants.kPeakVoltage;
+    bothVoltageConfigs.PeakReverseVoltage = -ElevatorConstants.kPeakVoltage;
+
     Slot0Configs slot0Configs = new Slot0Configs();
     slot0Configs.kP = ElevatorConstants.kP;
 
@@ -51,6 +60,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         .withMotorOutput(leftMotorOutputConfigs)
         .withCurrentLimits(bothCurrentLimitsConfigs)
         .withFeedback(leftFeedbackConfigs)
+        .withVoltage(bothVoltageConfigs)
         .withSlot0(slot0Configs)
     );
 
@@ -62,7 +72,17 @@ public class ElevatorIOTalonFX implements ElevatorIO {
       new TalonFXConfiguration()
         .withMotorOutput(rightMotorOutputConfigs)
         .withCurrentLimits(bothCurrentLimitsConfigs)
+        .withVoltage(bothVoltageConfigs)
     );
+
+    try {
+      laserCan = new LaserCan(ElevatorConstants.kLaserCanId);
+      laserCan.setRangingMode(RangingMode.SHORT);
+      laserCan.setRegionOfInterest(new RegionOfInterest(8, 8, 6, 6));
+      laserCan.setTimingBudget(TimingBudget.TIMING_BUDGET_100MS);
+    } catch (ConfigurationFailedException e) {
+      System.out.println("Configuration failed! " + e);
+    }
   }
 
   @Override
@@ -71,13 +91,19 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     inputs.leftMotorCurrentAmps = leftTalon.getSupplyCurrent().getValueAsDouble();
     inputs.rightMotorTempCelsius = rightTalon.getDeviceTemp().getValueAsDouble();
     inputs.rightMotorCurrentAmps = rightTalon.getSupplyCurrent().getValueAsDouble();
-    inputs.spoolPosition = leftTalon.getPosition().getValueAsDouble();
-    inputs.laserCanElevatorHeightMeters = 0;
+    inputs.drumPosition = leftTalon.getPosition().getValueAsDouble();
+    inputs.elevatorHeightMeters = leftTalon.getPosition().getValueAsDouble() * ElevatorConstants.kSpoolCircumferenceMeters;
+    LaserCan.Measurement measurement = laserCan.getMeasurement();
+    if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
+      inputs.laserCanMillimetersAboveLowest = measurement.distance_mm - ElevatorConstants.kLaserCanReadingAtLowestPointMillimeters;
+    } else {
+      inputs.laserCanMillimetersAboveLowest = -1;
+    }
   }
 
   @Override
   public void setElevatorHeight(double meters) {
-    double spoolRotations = meters / ElevatorConstants.kSpoolCircumference;
+    double spoolRotations = meters / ElevatorConstants.kSpoolCircumferenceMeters;
     leftTalon.setControl(positionVoltage.withPosition(spoolRotations));
     rightTalon.setControl(new StrictFollower(leftTalon.getDeviceID()));
   }

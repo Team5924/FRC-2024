@@ -6,31 +6,29 @@ package org.first5924.frc2024.subsystems.elevator;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new elevator. */
   private final ElevatorIO io;
   private final ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
-  private final PIDController mPID = new PIDController(10, 0, 0);
+
   public Elevator(ElevatorIO io) {
     this.io = io;
   }
 
   @Override
   public void periodic() {
+    // This method will be called once per scheduler run
     io.updateInputs(inputs);
     Logger.processInputs("Elevator", inputs);
-    // This method will be called once per scheduler run
   }
 
-  public void setVoltage(double volts){
-    io.setVoltage(mPID.calculate(volts));
+  public void setVoltage(double volts) {
+    io.setVoltage(volts);
   }
 
   public void setHeight(double height){
     io.setElevatorHeight(height);
   }
-
 }
