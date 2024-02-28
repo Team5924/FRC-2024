@@ -27,13 +27,13 @@ public class RotateWrist extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // wrist.setPercent(MathUtil.applyDeadband(mJoystick.getAsDouble(), 0.2));
+    wrist.setVoltage(MathUtil.applyDeadband(mJoystick.getAsDouble(), 0.2) * 4);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // wrist.setPercent(0);
+    wrist.setVoltage(0);
   }
 
   // Returns true when the command should end.

@@ -76,7 +76,7 @@ public class ModuleIOTalonFX implements ModuleIO {
 
     MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
     magnetSensorConfigs.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
-    magnetSensorConfigs.MagnetOffset = -Units.radiansToRotations(absoluteEncoderOffsetRad);
+    magnetSensorConfigs.MagnetOffset = Units.radiansToRotations(absoluteEncoderOffsetRad);
     turnCanCoder.getConfigurator().apply(magnetSensorConfigs);
 
     MotorOutputConfigs driveMotorOutputConfigs = new MotorOutputConfigs();

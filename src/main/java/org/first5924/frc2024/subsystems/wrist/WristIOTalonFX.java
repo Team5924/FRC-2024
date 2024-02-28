@@ -13,12 +13,16 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** Add your docs here. */
 public class WristIOTalonFX implements WristIO {
@@ -26,10 +30,12 @@ public class WristIOTalonFX implements WristIO {
   private final CANcoder canCoder = new CANcoder(WristConstants.kCanCoderId);
 
   private final PositionVoltage positionVoltage = new PositionVoltage(0).withEnableFOC(true).withSlot(0);
+  private final VoltageOut voltageOut = new VoltageOut(0).withEnableFOC(true);
 
   public WristIOTalonFX() {
     MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
-    magnetSensorConfigs.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
+    magnetSensorConfigs.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+    magnetSensorConfigs.SensorDirection = SensorDirectionValue.Clockwise_Positive;
     magnetSensorConfigs.MagnetOffset = WristConstants.kCanCoderOffset;
     canCoder.getConfigurator().apply(magnetSensorConfigs);
 
@@ -47,7 +53,7 @@ public class WristIOTalonFX implements WristIO {
     feedbackConfigs.FeedbackRemoteSensorID = canCoder.getDeviceID();
     feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
     feedbackConfigs.SensorToMechanismRatio = 1.0;
-    feedbackConfigs.RotorToSensorRatio = 363;
+    feedbackConfigs.RotorToSensorRatio = 208.33;
 
     Slot0Configs slot0Configs = new Slot0Configs();
     slot0Configs.kP = WristConstants.kP;
@@ -59,6 +65,8 @@ public class WristIOTalonFX implements WristIO {
         .withFeedback(feedbackConfigs)
         .withSlot0(slot0Configs)
     );
+
+    talon.setPosition(0);
   }
 
   @Override
@@ -66,6 +74,7 @@ public class WristIOTalonFX implements WristIO {
     inputs.motorTempCelsius = talon.getDeviceTemp().getValueAsDouble();
     inputs.motorCurrentAmps = talon.getSupplyCurrent().getValueAsDouble();
     inputs.wristAngleDegrees = talon.getPosition().getValueAsDouble() * 360;
+    SmartDashboard.putNumber("CANCoder Wrist", canCoder.getAbsolutePosition().getValueAsDouble());
   }
 
   @Override
@@ -76,7 +85,7 @@ public class WristIOTalonFX implements WristIO {
 
   @Override
   public void setVoltage(double volts) {
-    talon.set(volts);
+    talon.setControl(voltageOut.withOutput(volts));
   }
 }
 
