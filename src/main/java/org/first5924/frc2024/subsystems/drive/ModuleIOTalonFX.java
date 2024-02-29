@@ -115,7 +115,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     turnCurrentLimitsConfigs.SupplyCurrentThreshold = 35;
     turnCurrentLimitsConfigs.SupplyTimeThreshold = 0.15;
     turnCurrentLimitsConfigs.StatorCurrentLimitEnable = true;
-    turnCurrentLimitsConfigs.StatorCurrentLimit = 100;
+    turnCurrentLimitsConfigs.StatorCurrentLimit = 80;
 
     FeedbackConfigs turnFeedbackConfigs = new FeedbackConfigs();
     turnFeedbackConfigs.FeedbackRemoteSensorID = turnCanCoder.getDeviceID();
@@ -128,6 +128,8 @@ public class ModuleIOTalonFX implements ModuleIO {
         .withMotorOutput(turnMotorOutputConfigs)
         .withCurrentLimits(turnCurrentLimitsConfigs)
         .withFeedback(turnFeedbackConfigs)
+        .withOpenLoopRamps(RobotConstants.kOpenLoopRampsConfigs)
+        .withClosedLoopRamps(RobotConstants.kClosedLoopRampsConfigs)
     );
   }
 
