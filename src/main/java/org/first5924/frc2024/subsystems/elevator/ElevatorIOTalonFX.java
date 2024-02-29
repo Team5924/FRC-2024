@@ -47,6 +47,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     bothCurrentLimitsConfigs.SupplyCurrentThreshold = 40;
     bothCurrentLimitsConfigs.SupplyTimeThreshold = 0;
     bothCurrentLimitsConfigs.SupplyCurrentLimitEnable = true;
+    bothCurrentLimitsConfigs.StatorCurrentLimit = 80;
 
     VoltageConfigs bothVoltageConfigs = new VoltageConfigs();
     bothVoltageConfigs.PeakForwardVoltage = ElevatorConstants.kPeakVoltage;

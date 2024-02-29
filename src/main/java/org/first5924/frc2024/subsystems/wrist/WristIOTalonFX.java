@@ -48,6 +48,7 @@ public class WristIOTalonFX implements WristIO {
     currentLimitsConfigs.SupplyCurrentThreshold = 40;
     currentLimitsConfigs.SupplyTimeThreshold = 0;
     currentLimitsConfigs.SupplyCurrentLimitEnable = true;
+    currentLimitsConfigs.StatorCurrentLimit = 80;
 
     FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
     feedbackConfigs.FeedbackRemoteSensorID = canCoder.getDeviceID();

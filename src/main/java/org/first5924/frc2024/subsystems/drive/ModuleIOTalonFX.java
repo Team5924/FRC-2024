@@ -89,7 +89,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     driveCurrentLimitsConfigs.SupplyCurrentThreshold = 45;
     driveCurrentLimitsConfigs.SupplyTimeThreshold = 0.15;
     driveCurrentLimitsConfigs.StatorCurrentLimitEnable = true;
-    driveCurrentLimitsConfigs.StatorCurrentLimit = 100;
+    driveCurrentLimitsConfigs.StatorCurrentLimit = 80;
 
     FeedbackConfigs driveFeedbackConfigs = new FeedbackConfigs();
     driveFeedbackConfigs.SensorToMechanismRatio = DriveConstants.kEncoderToDriveRatio;

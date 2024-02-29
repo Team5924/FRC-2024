@@ -38,6 +38,7 @@ public class IntakeIOTalonFX implements IntakeIO {
     rollerCurrentLimitsConfigs.SupplyCurrentThreshold = 40;
     rollerCurrentLimitsConfigs.SupplyTimeThreshold = 0;
     rollerCurrentLimitsConfigs.SupplyCurrentLimitEnable = true;
+    rollerCurrentLimitsConfigs.StatorCurrentLimit = 80;
 
     rollerTalon.getConfigurator().apply(
       new TalonFXConfiguration()

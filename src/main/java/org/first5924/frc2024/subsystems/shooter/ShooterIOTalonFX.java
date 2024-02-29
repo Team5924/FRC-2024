@@ -32,6 +32,7 @@ public class ShooterIOTalonFX implements ShooterIO {
     bothMotorsCurrentLimitsConfigs.SupplyCurrentThreshold = 40;
     bothMotorsCurrentLimitsConfigs.SupplyTimeThreshold = 0.1;
     bothMotorsCurrentLimitsConfigs.SupplyCurrentLimitEnable = true;
+    bothMotorsCurrentLimitsConfigs.StatorCurrentLimit = 80;
 
     upperTalon.getConfigurator().apply(
       new TalonFXConfiguration()
