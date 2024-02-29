@@ -4,6 +4,9 @@
 
 package org.first5924.frc2024.constants;
 
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
+import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
+
 /** Add your docs here. */
 public class RobotConstants {
   public static final double kNominalVoltage = 12.0;
@@ -11,7 +14,19 @@ public class RobotConstants {
   public static final int kPigeonId = 2;
 
   public static final Mode kCurrentMode = Mode.REAL;
+  
+  public static ClosedLoopRampsConfigs kClosedLoopRampsConfigs = new ClosedLoopRampsConfigs()
+  .withDutyCycleClosedLoopRampPeriod(0.02)
+  .withTorqueClosedLoopRampPeriod(0.02)
+  .withVoltageClosedLoopRampPeriod(0.02);
 
+  public static OpenLoopRampsConfigs kOpenLoopRampsConfigs = new OpenLoopRampsConfigs()
+  .withDutyCycleOpenLoopRampPeriod(0.02)
+  .withTorqueOpenLoopRampPeriod(0.02)
+  .withVoltageOpenLoopRampPeriod(0.02);
+  
+    
+  
   public static enum Mode {
     /** Running on a real robot. */
     REAL,

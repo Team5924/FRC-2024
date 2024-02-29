@@ -5,6 +5,7 @@
 package org.first5924.frc2024.subsystems.elevator;
 
 import org.first5924.frc2024.constants.ElevatorConstants;
+import org.first5924.frc2024.constants.RobotConstants;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
@@ -47,6 +48,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     bothCurrentLimitsConfigs.SupplyCurrentThreshold = 40;
     bothCurrentLimitsConfigs.SupplyTimeThreshold = 0;
     bothCurrentLimitsConfigs.SupplyCurrentLimitEnable = true;
+    bothCurrentLimitsConfigs.StatorCurrentLimit = 80;
 
     VoltageConfigs bothVoltageConfigs = new VoltageConfigs();
     bothVoltageConfigs.PeakForwardVoltage = ElevatorConstants.kPeakVoltage;
@@ -62,6 +64,8 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         .withFeedback(leftFeedbackConfigs)
         .withVoltage(bothVoltageConfigs)
         .withSlot0(slot0Configs)
+        .withClosedLoopRamps(RobotConstants.kClosedLoopRampsConfigs)
+        .withOpenLoopRamps(RobotConstants.kOpenLoopRampsConfigs)
     );
 
     MotorOutputConfigs rightMotorOutputConfigs = new MotorOutputConfigs();

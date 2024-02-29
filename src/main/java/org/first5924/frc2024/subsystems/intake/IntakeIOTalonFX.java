@@ -19,6 +19,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.first5924.frc2024.constants.IntakeConstants;
+import org.first5924.frc2024.constants.RobotConstants;
 
 /** Add your docs here. */
 public class IntakeIOTalonFX implements IntakeIO {
@@ -38,11 +39,14 @@ public class IntakeIOTalonFX implements IntakeIO {
     rollerCurrentLimitsConfigs.SupplyCurrentThreshold = 40;
     rollerCurrentLimitsConfigs.SupplyTimeThreshold = 0;
     rollerCurrentLimitsConfigs.SupplyCurrentLimitEnable = true;
+    rollerCurrentLimitsConfigs.StatorCurrentLimit = 80;
 
     rollerTalon.getConfigurator().apply(
       new TalonFXConfiguration()
         .withMotorOutput(rollerMotorOutputConfigs)
         .withCurrentLimits(rollerCurrentLimitsConfigs)
+        .withClosedLoopRamps(RobotConstants.kClosedLoopRampsConfigs)
+        .withOpenLoopRamps(RobotConstants.kOpenLoopRampsConfigs)
     );
 
     MotorOutputConfigs pivotMotorOutputConfigs = new MotorOutputConfigs();
