@@ -6,10 +6,12 @@ package org.first5924.frc2024.subsystems.wrist;
 
 import org.first5924.frc2024.constants.WristConstants;
 
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -21,6 +23,7 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import org.first5924.frc2024.constants.RobotConstants;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -38,6 +41,9 @@ public class WristIOTalonFX implements WristIO {
     magnetSensorConfigs.SensorDirection = SensorDirectionValue.Clockwise_Positive;
     magnetSensorConfigs.MagnetOffset = WristConstants.kCanCoderOffset;
     canCoder.getConfigurator().apply(magnetSensorConfigs);
+    
+    
+
 
     MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
     motorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -65,6 +71,8 @@ public class WristIOTalonFX implements WristIO {
         .withCurrentLimits(currentLimitsConfigs)
         .withFeedback(feedbackConfigs)
         .withSlot0(slot0Configs)
+        .withClosedLoopRamps(RobotConstants.closedLoopRampsConfigs)
+        .withOpenLoopRamps(RobotConstants.openLoopRampsConfigs)
     );
 
     talon.setPosition(0);

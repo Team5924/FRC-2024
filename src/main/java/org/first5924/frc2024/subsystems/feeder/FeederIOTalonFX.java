@@ -5,8 +5,10 @@
 package org.first5924.frc2024.subsystems.feeder;
 
 import org.first5924.frc2024.constants.FeederConstants;
+import org.first5924.frc2024.constants.RobotConstants;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -38,6 +40,14 @@ public class FeederIOTalonFX implements FeederIO {
     feederCurrentLimitsConfigs.SupplyTimeThreshold = 0;
     feederCurrentLimitsConfigs.SupplyCurrentLimitEnable = true;
     feederCurrentLimitsConfigs.StatorCurrentLimit = 80;
+
+    motor.getConfigurator().apply(
+      new TalonFXConfiguration()
+        .withCurrentLimits(feederCurrentLimitsConfigs)
+        .withClosedLoopRamps(RobotConstants.closedLoopRampsConfigs)
+        .withOpenLoopRamps(RobotConstants.openLoopRampsConfigs)
+    );
+    
   }
 
   @Override

@@ -4,6 +4,7 @@
 
 package org.first5924.frc2024.subsystems.shooter;
 
+import org.first5924.frc2024.constants.RobotConstants;
 import org.first5924.frc2024.constants.ShooterConstants;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
@@ -38,6 +39,8 @@ public class ShooterIOTalonFX implements ShooterIO {
       new TalonFXConfiguration()
         .withMotorOutput(upperMotorOutputConfigs)
         .withCurrentLimits(bothMotorsCurrentLimitsConfigs)
+        .withClosedLoopRamps(RobotConstants.closedLoopRampsConfigs)
+        .withOpenLoopRamps(RobotConstants.openLoopRampsConfigs)
     );
 
     MotorOutputConfigs lowerMotorOutputConfigs = new MotorOutputConfigs();

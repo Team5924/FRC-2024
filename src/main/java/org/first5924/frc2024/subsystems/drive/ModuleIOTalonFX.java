@@ -8,6 +8,7 @@
 package org.first5924.frc2024.subsystems.drive;
 
 import org.first5924.frc2024.constants.DriveConstants;
+import org.first5924.frc2024.constants.RobotConstants;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
@@ -83,6 +84,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     driveMotorOutputConfigs.Inverted = isDriveMotorInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
     driveMotorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
 
+
     CurrentLimitsConfigs driveCurrentLimitsConfigs = new CurrentLimitsConfigs();
     driveCurrentLimitsConfigs.SupplyCurrentLimitEnable = true;
     driveCurrentLimitsConfigs.SupplyCurrentLimit = 40;
@@ -99,6 +101,8 @@ public class ModuleIOTalonFX implements ModuleIO {
         .withMotorOutput(driveMotorOutputConfigs)
         .withCurrentLimits(driveCurrentLimitsConfigs)
         .withFeedback(driveFeedbackConfigs)
+        .withClosedLoopRamps(RobotConstants.closedLoopRampsConfigs)
+        .withOpenLoopRamps(RobotConstants.openLoopRampsConfigs)
     );
 
     MotorOutputConfigs turnMotorOutputConfigs = new MotorOutputConfigs();
