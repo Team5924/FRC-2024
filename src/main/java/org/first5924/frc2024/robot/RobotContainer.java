@@ -165,7 +165,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    operatorController.y().whileTrue(new ShooterOn(shooter));
+    //operatorController.y().whileTrue(new ShooterOn(shooter));
     wrist.setDefaultCommand(new RotateWrist(wrist, operatorController::getLeftY));
     drive.setDefaultCommand(new DriveWithJoysticks(
       drive,
@@ -222,6 +222,7 @@ public class RobotContainer {
     elevator.setDefaultCommand(new RunElevatorVoltage(elevator, operatorController::getRightY));
 
     driverController.a().onTrue(new SetGyroYaw(drive, 0));
+    operatorController.y().onTrue(new PIDTest(wrist));
   }
 
   //public Command FollowPath()

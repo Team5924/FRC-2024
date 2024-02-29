@@ -9,7 +9,7 @@ public class WristConstants {
   public static final int kTalonId = 54;
   public static final int kCanCoderId = 49;
 
-  public static final double kP = 0.1;
+  public static final double kP = 60;
 
   public static final double kCanCoderOffset = 0.436;
 }
