@@ -15,7 +15,8 @@ public interface ElevatorIO {
     public double rightMotorCurrentAmps = 0.0;
     public double drumPosition = 0.0;
     public double elevatorHeightMeters = 0.0;
-    public double laserCanMillimetersAboveLowest = 0.0;
+    // LaserCAN reading accounting for the height it has at the elevator's lowest position
+    public double laserCanMillimetersAboveAtLowest = 0.0;
   }
 
   /** Updates the set of loggable inputs. */

@@ -88,6 +88,8 @@ public class ModuleIOTalonFX implements ModuleIO {
     driveCurrentLimitsConfigs.SupplyCurrentLimit = 40;
     driveCurrentLimitsConfigs.SupplyCurrentThreshold = 45;
     driveCurrentLimitsConfigs.SupplyTimeThreshold = 0.15;
+    driveCurrentLimitsConfigs.StatorCurrentLimitEnable = true;
+    driveCurrentLimitsConfigs.StatorCurrentLimit = 100;
 
     FeedbackConfigs driveFeedbackConfigs = new FeedbackConfigs();
     driveFeedbackConfigs.SensorToMechanismRatio = DriveConstants.kEncoderToDriveRatio;
@@ -108,6 +110,8 @@ public class ModuleIOTalonFX implements ModuleIO {
     turnCurrentLimitsConfigs.SupplyCurrentLimit = 30;
     turnCurrentLimitsConfigs.SupplyCurrentThreshold = 35;
     turnCurrentLimitsConfigs.SupplyTimeThreshold = 0.15;
+    turnCurrentLimitsConfigs.StatorCurrentLimitEnable = true;
+    turnCurrentLimitsConfigs.StatorCurrentLimit = 100;
 
     FeedbackConfigs turnFeedbackConfigs = new FeedbackConfigs();
     turnFeedbackConfigs.FeedbackRemoteSensorID = turnCanCoder.getDeviceID();

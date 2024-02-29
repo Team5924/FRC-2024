@@ -16,7 +16,7 @@ public class ElevatorConstants {
   public static final double kSpoolDiameterMeters = Units.inchesToMeters(1.75);
   public static final double kSpoolCircumferenceMeters = Math.PI * kSpoolDiameterMeters;
 
-  public static final double kLaserCanReadingAtLowestPointMillimeters = 0;
+  public static final double kLaserCanReadingAtLowestMillimeters = 22;
 
   public static final double kP = 1;
 

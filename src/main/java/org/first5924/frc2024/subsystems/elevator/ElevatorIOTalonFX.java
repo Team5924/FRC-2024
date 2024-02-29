@@ -95,9 +95,9 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     inputs.elevatorHeightMeters = leftTalon.getPosition().getValueAsDouble() * ElevatorConstants.kSpoolCircumferenceMeters;
     LaserCan.Measurement measurement = laserCan.getMeasurement();
     if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-      inputs.laserCanMillimetersAboveLowest = measurement.distance_mm - ElevatorConstants.kLaserCanReadingAtLowestPointMillimeters;
+      inputs.laserCanMillimetersAboveAtLowest = measurement.distance_mm - ElevatorConstants.kLaserCanReadingAtLowestMillimeters;
     } else {
-      inputs.laserCanMillimetersAboveLowest = -1;
+      inputs.laserCanMillimetersAboveAtLowest = -1;
     }
   }
 
