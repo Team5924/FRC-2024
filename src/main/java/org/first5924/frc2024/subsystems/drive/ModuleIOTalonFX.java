@@ -101,8 +101,8 @@ public class ModuleIOTalonFX implements ModuleIO {
         .withMotorOutput(driveMotorOutputConfigs)
         .withCurrentLimits(driveCurrentLimitsConfigs)
         .withFeedback(driveFeedbackConfigs)
-        .withClosedLoopRamps(RobotConstants.closedLoopRampsConfigs)
-        .withOpenLoopRamps(RobotConstants.openLoopRampsConfigs)
+        .withClosedLoopRamps(RobotConstants.kClosedLoopRampsConfigs)
+        .withOpenLoopRamps(RobotConstants.kOpenLoopRampsConfigs)
     );
 
     MotorOutputConfigs turnMotorOutputConfigs = new MotorOutputConfigs();

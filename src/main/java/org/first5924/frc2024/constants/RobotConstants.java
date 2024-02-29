@@ -6,7 +6,6 @@ package org.first5924.frc2024.constants;
 
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
 /** Add your docs here. */
 public class RobotConstants {
@@ -16,12 +15,12 @@ public class RobotConstants {
 
   public static final Mode kCurrentMode = Mode.REAL;
   
-  public static ClosedLoopRampsConfigs closedLoopRampsConfigs = new ClosedLoopRampsConfigs()
+  public static ClosedLoopRampsConfigs kClosedLoopRampsConfigs = new ClosedLoopRampsConfigs()
   .withDutyCycleClosedLoopRampPeriod(0.02)
   .withTorqueClosedLoopRampPeriod(0.02)
   .withVoltageClosedLoopRampPeriod(0.02);
 
-  public static OpenLoopRampsConfigs openLoopRampsConfigs = new OpenLoopRampsConfigs()
+  public static OpenLoopRampsConfigs kOpenLoopRampsConfigs = new OpenLoopRampsConfigs()
   .withDutyCycleOpenLoopRampPeriod(0.02)
   .withTorqueOpenLoopRampPeriod(0.02)
   .withVoltageOpenLoopRampPeriod(0.02);

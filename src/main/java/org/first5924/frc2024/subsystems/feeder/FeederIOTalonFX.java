@@ -44,8 +44,8 @@ public class FeederIOTalonFX implements FeederIO {
     motor.getConfigurator().apply(
       new TalonFXConfiguration()
         .withCurrentLimits(feederCurrentLimitsConfigs)
-        .withClosedLoopRamps(RobotConstants.closedLoopRampsConfigs)
-        .withOpenLoopRamps(RobotConstants.openLoopRampsConfigs)
+        .withClosedLoopRamps(RobotConstants.kClosedLoopRampsConfigs)
+        .withOpenLoopRamps(RobotConstants.kOpenLoopRampsConfigs)
     );
     
   }

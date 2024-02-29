@@ -6,12 +6,10 @@ package org.first5924.frc2024.subsystems.wrist;
 
 import org.first5924.frc2024.constants.WristConstants;
 
-import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -71,8 +69,8 @@ public class WristIOTalonFX implements WristIO {
         .withCurrentLimits(currentLimitsConfigs)
         .withFeedback(feedbackConfigs)
         .withSlot0(slot0Configs)
-        .withClosedLoopRamps(RobotConstants.closedLoopRampsConfigs)
-        .withOpenLoopRamps(RobotConstants.openLoopRampsConfigs)
+        .withClosedLoopRamps(RobotConstants.kClosedLoopRampsConfigs)
+        .withOpenLoopRamps(RobotConstants.kOpenLoopRampsConfigs)
     );
 
     talon.setPosition(0);

@@ -39,8 +39,8 @@ public class ShooterIOTalonFX implements ShooterIO {
       new TalonFXConfiguration()
         .withMotorOutput(upperMotorOutputConfigs)
         .withCurrentLimits(bothMotorsCurrentLimitsConfigs)
-        .withClosedLoopRamps(RobotConstants.closedLoopRampsConfigs)
-        .withOpenLoopRamps(RobotConstants.openLoopRampsConfigs)
+        .withClosedLoopRamps(RobotConstants.kClosedLoopRampsConfigs)
+        .withOpenLoopRamps(RobotConstants.kOpenLoopRampsConfigs)
     );
 
     MotorOutputConfigs lowerMotorOutputConfigs = new MotorOutputConfigs();

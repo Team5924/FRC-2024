@@ -64,8 +64,8 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         .withFeedback(leftFeedbackConfigs)
         .withVoltage(bothVoltageConfigs)
         .withSlot0(slot0Configs)
-        .withClosedLoopRamps(RobotConstants.closedLoopRampsConfigs)
-        .withOpenLoopRamps(RobotConstants.openLoopRampsConfigs)
+        .withClosedLoopRamps(RobotConstants.kClosedLoopRampsConfigs)
+        .withOpenLoopRamps(RobotConstants.kOpenLoopRampsConfigs)
     );
 
     MotorOutputConfigs rightMotorOutputConfigs = new MotorOutputConfigs();

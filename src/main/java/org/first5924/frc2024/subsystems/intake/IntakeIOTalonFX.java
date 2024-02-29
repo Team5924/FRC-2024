@@ -45,8 +45,8 @@ public class IntakeIOTalonFX implements IntakeIO {
       new TalonFXConfiguration()
         .withMotorOutput(rollerMotorOutputConfigs)
         .withCurrentLimits(rollerCurrentLimitsConfigs)
-        .withClosedLoopRamps(RobotConstants.closedLoopRampsConfigs)
-        .withOpenLoopRamps(RobotConstants.openLoopRampsConfigs)
+        .withClosedLoopRamps(RobotConstants.kClosedLoopRampsConfigs)
+        .withOpenLoopRamps(RobotConstants.kOpenLoopRampsConfigs)
     );
 
     MotorOutputConfigs pivotMotorOutputConfigs = new MotorOutputConfigs();
