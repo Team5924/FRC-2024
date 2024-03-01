@@ -1,9 +1,15 @@
-// Copyright (c) 2023 FRC 6328
+// Copyright 2021-2024 FRC 6328
 // http://github.com/Mechanical-Advantage
 //
-// Use of this source code is governed by an MIT-style
-// license that can be found in the LICENSE file at
-// the root directory of this project.
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// version 3 as published by the Free Software Foundation or
+// available in the root directory of this project.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
 
 package org.first5924.frc2024.subsystems.drive;
 
@@ -14,10 +20,13 @@ public interface ModuleIO {
   public static class ModuleIOInputs {
     public double drivePositionRad = 0.0;
     public double driveVelocityRadPerSec = 0.0;
+    public double driveAppliedVolts = 0.0;
     public double driveCurrentAmps = 0.0;
     public double driveTempCelcius = 0.0;
 
     public double turnAbsolutePositionRad = 0.0;
+    public double turnVelocityRadPerSec = 0.0;
+    public double turnAppliedVolts = 0.0;
     public double turnCurrentAmps = 0.0;
     public double turnTempCelcius = 0.0;
   }
