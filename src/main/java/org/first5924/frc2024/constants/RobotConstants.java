@@ -14,7 +14,7 @@ public class RobotConstants {
   public static final int kPigeonId = 2;
 
   public static final Mode kCurrentMode = Mode.REAL;
-  
+
   public static ClosedLoopRampsConfigs kClosedLoopRampsConfigs = new ClosedLoopRampsConfigs()
   .withDutyCycleClosedLoopRampPeriod(0.02)
   .withTorqueClosedLoopRampPeriod(0.02)
@@ -24,9 +24,7 @@ public class RobotConstants {
   .withDutyCycleOpenLoopRampPeriod(0.02)
   .withTorqueOpenLoopRampPeriod(0.02)
   .withVoltageOpenLoopRampPeriod(0.02);
-  
-    
-  
+
   public static enum Mode {
     /** Running on a real robot. */
     REAL,

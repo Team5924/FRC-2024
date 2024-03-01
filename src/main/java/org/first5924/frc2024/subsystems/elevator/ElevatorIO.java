@@ -11,12 +11,14 @@ public interface ElevatorIO {
   public static class ElevatorIOInputs {
     public double leftMotorTempCelsius = 0.0;
     public double leftMotorCurrentAmps = 0.0;
+    public double leftMotorAppliedVoltage = 0.0;
     public double rightMotorTempCelsius = 0.0;
     public double rightMotorCurrentAmps = 0.0;
+    public double rightMotorAppliedVoltage = 0.0;
     public double drumPosition = 0.0;
     public double elevatorHeightMeters = 0.0;
     // LaserCAN reading accounting for the height it has at the elevator's lowest position
-    public double laserCanMillimetersAboveAtLowest = 0.0;
+    public int laserCanMillimetersAboveAtLowest = 0;
   }
 
   /** Updates the set of loggable inputs. */

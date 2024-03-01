@@ -16,9 +16,14 @@ public class ElevatorConstants {
   public static final double kSpoolDiameterMeters = Units.inchesToMeters(1.75);
   public static final double kSpoolCircumferenceMeters = Math.PI * kSpoolDiameterMeters;
 
-  public static final double kLaserCanReadingAtLowestMillimeters = 22;
+  public static final int kLaserCanReadingAtLowestMillimeters = 20;
 
-  public static final double kP = 1;
+  public static final double kP = 16;
+  public static final double kG = 0.25;
 
-  public static final double kPeakVoltage = 8;
+  public static final double kPeakForwardVoltage = 5;
+  public static final double kPeakReverseVoltage = -4;
+
+  // public static final double kForwardSoftLimitThreshold = 3.5;
+  // public static final double kReverseSoftLimitThreshold = 0;
 }

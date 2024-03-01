@@ -27,6 +27,7 @@ import org.first5924.frc2024.commands.vision.TurnToSpeaker;
 import org.first5924.frc2024.commands.wrist.RotateWrist;
 import org.first5924.frc2024.commands.elevator.RunElevator;
 import org.first5924.frc2024.commands.elevator.RunElevatorVoltage;
+import org.first5924.frc2024.commands.elevator.SetHeight;
 import org.first5924.frc2024.constants.RobotConstants;
 import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
 import org.first5924.frc2024.commands.intake.RunIntake;
@@ -221,6 +222,8 @@ public class RobotContainer {
 
     elevator.setDefaultCommand(new RunElevatorVoltage(elevator, operatorController::getRightY));
 
+    operatorController.a().whileTrue(new SetHeight(elevator, 0.3));
+    operatorController.b().whileTrue(new SetHeight(elevator, 0));
     driverController.a().onTrue(new SetGyroYaw(drive, 0));
   }
 
