@@ -14,12 +14,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import java.util.function.BooleanSupplier;
 
+import org.first5924.frc2024.commands.AutoAimAndShoot;
+import org.first5924.frc2024.commands.TeleopAimAndShoot;
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
 
 import org.first5924.frc2024.commands.feeder.FeederSlow;
-import org.first5924.frc2024.commands.wrist.TeleopAimAndShoot;
-import org.first5924.frc2024.commands.wrist.AutoAimAndShoot;
 import org.first5924.frc2024.commands.wrist.SetWristPosition;
 import org.first5924.frc2024.commands.shooter.ShooterOn;
 import org.first5924.frc2024.commands.vision.DriveToNote;
