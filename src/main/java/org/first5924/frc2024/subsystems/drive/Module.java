@@ -26,8 +26,6 @@ public class Module {
   private final PIDController driveFeedback = new PIDController(DriveConstants.kDriveKp, 0.0, DriveConstants.kDriveKd);
   private final PIDController turnFeedback = new PIDController(DriveConstants.kTurnKp, 0.0, DriveConstants.kTurnKd);
 
-  private double lastVoltage = -1;
-
   public Module(ModuleIO io, int index) {
     this.io = io;
     this.index = index;
@@ -42,12 +40,11 @@ public class Module {
   }
 
   public void driveVoltage(double volts) {
-    lastVoltage = volts;
     io.setDriveVoltage(volts);
   }
 
   public double getLastVoltage() {
-    return lastVoltage;
+    return inputs.driveAppliedVolts;
   }
 
   /**

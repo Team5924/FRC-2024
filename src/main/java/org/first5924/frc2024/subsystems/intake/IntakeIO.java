@@ -12,9 +12,11 @@ public interface IntakeIO {
   public static class IntakeIOInputs {
     public double rollerMotorTempCelsius = 0.0;
     public double rollerMotorCurrentAmps = 0.0;
+    public double rollerMotorAppliedVolts = 0.0;
     public double pivotAngleDegrees = 0.0;
     public double pivotMotorTempCelsius = 0.0;
     public double pivotMotorCurrentAmps = 0.0;
+    public double pivotMotorAppliedVolts = 0.0;
   }
 
   /** Updates the set of loggable inputs */

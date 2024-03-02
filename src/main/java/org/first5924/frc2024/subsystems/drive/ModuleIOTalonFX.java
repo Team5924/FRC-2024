@@ -10,6 +10,8 @@ package org.first5924.frc2024.subsystems.drive;
 import org.first5924.frc2024.constants.DriveConstants;
 import org.first5924.frc2024.constants.RobotConstants;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
@@ -28,12 +30,23 @@ import edu.wpi.first.math.util.Units;
 public class ModuleIOTalonFX implements ModuleIO {
   private final TalonFX driveTalon;
   private final TalonFX turnTalon;
-
   private final CANcoder turnCanCoder;
 
   private final boolean isDriveMotorInverted;
   private final boolean isTurnMotorInverted;
   private final double absoluteEncoderOffsetRad;
+
+  private final StatusSignal<Double> drivePosition;
+  private final StatusSignal<Double> driveVelocity;
+  private final StatusSignal<Double> driveAppliedVolts;
+  private final StatusSignal<Double> driveCurrentAmps;
+  private final StatusSignal<Double> driveTempCelsius;
+
+  private final StatusSignal<Double> turnAbsolutePosition;
+  private final StatusSignal<Double> turnVelocity;
+  private final StatusSignal<Double> turnAppliedVolts;
+  private final StatusSignal<Double> turnCurrentAmps;
+  private final StatusSignal<Double> turnTempCelsius;
 
   private final VoltageOut voltageOut = new VoltageOut(0).withEnableFOC(true);
 
@@ -80,16 +93,9 @@ public class ModuleIOTalonFX implements ModuleIO {
     magnetSensorConfigs.MagnetOffset = Units.radiansToRotations(absoluteEncoderOffsetRad);
     turnCanCoder.getConfigurator().apply(magnetSensorConfigs);
 
-    MotorOutputConfigs driveMotorOutputConfigs = new MotorOutputConfigs();
-    driveMotorOutputConfigs.Inverted = isDriveMotorInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
-    driveMotorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
-
-
     CurrentLimitsConfigs driveCurrentLimitsConfigs = new CurrentLimitsConfigs();
     driveCurrentLimitsConfigs.SupplyCurrentLimitEnable = true;
     driveCurrentLimitsConfigs.SupplyCurrentLimit = 40;
-    driveCurrentLimitsConfigs.SupplyCurrentThreshold = 45;
-    driveCurrentLimitsConfigs.SupplyTimeThreshold = 0.15;
     driveCurrentLimitsConfigs.StatorCurrentLimitEnable = true;
     driveCurrentLimitsConfigs.StatorCurrentLimit = 80;
 
@@ -98,22 +104,16 @@ public class ModuleIOTalonFX implements ModuleIO {
 
     driveTalon.getConfigurator().apply(
       new TalonFXConfiguration()
-        .withMotorOutput(driveMotorOutputConfigs)
         .withCurrentLimits(driveCurrentLimitsConfigs)
         .withFeedback(driveFeedbackConfigs)
         .withClosedLoopRamps(RobotConstants.kClosedLoopRampsConfigs)
         .withOpenLoopRamps(RobotConstants.kOpenLoopRampsConfigs)
     );
-
-    MotorOutputConfigs turnMotorOutputConfigs = new MotorOutputConfigs();
-    turnMotorOutputConfigs.Inverted = isTurnMotorInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
-    turnMotorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+    setDriveBrakeMode(true);
 
     CurrentLimitsConfigs turnCurrentLimitsConfigs = new CurrentLimitsConfigs();
     turnCurrentLimitsConfigs.SupplyCurrentLimitEnable = true;
     turnCurrentLimitsConfigs.SupplyCurrentLimit = 30;
-    turnCurrentLimitsConfigs.SupplyCurrentThreshold = 35;
-    turnCurrentLimitsConfigs.SupplyTimeThreshold = 0.15;
     turnCurrentLimitsConfigs.StatorCurrentLimitEnable = true;
     turnCurrentLimitsConfigs.StatorCurrentLimit = 80;
 
@@ -125,33 +125,80 @@ public class ModuleIOTalonFX implements ModuleIO {
 
     turnTalon.getConfigurator().apply(
       new TalonFXConfiguration()
-        .withMotorOutput(turnMotorOutputConfigs)
         .withCurrentLimits(turnCurrentLimitsConfigs)
         .withFeedback(turnFeedbackConfigs)
         .withOpenLoopRamps(RobotConstants.kOpenLoopRampsConfigs)
         .withClosedLoopRamps(RobotConstants.kClosedLoopRampsConfigs)
     );
+    setTurnBrakeMode(true);
+
+    drivePosition = driveTalon.getPosition();
+    driveVelocity = driveTalon.getVelocity();
+    driveAppliedVolts = driveTalon.getMotorVoltage();
+    driveCurrentAmps = driveTalon.getSupplyCurrent();
+    driveTempCelsius = driveTalon.getDeviceTemp();
+
+    turnAbsolutePosition = turnCanCoder.getAbsolutePosition();
+    turnVelocity = turnTalon.getVelocity();
+    turnAppliedVolts = turnTalon.getMotorVoltage();
+    turnCurrentAmps = turnTalon.getSupplyCurrent();
+    turnTempCelsius = turnTalon.getDeviceTemp();
+
+    BaseStatusSignal.setUpdateFrequencyForAll(
+      100.0, drivePosition, turnAbsolutePosition); // Required for odometry, use faster rate
+    BaseStatusSignal.setUpdateFrequencyForAll(
+      50.0,
+      driveVelocity,
+      driveAppliedVolts,
+      driveCurrentAmps,
+      driveTempCelsius,
+      turnVelocity,
+      turnAppliedVolts,
+      turnCurrentAmps,
+      turnTempCelsius
+    );
+    driveTalon.optimizeBusUtilization();
+    turnTalon.optimizeBusUtilization();
   }
 
   public void updateInputs(ModuleIOInputs inputs) {
-    inputs.drivePositionRad = driveTalon.getPosition().getValueAsDouble();
-    inputs.driveVelocityRadPerSec = driveTalon.getVelocity().getValueAsDouble();
-    inputs.driveCurrentAmps = driveTalon.getSupplyCurrent().getValueAsDouble();
-    inputs.driveTempCelcius = driveTalon.getDeviceTemp().getValueAsDouble();
+    BaseStatusSignal.refreshAll(
+      drivePosition,
+      driveVelocity,
+      driveAppliedVolts,
+      driveCurrentAmps,
+      driveTempCelsius,
+      turnAbsolutePosition,
+      turnVelocity,
+      turnAppliedVolts,
+      turnCurrentAmps,
+      turnTempCelsius
+    );
 
-    inputs.turnAbsolutePositionRad = Units.rotationsToRadians(turnCanCoder.getAbsolutePosition().getValueAsDouble());
-    inputs.turnCurrentAmps = turnTalon.getSupplyCurrent().getValueAsDouble();
-    inputs.turnTempCelcius = turnTalon.getDeviceTemp().getValueAsDouble();
+    inputs.drivePositionRad = Units.rotationsToRadians(drivePosition.getValueAsDouble());
+    inputs.driveVelocityRadPerSec = Units.rotationsToRadians(driveVelocity.getValueAsDouble());
+    inputs.driveCurrentAmps = driveCurrentAmps.getValueAsDouble();
+    inputs.driveAppliedVolts = driveAppliedVolts.getValueAsDouble();
+    inputs.driveTempCelcius = driveTempCelsius.getValueAsDouble();
+
+    inputs.turnAbsolutePositionRad = Units.rotationsToRadians(turnAbsolutePosition.getValueAsDouble());
+    inputs.turnVelocityRadPerSec = Units.rotationsToRadians(turnVelocity.getValueAsDouble());
+    inputs.turnCurrentAmps = turnCurrentAmps.getValueAsDouble();
+    inputs.turnAppliedVolts = turnAppliedVolts.getValueAsDouble();
+    inputs.turnTempCelcius = turnTempCelsius.getValueAsDouble();
   }
 
+  @Override
   public void setDriveVoltage(double volts) {
     driveTalon.setControl(voltageOut.withOutput(volts));
   }
 
+  @Override
   public void setTurnVoltage(double volts) {
     turnTalon.setControl(voltageOut.withOutput(volts));
   }
 
+   @Override
   public void setDriveBrakeMode(boolean brake) {
     MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
     motorOutputConfigs.Inverted = isDriveMotorInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
@@ -159,6 +206,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     driveTalon.getConfigurator().apply(motorOutputConfigs);
   }
 
+  @Override
   public void setTurnBrakeMode(boolean brake) {
     MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
     motorOutputConfigs.Inverted = isTurnMotorInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;

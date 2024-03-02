@@ -87,10 +87,11 @@ public class IntakeIOTalonFX implements IntakeIO {
   public void updateInputs(IntakeIOInputs inputs) {
     inputs.rollerMotorTempCelsius = rollerTalon.getDeviceTemp().getValueAsDouble();
     inputs.rollerMotorCurrentAmps = rollerTalon.getSupplyCurrent().getValueAsDouble();
+    inputs.rollerMotorAppliedVolts = rollerTalon.getMotorVoltage().getValueAsDouble();
     inputs.pivotMotorTempCelsius = pivotTalon.getDeviceTemp().getValueAsDouble();
     inputs.pivotMotorCurrentAmps = pivotTalon.getSupplyCurrent().getValueAsDouble();
     inputs.pivotAngleDegrees = pivotTalon.getPosition().getValueAsDouble() * 360;
-    SmartDashboard.putNumber("Intake Pivot Rotations", pivotTalon.getPosition().getValueAsDouble());
+    inputs.pivotMotorAppliedVolts = pivotTalon.getMotorVoltage().getValueAsDouble();
   }
 
   @Override

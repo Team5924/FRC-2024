@@ -23,8 +23,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import org.first5924.frc2024.constants.RobotConstants;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 /** Add your docs here. */
 public class WristIOTalonFX implements WristIO {
   private final TalonFX talon = new TalonFX(WristConstants.kTalonId);
@@ -39,9 +37,6 @@ public class WristIOTalonFX implements WristIO {
     magnetSensorConfigs.SensorDirection = SensorDirectionValue.Clockwise_Positive;
     magnetSensorConfigs.MagnetOffset = WristConstants.kCanCoderOffset;
     canCoder.getConfigurator().apply(magnetSensorConfigs);
-    
-    
-
 
     MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
     motorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -80,8 +75,8 @@ public class WristIOTalonFX implements WristIO {
   public void updateInputs(WristIOInputs inputs) {
     inputs.motorTempCelsius = talon.getDeviceTemp().getValueAsDouble();
     inputs.motorCurrentAmps = talon.getSupplyCurrent().getValueAsDouble();
+    inputs.motorAppliedVolts = talon.getMotorVoltage().getValueAsDouble();
     inputs.wristAngleDegrees = talon.getPosition().getValueAsDouble() * 360;
-    SmartDashboard.putNumber("CANCoder Wrist", canCoder.getAbsolutePosition().getValueAsDouble());
   }
 
   @Override

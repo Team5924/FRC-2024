@@ -12,6 +12,7 @@ public interface WristIO {
   public static class WristIOInputs {
     public double motorTempCelsius = 0.0;
     public double motorCurrentAmps = 0.0;
+    public double motorAppliedVolts = 0.0;
     public double wristAngleDegrees = 0.0;
   }
 

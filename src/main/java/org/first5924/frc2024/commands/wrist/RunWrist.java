@@ -2,26 +2,24 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.first5924.frc2024.commands.elevator;
+package org.first5924.frc2024.commands.wrist;
 
-import java.util.function.DoubleSupplier;
-
-import org.first5924.frc2024.constants.ElevatorConstants;
+import org.first5924.frc2024.constants.WristConstants;
 import org.first5924.frc2024.subsystems.elevator.Elevator;
+import org.first5924.frc2024.subsystems.wrist.Wrist;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class RunElevator extends Command {
+public class RunWrist extends Command {
+  private final Wrist wrist;
   private final Elevator elevator;
-  private final DoubleSupplier rightJoystickY;
 
   /** Creates a new RunWristAndElevator. */
-  public RunElevator(Elevator elevator, DoubleSupplier rightJoystickY) {
+  public RunWrist(Wrist wrist, Elevator elevator) {
+    this.wrist = wrist;
     this.elevator = elevator;
-    this.rightJoystickY = rightJoystickY;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(elevator);
+    addRequirements(wrist);
   }
 
   // Called when the command is initially scheduled.
@@ -33,19 +31,17 @@ public class RunElevator extends Command {
   public void execute() {
     switch(elevator.getWristAndElevatorState()) {
       case INTAKE:
-        elevator.setHeight(ElevatorConstants.kIntakeHeight);
+        wrist.setAngle(WristConstants.kIntakeAngle);
         break;
       case AMP:
-        elevator.setHeight(ElevatorConstants.kAmpHeight);
+        wrist.setAngle(WristConstants.kAmpAngle);
         break;
       case AIM_LOW:
-        elevator.setHeight(ElevatorConstants.kAimLowHeight);
         break;
       case AIM_HIGH:
-        elevator.setHeight(ElevatorConstants.kAimHighHeight);
         break;
       case CLIMB:
-        elevator.setVoltage(MathUtil.applyDeadband(-rightJoystickY.getAsDouble(), 0.1) * ElevatorConstants.kPeakForwardVoltage);
+        wrist.setAngle(WristConstants.kClimbAngle);
         break;
     }
   }
@@ -53,6 +49,7 @@ public class RunElevator extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    wrist.setVoltage(0);
     elevator.setVoltage(0);
   }
 

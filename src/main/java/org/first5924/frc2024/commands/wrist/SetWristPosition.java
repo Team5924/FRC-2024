@@ -8,12 +8,14 @@ import org.first5924.frc2024.subsystems.wrist.Wrist;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class PIDTest extends Command {
-
+public class SetWristPosition extends Command {
   private final Wrist wrist;
+  private final double degrees;
+
   /** Creates a new PIDTest. */
-  public PIDTest(Wrist wrist) {
+  public SetWristPosition(Wrist wrist, double degrees) {
     this.wrist = wrist;
+    this.degrees = degrees;
     addRequirements(wrist);
   }
 
@@ -24,14 +26,12 @@ public class PIDTest extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    wrist.setAngle(45);
+    wrist.setAngle(degrees);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    wrist.setAngle(0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
