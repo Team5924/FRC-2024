@@ -6,7 +6,6 @@ package org.first5924.frc2024.subsystems.elevator;
 
 import org.first5924.frc2024.constants.ElevatorConstants;
 import org.first5924.frc2024.constants.RobotConstants;
-import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;

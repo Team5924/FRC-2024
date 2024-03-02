@@ -20,11 +20,11 @@ import org.first5924.frc2024.commands.drive.SetGyroYaw;
 import org.first5924.frc2024.commands.feeder.FeederSlow;
 import org.first5924.frc2024.commands.wrist.TeleopAimAndShoot;
 import org.first5924.frc2024.commands.wrist.AutoAimAndShoot;
-import org.first5924.frc2024.commands.wrist.PIDTest;
+import org.first5924.frc2024.commands.wrist.SetWristPosition;
 import org.first5924.frc2024.commands.shooter.ShooterOn;
 import org.first5924.frc2024.commands.vision.DriveToNote;
 import org.first5924.frc2024.commands.vision.TurnToSpeaker;
-import org.first5924.frc2024.commands.wrist.RotateWrist;
+import org.first5924.frc2024.commands.wrist.SetWristVoltage;
 import org.first5924.frc2024.commands.elevator.RunElevator;
 import org.first5924.frc2024.commands.elevator.RunElevatorVoltage;
 import org.first5924.frc2024.commands.elevator.SetHeight;
@@ -167,7 +167,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     operatorController.y().whileTrue(new ShooterOn(shooter));
-    wrist.setDefaultCommand(new RotateWrist(wrist, operatorController::getLeftY));
+    wrist.setDefaultCommand(new SetWristVoltage(wrist, operatorController::getLeftY));
     drive.setDefaultCommand(new DriveWithJoysticks(
       drive,
       driverController::getLeftX,

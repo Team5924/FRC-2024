@@ -5,17 +5,16 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.MathUtil;
 import org.first5924.frc2024.subsystems.wrist.Wrist;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class RotateWrist extends Command {
+public class SetWristVoltage extends Command {
   /** Creates a new SetWristAngle. */
   private final Wrist wrist;
-  private final DoubleSupplier mJoystick;
+  private final DoubleSupplier joystickY;
 
-  public RotateWrist(Wrist wrist, DoubleSupplier joystickY) {
+  public SetWristVoltage(Wrist wrist, DoubleSupplier joystickY) {
     this.wrist = wrist;
-    mJoystick = joystickY;
+    this.joystickY = joystickY;
     addRequirements(wrist);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -27,7 +26,7 @@ public class RotateWrist extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    wrist.setVoltage(MathUtil.applyDeadband(mJoystick.getAsDouble(), 0.2) * 4);
+    wrist.setVoltage(MathUtil.applyDeadband(joystickY.getAsDouble(), 0.2) * 4);
   }
 
   // Called once the command ends or is interrupted.

@@ -20,7 +20,7 @@ import au.grapplerobotics.LaserCan.TimingBudget;
 
 /** Add your docs here. */
 public class FeederIOTalonFX implements FeederIO {
-  private final TalonFX motor = new TalonFX(FeederConstants.talonId);
+  private final TalonFX talon = new TalonFX(FeederConstants.talonId);
   private LaserCan laserCan;
 
   private final DutyCycleOut dutyCycleOut = new DutyCycleOut(0).withEnableFOC(true);
@@ -41,20 +41,20 @@ public class FeederIOTalonFX implements FeederIO {
     feederCurrentLimitsConfigs.SupplyCurrentLimitEnable = true;
     feederCurrentLimitsConfigs.StatorCurrentLimit = 80;
 
-    motor.getConfigurator().apply(
+    talon.getConfigurator().apply(
       new TalonFXConfiguration()
         .withCurrentLimits(feederCurrentLimitsConfigs)
         .withClosedLoopRamps(RobotConstants.kClosedLoopRampsConfigs)
         .withOpenLoopRamps(RobotConstants.kOpenLoopRampsConfigs)
     );
-    
   }
 
   @Override
   public void updateInputs(FeederIOInputs inputs) {
-    inputs.motorTempCelsius = motor.getDeviceTemp().getValueAsDouble();
-    inputs.motorCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();
-    inputs.motorVelocityRotationsPerSecond = motor.getVelocity().getValueAsDouble();
+    inputs.motorTempCelsius = talon.getDeviceTemp().getValueAsDouble();
+    inputs.motorCurrentAmps = talon.getSupplyCurrent().getValueAsDouble();
+    inputs.motorAppliedVolts = talon.getMotorVoltage().getValueAsDouble();
+    inputs.motorVelocityRotationsPerSecond = talon.getVelocity().getValueAsDouble();
     LaserCan.Measurement measurement = laserCan.getMeasurement();
     if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
       inputs.laserCanMeasurementMillimeters = measurement.distance_mm;
@@ -65,6 +65,6 @@ public class FeederIOTalonFX implements FeederIO {
 
   @Override
   public void setPercent(double percent) {
-    motor.setControl(dutyCycleOut.withOutput(percent));
+    talon.setControl(dutyCycleOut.withOutput(percent));
   }
 }

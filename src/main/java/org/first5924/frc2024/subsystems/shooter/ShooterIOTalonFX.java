@@ -54,6 +54,8 @@ public class ShooterIOTalonFX implements ShooterIO {
     inputs.lowerMotorTempCelsius = lowerTalon.getDeviceTemp().getValueAsDouble();
     inputs.upperMotorCurrentAmps = upperTalon.getSupplyCurrent().getValueAsDouble();
     inputs.lowerMotorCurrentAmps = lowerTalon.getSupplyCurrent().getValueAsDouble();
+    inputs.upperMotorAppliedVolts = upperTalon.getMotorVoltage().getValueAsDouble();
+    inputs.lowerMotorAppliedVolts = lowerTalon.getMotorVoltage().getValueAsDouble();
     inputs.upperMotorVelocityRotationsPerSecond = upperTalon.getVelocity().getValueAsDouble();
     inputs.lowerMotorVelocityRotationsPerSecond = lowerTalon.getVelocity().getValueAsDouble();
   }

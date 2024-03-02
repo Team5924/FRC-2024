@@ -13,6 +13,8 @@ public interface ShooterIO {
     public double lowerMotorTempCelsius = 0.0;
     public double upperMotorCurrentAmps = 0.0;
     public double lowerMotorCurrentAmps = 0.0;
+    public double upperMotorAppliedVolts = 0.0;
+    public double lowerMotorAppliedVolts = 0.0;
     public double upperMotorVelocityRotationsPerSecond = 0.0;
     public double lowerMotorVelocityRotationsPerSecond = 0.0;
   }
