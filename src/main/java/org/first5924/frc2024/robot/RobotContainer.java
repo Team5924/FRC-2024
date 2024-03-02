@@ -20,7 +20,8 @@ import org.first5924.frc2024.commands.TeleopAimAndShoot;
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
 
-import org.first5924.frc2024.commands.feeder.FeederSlow;
+import org.first5924.frc2024.commands.feeder.FeedShooter;
+import org.first5924.frc2024.commands.feeder.RunFeeder;
 import org.first5924.frc2024.commands.wrist.RunWrist;
 import org.first5924.frc2024.commands.wrist.SetWristPosition;
 import org.first5924.frc2024.commands.shooter.ShooterOn;
@@ -36,7 +37,7 @@ import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
 import org.first5924.frc2024.commands.intake.RunIntake;
 import org.first5924.frc2024.commands.intake.SetIntakeState;
 import org.first5924.frc2024.commands.intake.SetPivotVoltage;
-import org.first5924.frc2024.commands.intake.SetRollerVoltage;
+import org.first5924.frc2024.commands.intake.SetRollerPercent;
 import org.first5924.frc2024.subsystems.intake.Intake;
 import org.first5924.frc2024.subsystems.intake.IntakeIO;
 import org.first5924.frc2024.subsystems.intake.IntakeIOTalonFX;
@@ -203,7 +204,7 @@ public class RobotContainer {
     // driverController.b().onTrue(new DriveToNote(dCam::getNoteX, dCam::getNoteY, dCam.hasTarget(), drive));
     //feeder.setDefaultCommand(new FeederSlow(feeder));
     // operatorController.b().whileTrue(new FeederSlow(feeder, operatorController::getRightY));
-    operatorController.leftTrigger(0.75).whileTrue(new FeederSlow(feeder));
+    operatorController.leftTrigger(0.75).whileTrue(new FeedShooter(feeder));
     // operatorController.y().whileTrue(new TeleopAimAndShoot(feeder, shooter, wrist, wrist::getAngleDegrees, fieldCam::getRedShooterAngle));
     // operatorController.x().whileTrue(new PIDTest(wrist));
     // //driverController.y().onTrue(FollowPath());
@@ -214,7 +215,7 @@ public class RobotContainer {
     // operatorController.rightBumper().onTrue(new SetIntakeState(intake, IntakeState.FLOOR));
     // operatorController.rightTrigger(0.75).onTrue(new SetIntakeState(intake, IntakeState.EJECT));
     // operatorController.rightTrigger(0.75).onFalse(new SetIntakeState(intake, intake.getIntakeStateBeforeEject()));
-    // intake.setDefaultCommand(new RunIntake(intake));
+    intake.setDefaultCommand(new RunIntake(intake));
     operatorController.leftBumper().onTrue(new SetIntakeState(intake, IntakeState.RETRACT));
     operatorController.rightBumper().onTrue(new SetIntakeState(intake, IntakeState.FLOOR));
     operatorController.rightTrigger(0.75).onTrue(new SetIntakeState(intake, IntakeState.EJECT));
@@ -222,10 +223,10 @@ public class RobotContainer {
     // operatorController.a().whileTrue(new SetRollerVoltage(intake, 4));
     // operatorController.b().whileTrue(new SetPivotVoltage(intake, 1));
     // operatorController.x().whileTrue(new SetPivotVoltage(intake, -1));
-
     // elevator.setDefaultCommand(new RunElevatorVoltage(elevator, operatorController::getRightY));
-    //elevator.setDefaultCommand(new RunElevator(elevator, operatorController::getRightY));
-    //wrist.setDefaultCommand(new RunWrist(wrist, elevator));
+    elevator.setDefaultCommand(new RunElevator(elevator, operatorController::getRightY));
+    wrist.setDefaultCommand(new RunWrist(wrist, elevator));
+    feeder.setDefaultCommand(new RunFeeder(feeder, intake));
     operatorController.a().onTrue(new SetWristPosition(wrist, 45));
     operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
     operatorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));

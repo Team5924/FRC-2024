@@ -12,6 +12,7 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.VoltageConfigs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -49,6 +50,10 @@ public class WristIOTalonFX implements WristIO {
     currentLimitsConfigs.SupplyCurrentLimitEnable = true;
     currentLimitsConfigs.StatorCurrentLimit = 80;
 
+    VoltageConfigs voltageConfigs = new VoltageConfigs();
+    voltageConfigs.PeakForwardVoltage = WristConstants.kPeakVoltage;
+    voltageConfigs.PeakReverseVoltage = -WristConstants.kPeakVoltage;
+
     FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
     feedbackConfigs.FeedbackRemoteSensorID = canCoder.getDeviceID();
     feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
@@ -62,6 +67,7 @@ public class WristIOTalonFX implements WristIO {
       new TalonFXConfiguration()
         .withMotorOutput(motorOutputConfigs)
         .withCurrentLimits(currentLimitsConfigs)
+        .withVoltage(voltageConfigs)
         .withFeedback(feedbackConfigs)
         .withSlot0(slot0Configs)
         .withClosedLoopRamps(RobotConstants.kClosedLoopRampsConfigs)

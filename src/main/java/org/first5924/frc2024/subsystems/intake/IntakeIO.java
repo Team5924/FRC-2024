@@ -22,7 +22,7 @@ public interface IntakeIO {
   /** Updates the set of loggable inputs */
   public default void updateInputs(IntakeIOInputs inputs) {}
 
-  public default void setRollerVoltage(double volts) {}
+  public default void setRollerPercent(double percent) {}
 
   public default void setPivotPosition(double degrees) {}
 

@@ -9,11 +9,13 @@ public class WristConstants {
   public static final int kTalonId = 54;
   public static final int kCanCoderId = 49;
 
-  public static final double kP = 60;
+  public static final double kP = 100;
 
   public static final double kCanCoderOffset = 0.436;
 
-  public static final double kIntakeAngle = 25;
+  public static final double kIntakeAngle = 41.6;
   public static final double kAmpAngle = 15;
-  public static final double kClimbAngle = 0;
+  public static final double kClimbAngle = 53;
+
+  public static final double kPeakVoltage = 4;
 }

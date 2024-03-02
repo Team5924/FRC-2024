@@ -6,6 +6,7 @@ package org.first5924.frc2024.subsystems.feeder;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Feeder extends SubsystemBase {
@@ -21,6 +22,7 @@ public class Feeder extends SubsystemBase {
     // This method will be called once per scheduler run
     io.updateInputs(inputs);
     Logger.processInputs("Feeder", inputs);
+    isNoteFullyIn();
   }
 
   public double getLaserCanMeasurementMillimeters() {
@@ -29,5 +31,10 @@ public class Feeder extends SubsystemBase {
 
   public void setPercent(double percent) {
     io.setPercent(percent);
+  }
+
+  public boolean isNoteFullyIn() {
+    SmartDashboard.putBoolean("Is Note Fully In", inputs.laserCanMeasurementMillimeters < 40);
+    return inputs.laserCanMeasurementMillimeters < 40;
   }
 }

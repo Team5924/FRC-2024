@@ -42,8 +42,8 @@ public class Intake extends SubsystemBase {
     return intakeStateBeforeEject;
   }
 
-  public void setRollerVoltage(double volts) {
-    io.setRollerVoltage(volts);
+  public void setRollerPercent(double percent) {
+    io.setRollerPercent(percent);
   }
 
   public void setPivotPosition(double degrees) {

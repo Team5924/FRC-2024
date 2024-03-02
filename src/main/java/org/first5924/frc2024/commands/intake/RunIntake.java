@@ -29,7 +29,7 @@ public class RunIntake extends Command {
   public void execute() {
     SmartDashboard.putNumber("Intake Pivot Angle Target", intake.getIntakeState().getPivotAngle());
     intake.setPivotPosition(intake.getIntakeState().getPivotAngle());
-    intake.setRollerVoltage(intake.getIntakeState().getIntakeVoltage());
+    intake.setRollerPercent(intake.getIntakeState().getRollerPercent());
   }
 
   // Called once the command ends or is interrupted.

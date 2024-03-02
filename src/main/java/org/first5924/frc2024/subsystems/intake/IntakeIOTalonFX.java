@@ -10,6 +10,7 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.VoltageConfigs;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -26,6 +27,7 @@ public class IntakeIOTalonFX implements IntakeIO {
   private final TalonFX rollerTalon = new TalonFX(IntakeConstants.kRollerTalonId);
   private final TalonFX pivotTalon = new TalonFX(IntakeConstants.kPivotTalonId);
 
+  private final DutyCycleOut dutyCycleOut = new DutyCycleOut(0).withEnableFOC(true);
   private final VoltageOut voltageOut = new VoltageOut(0).withEnableFOC(true);
   private final PositionVoltage positionVoltage = new PositionVoltage(0).withEnableFOC(true).withSlot(0);
 
@@ -95,8 +97,8 @@ public class IntakeIOTalonFX implements IntakeIO {
   }
 
   @Override
-  public void setRollerVoltage(double volts) {
-    rollerTalon.setControl(voltageOut.withOutput(volts));
+  public void setRollerPercent(double percent) {
+    rollerTalon.setControl(dutyCycleOut.withOutput(percent));
   }
 
   @Override

@@ -4,12 +4,22 @@
 
 package org.first5924.frc2024.commands.feeder;
 
+import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
+import org.first5924.frc2024.subsystems.feeder.Feeder;
+import org.first5924.frc2024.subsystems.intake.Intake;
+
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class FeederShoot extends Command {
+public class RunFeeder extends Command {
+  private final Feeder feeder;
+  private final Intake intake;
+
   /** Creates a new FeederShoot. */
-  public FeederShoot() {
+  public RunFeeder(Feeder feeder, Intake intake) {
+    this.feeder = feeder;
+    this.intake = intake;
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(feeder);
   }
 
   // Called when the command is initially scheduled.
@@ -18,7 +28,13 @@ public class FeederShoot extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if (intake.getIntakeState() == IntakeState.FLOOR && !feeder.isNoteFullyIn()) {
+      feeder.setPercent(0.5);
+    } else {
+      feeder.setPercent(0);
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override

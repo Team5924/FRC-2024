@@ -16,37 +16,37 @@ public class IntakeConstants {
   public static final double kPivotPeakVoltage = 6;
 
   public static final double kFloorPivotAngleDegrees = 90;
-  public static final double kFloorRollerVoltage = 0;
+  public static final double kFloorRollerPercent = 0.45;
 
   public static final double kFeederPivotAngleDegrees = 45;
-  public static final double kFeederRollerVoltage = 6;
+  public static final double kFeederRollerPercent = 0.45;
 
   public static final double kRetractPivotAngleDegrees = 0;
-  public static final double kRetractRollerVoltage = 0;
+  public static final double kRetractRollerPercent = 0;
 
   public static final double kEjectPivotAngleDegrees = 45;
-  public static final double kEjectRollerVoltage = -4;
+  public static final double kEjectRollerPercent = -0.35;
 
   public static enum IntakeState {
-    FLOOR(kFloorPivotAngleDegrees, kFloorRollerVoltage),
-    FEEDER(kFeederPivotAngleDegrees, kFeederRollerVoltage),
-    RETRACT(kRetractPivotAngleDegrees, kRetractRollerVoltage),
-    EJECT(kEjectPivotAngleDegrees, kEjectRollerVoltage);
+    FLOOR(kFloorPivotAngleDegrees, kFloorRollerPercent),
+    FEEDER(kFeederPivotAngleDegrees, kFeederRollerPercent),
+    RETRACT(kRetractPivotAngleDegrees, kRetractRollerPercent),
+    EJECT(kEjectPivotAngleDegrees, kEjectRollerPercent);
 
     private final double pivotAngle;
-    private final double intakeVoltage;
+    private final double rollerPercent;
 
-    private IntakeState(double pivotAngle, double intakeVoltage) {
+    private IntakeState(double pivotAngle, double rollerPercent) {
       this.pivotAngle = pivotAngle;
-      this.intakeVoltage = intakeVoltage;
+      this.rollerPercent = rollerPercent;
     }
 
     public double getPivotAngle() {
       return pivotAngle;
     }
 
-    public double getIntakeVoltage() {
-      return intakeVoltage;
+    public double getRollerPercent() {
+      return rollerPercent;
     }
   }
 }
