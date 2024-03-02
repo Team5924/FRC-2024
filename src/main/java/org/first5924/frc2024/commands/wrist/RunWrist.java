@@ -2,29 +2,24 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.first5924.frc2024.commands;
+package org.first5924.frc2024.commands.wrist;
 
-import java.util.function.DoubleSupplier;
-
-import org.first5924.frc2024.constants.ElevatorConstants;
 import org.first5924.frc2024.constants.WristConstants;
 import org.first5924.frc2024.subsystems.elevator.Elevator;
 import org.first5924.frc2024.subsystems.wrist.Wrist;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class RunWristAndElevator extends Command {
+public class RunWrist extends Command {
   private final Wrist wrist;
   private final Elevator elevator;
-  private final DoubleSupplier rightJoystickY;
 
   /** Creates a new RunWristAndElevator. */
-  public RunWristAndElevator(Wrist wrist, Elevator elevator, DoubleSupplier rightJoystickY) {
+  public RunWrist(Wrist wrist, Elevator elevator) {
     this.wrist = wrist;
     this.elevator = elevator;
-    this.rightJoystickY = rightJoystickY;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(wrist, elevator);
+    addRequirements(wrist);
   }
 
   // Called when the command is initially scheduled.
@@ -37,17 +32,17 @@ public class RunWristAndElevator extends Command {
     switch(elevator.getWristAndElevatorState()) {
       case INTAKE:
         wrist.setAngle(WristConstants.kIntakeAngle);
-        elevator.setHeight(ElevatorConstants.kIntakeHeight);
+        break;
       case AMP:
         wrist.setAngle(WristConstants.kAmpAngle);
-        elevator.setHeight(ElevatorConstants.kAmpHeight);
+        break;
       case AIM_LOW:
-        elevator.setHeight(ElevatorConstants.kAimLowHeight);
+        break;
       case AIM_HIGH:
-        elevator.setHeight(ElevatorConstants.kAimHighHeight);
+        break;
       case CLIMB:
         wrist.setAngle(WristConstants.kClimbAngle);
-        elevator.setVoltage(-rightJoystickY.getAsDouble() * ElevatorConstants.kPeakForwardVoltage);
+        break;
     }
   }
 

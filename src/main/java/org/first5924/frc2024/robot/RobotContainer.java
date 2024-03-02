@@ -15,11 +15,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import java.util.function.BooleanSupplier;
 
 import org.first5924.frc2024.commands.AutoAimAndShoot;
+import org.first5924.frc2024.commands.SetWristAndElevatorState;
 import org.first5924.frc2024.commands.TeleopAimAndShoot;
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
 
 import org.first5924.frc2024.commands.feeder.FeederSlow;
+import org.first5924.frc2024.commands.wrist.RunWrist;
 import org.first5924.frc2024.commands.wrist.SetWristPosition;
 import org.first5924.frc2024.commands.shooter.ShooterOn;
 import org.first5924.frc2024.commands.vision.DriveToNote;
@@ -29,6 +31,7 @@ import org.first5924.frc2024.commands.elevator.RunElevator;
 import org.first5924.frc2024.commands.elevator.RunElevatorVoltage;
 import org.first5924.frc2024.commands.elevator.SetHeight;
 import org.first5924.frc2024.constants.RobotConstants;
+import org.first5924.frc2024.constants.WristAndElevatorState;
 import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
 import org.first5924.frc2024.commands.intake.RunIntake;
 import org.first5924.frc2024.commands.intake.SetIntakeState;
@@ -220,10 +223,12 @@ public class RobotContainer {
     // operatorController.b().whileTrue(new SetPivotVoltage(intake, 1));
     // operatorController.x().whileTrue(new SetPivotVoltage(intake, -1));
 
-    elevator.setDefaultCommand(new RunElevatorVoltage(elevator, operatorController::getRightY));
-
-    operatorController.a().whileTrue(new SetHeight(elevator, 0.3));
-    operatorController.b().whileTrue(new SetHeight(elevator, 0));
+    // elevator.setDefaultCommand(new RunElevatorVoltage(elevator, operatorController::getRightY));
+    //elevator.setDefaultCommand(new RunElevator(elevator, operatorController::getRightY));
+    //wrist.setDefaultCommand(new RunWrist(wrist, elevator));
+    operatorController.a().onTrue(new SetWristPosition(wrist, 45));
+    operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
+    operatorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));
     driverController.a().onTrue(new SetGyroYaw(drive, 0));
   }
 

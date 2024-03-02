@@ -6,17 +6,20 @@ package org.first5924.frc2024.commands.elevator;
 
 import java.util.function.DoubleSupplier;
 
+import org.first5924.frc2024.constants.ElevatorConstants;
 import org.first5924.frc2024.subsystems.elevator.Elevator;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class RunElevator extends Command {
-  /** Creates a new SetPercent. (still need joystick y setup) */
   private final Elevator elevator;
-  private final DoubleSupplier mJoystickY;
-  public RunElevator(Elevator elevator, DoubleSupplier joystickY) {
+  private final DoubleSupplier rightJoystickY;
+
+  /** Creates a new RunWristAndElevator. */
+  public RunElevator(Elevator elevator, DoubleSupplier rightJoystickY) {
     this.elevator = elevator;
-    mJoystickY = joystickY;
+    this.rightJoystickY = rightJoystickY;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(elevator);
   }
@@ -28,12 +31,30 @@ public class RunElevator extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //elevator.setPercent(mJoystickY.getAsDouble());
+    switch(elevator.getWristAndElevatorState()) {
+      case INTAKE:
+        elevator.setHeight(ElevatorConstants.kIntakeHeight);
+        break;
+      case AMP:
+        elevator.setHeight(ElevatorConstants.kAmpHeight);
+        break;
+      case AIM_LOW:
+        elevator.setHeight(ElevatorConstants.kAimLowHeight);
+        break;
+      case AIM_HIGH:
+        elevator.setHeight(ElevatorConstants.kAimHighHeight);
+        break;
+      case CLIMB:
+        elevator.setVoltage(MathUtil.applyDeadband(-rightJoystickY.getAsDouble(), 0.1) * ElevatorConstants.kPeakForwardVoltage);
+        break;
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    elevator.setVoltage(0);
+  }
 
   // Returns true when the command should end.
   @Override
