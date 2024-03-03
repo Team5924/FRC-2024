@@ -29,4 +29,8 @@ public class Vision extends SubsystemBase {
   public Pose2d getBotPose2dBlue() {
     return new Pose2d(inputs.botPoseX, inputs.botPoseY, new Rotation2d(inputs.botPoseRotationRadians));
   }
+
+  public double getLatencySeconds() {
+    return inputs.aprilTagCaptureLatencySeconds + inputs.aprilTagPipelineLatencySeconds;
+  }
 }

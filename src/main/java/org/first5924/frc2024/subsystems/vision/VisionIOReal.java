@@ -20,5 +20,7 @@ public class VisionIOReal implements VisionIO {
     inputs.botPoseRotationRadians = botPose.getRotation().getRadians();
     inputs.botPoseX = botPose.getX();
     inputs.botPoseY = botPose.getY();
+    inputs.aprilTagPipelineLatencySeconds = LimelightHelpers.getLatency_Pipeline(VisionConstants.aprilTagLimelightName) / 1000;
+    inputs.numberFiducialsSpotted = LimelightHelpers.getLatestResults(VisionConstants.aprilTagLimelightName).targetingResults.targets_Fiducials.length;
   }
 }

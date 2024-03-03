@@ -137,7 +137,7 @@ public class Drive extends SubsystemBase {
   }
 
   public void periodic() {
-    SmartDashboard.putNumber("Pitch degrees", getPitch().getDegrees());
+    Logger.recordOutput("Estimated Pose", getEstimatedPose());
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Drive/Gyro", gyroInputs);
     for (var module : modules) {
@@ -151,10 +151,8 @@ public class Drive extends SubsystemBase {
         modules[1].getPosition(),
         modules[2].getPosition(),
         modules[3].getPosition(),
-      });
-
-    SmartDashboard.putNumber("X", poseEstimator.getPoseMeters().getX());
-    SmartDashboard.putNumber("Y", poseEstimator.getPoseMeters().getY());
+      }
+    );
   }
 
   /** Stops the drive. */
@@ -193,20 +191,24 @@ public class Drive extends SubsystemBase {
     return gyroInputs.rollVelocityRadPerSec;
   }
 
-  public Pose2d getPose() {
-    return poseEstimator.getPoseMeters();
+  public Pose2d getEstimatedPose() {
+    return poseEstimator.getEstimatedPosition();
+  }
+
+  public void addVisionMeasurement(Pose2d visionPoseEstimate, double timestampSeconds) {
+    poseEstimator.addVisionMeasurement(visionPoseEstimate, timestampSeconds);
   }
 
   public double getDistanceToSpeakerCenter(Alliance alliance) {
     return alliance == Alliance.Blue ?
-      FieldConstants.kBlueSpeakerCenterFieldTranslation.getDistance(getPose().getTranslation()) :
-      FieldConstants.kRedSpeakerCenterFieldTranslation.getDistance(getPose().getTranslation());
+      FieldConstants.kBlueSpeakerCenterFieldTranslation.getDistance(getEstimatedPose().getTranslation()) :
+      FieldConstants.kRedSpeakerCenterFieldTranslation.getDistance(getEstimatedPose().getTranslation());
   }
 
   public double getRotationRadiansToPointToSpeakerCenter(Alliance alliance) {
     return alliance == Alliance.Blue ?
-      FieldConstants.kBlueSpeakerCenterFieldTranslation.minus(getPose().getTranslation()).getAngle().getRadians() :
-      FieldConstants.kRedSpeakerCenterFieldTranslation.minus(getPose().getTranslation()).getAngle().getRadians();
+      FieldConstants.kBlueSpeakerCenterFieldTranslation.minus(getEstimatedPose().getTranslation()).getAngle().getRadians() :
+      FieldConstants.kRedSpeakerCenterFieldTranslation.minus(getEstimatedPose().getTranslation()).getAngle().getRadians();
   }
 
   public void resetPose(Pose2d pose) {
