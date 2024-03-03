@@ -66,7 +66,7 @@ public class Drive extends SubsystemBase {
     for (var module : modules) {
       module.setBrakeMode(false);
     }
-    poseEstimator = new SwerveDriveOdometry(
+    poseEstimator = new SwerveDrivePoseEstimator(
       kinematics,
       new Rotation2d(gyroInputs.yawPositionRad),
       new SwerveModulePosition[] {
@@ -74,7 +74,8 @@ public class Drive extends SubsystemBase {
         modules[1].getPosition(),
         modules[2].getPosition(),
         modules[3].getPosition(),
-      }
+      },
+      new Pose2d()
     );
   }
 
