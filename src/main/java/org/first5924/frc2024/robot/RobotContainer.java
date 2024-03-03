@@ -231,7 +231,7 @@ public class RobotContainer {
     //operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
     //operatorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));
     driverController.a().onTrue(new SetGyroYaw(drive, 0));
-    
+    driverController.b().onTrue(new SetIntakeState(intake, IntakeState.FEEDER));
   }
 
   //public Command FollowPath()

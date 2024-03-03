@@ -6,15 +6,15 @@ package org.first5924.frc2024.subsystems.vision;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class CalculateAutoaim extends SubsystemBase {
+public class CalculateAutoAim extends SubsystemBase {
   /** Creates a new CalculateAutoaim. */
-  public CalculateAutoaim() {}
+  public CalculateAutoAim() {}
 
   private double[][] highDistanceAngleTable = {
     //list of distance values in meters
-    {}, 
+    {1.13, 2}, 
     //list of successful angles in degrees
-    {}
+    {54, 40}
   };
 
   private double[][] lowDistanceAngleTable = {
