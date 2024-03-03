@@ -33,4 +33,8 @@ public class Vision extends SubsystemBase {
   public double getLatencySeconds() {
     return inputs.aprilTagCaptureLatencySeconds + inputs.aprilTagPipelineLatencySeconds;
   }
+
+  public int getNumberFiducialsSpotted() {
+    return inputs.numberFiducialsSpotted;
+  }
 }

@@ -138,6 +138,7 @@ public class Drive extends SubsystemBase {
 
   public void periodic() {
     Logger.recordOutput("Estimated Pose", getEstimatedPose());
+    Logger.recordOutput("Distance to Center of Red Speaker", getDistanceToSpeakerCenter(Alliance.Red));
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Drive/Gyro", gyroInputs);
     for (var module : modules) {

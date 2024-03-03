@@ -12,16 +12,16 @@ public class CalculateAutoAim extends SubsystemBase {
 
   private double[][] highDistanceAngleTable = {
     //list of distance values in meters
-    {1.13, 2}, 
+    {}, 
     //list of successful angles in degrees
-    {54, 40}
+    {}
   };
 
   private double[][] lowDistanceAngleTable = {
     //list of distance values in meters (truncate at 3 decimals)
-    {1.075},
-    //list of successful angles values in degrees (truncate at 3 decimals)
-    {54.843}
+    {1.13, 2, 3}, 
+    //list of successful angles in degrees
+    {54, 40, 30}
   };
 
   
