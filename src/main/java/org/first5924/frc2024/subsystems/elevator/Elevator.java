@@ -8,6 +8,7 @@ import org.first5924.frc2024.constants.ElevatorConstants;
 import org.first5924.frc2024.constants.WristAndElevatorState;
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
@@ -27,6 +28,7 @@ public class Elevator extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Elevator", inputs);
     getDrumRotationsFromLaserCan();
+    SmartDashboard.putString("Wrist and Elevator State", getWristAndElevatorState().toString());
   }
 
   public WristAndElevatorState getWristAndElevatorState() {

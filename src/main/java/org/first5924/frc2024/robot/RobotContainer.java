@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -173,7 +174,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     operatorController.y().whileTrue(new ShooterOn(shooter));
     vision.setDefaultCommand(new RunVisionPoseEstimation(drive, vision));
-    wrist.setDefaultCommand(new SetWristVoltage(wrist, operatorController::getLeftY));
+    // wrist.setDefaultCommand(new SetWristVoltage(wrist, operatorController::getLeftY));
     drive.setDefaultCommand(new DriveWithJoysticks(
       drive,
       driverController::getLeftX,
@@ -212,14 +213,19 @@ public class RobotContainer {
     // //driverController.y().onTrue(FollowPath());
     // driverController.leftTrigger().whileTrue(new TurnToSpeaker(drive, fieldCam::getBotYaw, fieldCam::getYawToRedSpeaker));
     // wrist.setDefaultCommand(new RotateWrist(wrist, operatorController::getRightY));
-    // intake.setDefaultCommand(new RunIntake(intake));
     // operatorController.leftBumper().onTrue(new SetIntakeState(intake, IntakeState.RETRACT));
     // operatorController.rightBumper().onTrue(new SetIntakeState(intake, IntakeState.FLOOR));
     // operatorController.rightTrigger(0.75).onTrue(new SetIntakeState(intake, IntakeState.EJECT));
     // operatorController.rightTrigger(0.75).onFalse(new SetIntakeState(intake, intake.getIntakeStateBeforeEject()));
     intake.setDefaultCommand(new RunIntake(intake));
-    operatorController.leftBumper().onTrue(new SetIntakeState(intake, IntakeState.RETRACT));
-    operatorController.rightBumper().onTrue(new SetIntakeState(intake, IntakeState.FLOOR));
+    operatorController.leftBumper().onTrue(new ParallelCommandGroup(
+      new SetIntakeState(intake, IntakeState.RETRACT),
+      new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW)
+    ));
+    operatorController.rightBumper().onTrue(new ParallelCommandGroup(
+      new SetIntakeState(intake, IntakeState.FLOOR),
+      new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE)
+    ));
     operatorController.rightTrigger(0.75).onTrue(new SetIntakeState(intake, IntakeState.EJECT));
     // operatorController.rightTrigger(0.75).onFalse(new SetIntakeState(intake, intake.getIntakeStateBeforeEject()));
     // operatorController.a().whileTrue(new SetRollerVoltage(intake, 4));
@@ -227,14 +233,14 @@ public class RobotContainer {
     // operatorController.x().whileTrue(new SetPivotVoltage(intake, -1));
     // elevator.setDefaultCommand(new RunElevatorVoltage(elevator, operatorController::getRightY));
     elevator.setDefaultCommand(new RunElevator(elevator, operatorController::getRightY));
-    // wrist.setDefaultCommand(new RunWrist(wrist, elevator));
+    wrist.setDefaultCommand(new RunWrist(wrist, elevator, drive));
     feeder.setDefaultCommand(new RunFeeder(feeder, intake));
     //operatorController.a().onTrue(new SetWristPosition(wrist, 45));
     //operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
     //operatorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));
     // operatorController.a().onTrue(new SetWristPosition(wrist, 45));
     operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
-    operatorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));
+    operatorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
     driverController.a().onTrue(new SetGyroYaw(drive, 0));
     driverController.b().onTrue(new SetIntakeState(intake, IntakeState.FEEDER));
   }

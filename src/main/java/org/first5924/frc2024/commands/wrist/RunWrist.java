@@ -4,20 +4,25 @@
 
 package org.first5924.frc2024.commands.wrist;
 
+import org.first5924.frc2024.constants.WristAndElevatorState;
 import org.first5924.frc2024.constants.WristConstants;
+import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.elevator.Elevator;
 import org.first5924.frc2024.subsystems.wrist.Wrist;
 
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class RunWrist extends Command {
   private final Wrist wrist;
   private final Elevator elevator;
+  private final Drive drive;
 
   /** Creates a new RunWristAndElevator. */
-  public RunWrist(Wrist wrist, Elevator elevator) {
+  public RunWrist(Wrist wrist, Elevator elevator, Drive drive) {
     this.wrist = wrist;
     this.elevator = elevator;
+    this.drive = drive;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(wrist);
   }
@@ -37,6 +42,7 @@ public class RunWrist extends Command {
         wrist.setAngle(WristConstants.kAmpAngle);
         break;
       case AIM_LOW:
+        wrist.setAngle(wrist.calculateWristAngle(WristAndElevatorState.AIM_LOW, drive.getDistanceToSpeakerCenter(Alliance.Red)));
         break;
       case AIM_HIGH:
         break;
