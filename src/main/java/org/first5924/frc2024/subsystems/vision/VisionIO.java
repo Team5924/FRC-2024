@@ -4,5 +4,21 @@
 
 package org.first5924.frc2024.subsystems.vision;
 
+import org.littletonrobotics.junction.AutoLog;
+
 /** Add your docs here. */
-public class VisionIO {}
+public interface VisionIO {
+  @AutoLog
+  public static class VisionIOInputs {
+    public double botPoseRotationRadians = 0.0;
+    public double botPoseX = 0.0;
+    public double botPoseY = 0.0;
+    public double aprilTagPipelineLatencySeconds = 0.0;
+    public double aprilTagCaptureLatencySeconds = 0.0;
+    public int numberFiducialsSpotted = 0;
+  }
+
+  /** Updates the set of loggable inputs. */
+  public default void updateInputs(VisionIOInputs inputs) {
+  }
+}

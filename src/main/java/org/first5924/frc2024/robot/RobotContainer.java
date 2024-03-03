@@ -26,6 +26,7 @@ import org.first5924.frc2024.commands.wrist.RunWrist;
 import org.first5924.frc2024.commands.wrist.SetWristPosition;
 import org.first5924.frc2024.commands.shooter.ShooterOn;
 import org.first5924.frc2024.commands.vision.DriveToNote;
+import org.first5924.frc2024.commands.vision.RunVisionPoseEstimation;
 import org.first5924.frc2024.commands.vision.TurnToSpeaker;
 import org.first5924.frc2024.commands.wrist.SetWristVoltage;
 import org.first5924.frc2024.commands.elevator.RunElevator;
@@ -53,7 +54,9 @@ import org.first5924.frc2024.subsystems.shooter.Shooter;
 import org.first5924.frc2024.subsystems.shooter.ShooterIO;
 import org.first5924.frc2024.subsystems.shooter.ShooterIOTalonFX;
 import org.first5924.frc2024.subsystems.vision.DetectorCam;
-import org.first5924.frc2024.subsystems.vision.FieldCam;
+import org.first5924.frc2024.subsystems.vision.Vision;
+import org.first5924.frc2024.subsystems.vision.VisionIO;
+import org.first5924.frc2024.subsystems.vision.VisionIOReal;
 import org.first5924.frc2024.subsystems.wrist.Wrist;
 import org.first5924.frc2024.subsystems.wrist.WristIO;
 import org.first5924.frc2024.subsystems.wrist.WristIOTalonFX;
@@ -78,10 +81,9 @@ public class RobotContainer {
   private final Wrist wrist;
   private final Drive drive;
   private final DetectorCam dCam;
-  private final FieldCam fCam;
   private final Intake intake;
   private final Elevator elevator;
-  // private final Vision vision;
+  private final Vision vision;
 
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
@@ -104,10 +106,9 @@ public class RobotContainer {
         );
 
         feeder = new Feeder(new FeederIOTalonFX());
-        // vision = new Vision();
+        vision = new Vision(new VisionIOReal());
 
         // feeder = new Feeder(new FeederIOTalonFX());
-        fCam = new FieldCam();
         dCam = new DetectorCam();
         intake = new Intake(new IntakeIOTalonFX());
         elevator = new Elevator(new ElevatorIOTalonFX());
@@ -125,10 +126,10 @@ public class RobotContainer {
         );
         feeder = new Feeder(new FeederIO() {});
         shooter = new Shooter(new ShooterIO() {});
-        fCam = new FieldCam();
         dCam = new DetectorCam();
         intake = new Intake(new IntakeIO() {});
         elevator = new Elevator(new ElevatorIO() {});
+        vision = new Vision(new VisionIO() {});
         break;
 
       // Replayed robot, disable IO implementations
@@ -145,10 +146,10 @@ public class RobotContainer {
         feeder = new Feeder(new FeederIO() {});
         // vision = new Vision();
         // feeder = new Feeder(new FeederIO() {});
-        fCam = new FieldCam();
         dCam = new DetectorCam();
         intake = new Intake(new IntakeIO() {});
         elevator = new Elevator(new ElevatorIO() {});
+        vision = new Vision(new VisionIO() {});
         break;
     }
 
@@ -171,6 +172,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     operatorController.y().whileTrue(new ShooterOn(shooter));
+    vision.setDefaultCommand(new RunVisionPoseEstimation(drive, vision));
     wrist.setDefaultCommand(new SetWristVoltage(wrist, operatorController::getLeftY));
     drive.setDefaultCommand(new DriveWithJoysticks(
       drive,
@@ -230,6 +232,9 @@ public class RobotContainer {
     //operatorController.a().onTrue(new SetWristPosition(wrist, 45));
     //operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
     //operatorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));
+    // operatorController.a().onTrue(new SetWristPosition(wrist, 45));
+    operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
+    operatorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));
     driverController.a().onTrue(new SetGyroYaw(drive, 0));
     driverController.b().onTrue(new SetIntakeState(intake, IntakeState.FEEDER));
   }

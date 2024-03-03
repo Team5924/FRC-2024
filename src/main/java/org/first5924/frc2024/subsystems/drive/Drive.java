@@ -7,6 +7,7 @@
 
 package org.first5924.frc2024.subsystems.drive;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -21,6 +22,7 @@ import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -28,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import org.first5924.frc2024.constants.DriveConstants;
+import org.first5924.frc2024.constants.FieldConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
@@ -43,7 +46,7 @@ public class Drive extends SubsystemBase {
       new Translation2d(-DriveConstants.kTrackWidthX / 2, -DriveConstants.kTrackWidthY / 2)
     );
 
-  private SwerveDriveOdometry odometry;
+  private SwerveDrivePoseEstimator poseEstimator;
 
   // For SysId
   private final MutableMeasure<Voltage> appliedVoltageMutableMeasure = MutableMeasure.mutable(Units.Volts.of(0));
@@ -63,7 +66,7 @@ public class Drive extends SubsystemBase {
     for (var module : modules) {
       module.setBrakeMode(false);
     }
-    odometry = new SwerveDriveOdometry(
+    poseEstimator = new SwerveDrivePoseEstimator(
       kinematics,
       new Rotation2d(gyroInputs.yawPositionRad),
       new SwerveModulePosition[] {
@@ -71,7 +74,8 @@ public class Drive extends SubsystemBase {
         modules[1].getPosition(),
         modules[2].getPosition(),
         modules[3].getPosition(),
-      }
+      },
+      new Pose2d()
     );
   }
 
@@ -133,24 +137,22 @@ public class Drive extends SubsystemBase {
   }
 
   public void periodic() {
-    SmartDashboard.putNumber("Pitch degrees", getPitch().getDegrees());
+    Logger.recordOutput("Estimated Pose", getEstimatedPose());
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Drive/Gyro", gyroInputs);
     for (var module : modules) {
       module.periodic();
     }
 
-    odometry.update(
+    poseEstimator.update(
       new Rotation2d(gyroInputs.yawPositionRad),
       new SwerveModulePosition[] {
         modules[0].getPosition(),
         modules[1].getPosition(),
         modules[2].getPosition(),
         modules[3].getPosition(),
-      });
-
-    SmartDashboard.putNumber("X", odometry.getPoseMeters().getX());
-    SmartDashboard.putNumber("Y", odometry.getPoseMeters().getY());
+      }
+    );
   }
 
   /** Stops the drive. */
@@ -189,12 +191,28 @@ public class Drive extends SubsystemBase {
     return gyroInputs.rollVelocityRadPerSec;
   }
 
-  public Pose2d getPose() {
-    return odometry.getPoseMeters();
+  public Pose2d getEstimatedPose() {
+    return poseEstimator.getEstimatedPosition();
+  }
+
+  public void addVisionMeasurement(Pose2d visionPoseEstimate, double timestampSeconds) {
+    poseEstimator.addVisionMeasurement(visionPoseEstimate, timestampSeconds);
+  }
+
+  public double getDistanceToSpeakerCenter(Alliance alliance) {
+    return alliance == Alliance.Blue ?
+      FieldConstants.kBlueSpeakerCenterFieldTranslation.getDistance(getEstimatedPose().getTranslation()) :
+      FieldConstants.kRedSpeakerCenterFieldTranslation.getDistance(getEstimatedPose().getTranslation());
+  }
+
+  public double getRotationRadiansToPointToSpeakerCenter(Alliance alliance) {
+    return alliance == Alliance.Blue ?
+      FieldConstants.kBlueSpeakerCenterFieldTranslation.minus(getEstimatedPose().getTranslation()).getAngle().getRadians() :
+      FieldConstants.kRedSpeakerCenterFieldTranslation.minus(getEstimatedPose().getTranslation()).getAngle().getRadians();
   }
 
   public void resetPose(Pose2d pose) {
-    odometry.resetPosition(
+    poseEstimator.resetPosition(
       pose.getRotation(),
       new SwerveModulePosition[] {
         modules[0].getPosition(),

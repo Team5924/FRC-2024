@@ -1,12 +1,15 @@
 package org.first5924.frc2024.constants;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
+
 public class FieldConstants {
-    //x coordinate of the back of the speaker looking at the field from the judge's table
-    public static final double xRedSpeakerMeters = (326.61-9.8)/39.37; 
-    public static final double xBlueSpeakerMeters = (-326.61+9.8)/39.37;
-    
-    //y coordinate of the speakers looking at the field from the judge's table
-    public static final double ySpeakerMeters = 57/39.37;
+    public static final double kBlueSpeakerCenterFieldX = Units.inchesToMeters(9.1);
+    public static final double kRedSpeakerCenterFieldX = Units.inchesToMeters(648) - kBlueSpeakerCenterFieldX;
+    public static final double kBothSpeakerCenterFieldY = Units.inchesToMeters(219);
+
+    public static final Translation2d kBlueSpeakerCenterFieldTranslation = new Translation2d(kBlueSpeakerCenterFieldX, kBothSpeakerCenterFieldY);
+    public static final Translation2d kRedSpeakerCenterFieldTranslation = new Translation2d(kRedSpeakerCenterFieldX, kBothSpeakerCenterFieldY);
 
     //this value is to be tested
     public static final double shooterExitVeloMPS = 32.6;
