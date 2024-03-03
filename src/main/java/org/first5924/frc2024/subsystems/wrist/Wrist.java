@@ -6,6 +6,7 @@ package org.first5924.frc2024.subsystems.wrist;
 
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Wrist extends SubsystemBase {
   /** Creates a new Wrist. */
@@ -21,6 +22,7 @@ public class Wrist extends SubsystemBase {
     // This method will be called once per scheduler run
     io.updateInputs(inputs);
     Logger.processInputs("Wrist", inputs);
+    SmartDashboard.putNumber("Wrist angle", getAngleDegrees());
   }
 
   public double getAngleDegrees() {

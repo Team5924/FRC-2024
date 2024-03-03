@@ -18,10 +18,10 @@ public class CalculateAutoaim extends SubsystemBase {
   };
 
   private double[][] lowDistanceAngleTable = {
-    //list of distance values in meters
-    {},
-    //list of distance values in degrees
-    {}
+    //list of distance values in meters (truncate at 3 decimals)
+    {1.075},
+    //list of successful angles values in degrees (truncate at 3 decimals)
+    {54.843}
   };
 
   
@@ -62,6 +62,37 @@ public class CalculateAutoaim extends SubsystemBase {
   }
 
 
+
+
+  public double calculateAngleLow(double distanceFromSpeaker){
+    int index;
+    double distance;
+    double slope;
+    double mx1;
+    double y1;
+
+    //iterate through the array in order to find the distance that the input is in between to get the most accurate measure
+    index = 0;
+    distance = lowDistanceAngleTable[0][index];
+    while(distanceFromSpeaker > distance){
+      ++index;
+      distance = lowDistanceAngleTable[0][index];
+    }
+
+    //find the slope
+    slope = (lowDistanceAngleTable[1][index] - lowDistanceAngleTable[1][index - 1])/(lowDistanceAngleTable[0][index] - lowDistanceAngleTable[0][index - 1]);
+
+    /*
+      (y - y1) = m(x - x1)
+      (y - y1) = mx - mx1
+       y = mx - mx1 + y1
+    */
+    mx1 = slope*lowDistanceAngleTable[0][index];
+    y1 = lowDistanceAngleTable[1][index];
+
+    return (slope*distanceFromSpeaker - mx1 + y1);
+
+  }
 
 
 }

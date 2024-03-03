@@ -77,8 +77,8 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Wrist wrist;
   private final Drive drive;
-  // private final DetectorCam dCam;
-  // private final FieldCam fieldCam;
+  private final DetectorCam dCam;
+  private final FieldCam fCam;
   private final Intake intake;
   private final Elevator elevator;
   // private final Vision vision;
@@ -107,8 +107,8 @@ public class RobotContainer {
         // vision = new Vision();
 
         // feeder = new Feeder(new FeederIOTalonFX());
-        // fieldCam = new FieldCam();
-        // dCam = new DetectorCam();
+        fCam = new FieldCam();
+        dCam = new DetectorCam();
         intake = new Intake(new IntakeIOTalonFX());
         elevator = new Elevator(new ElevatorIOTalonFX());
         break;
@@ -125,8 +125,8 @@ public class RobotContainer {
         );
         feeder = new Feeder(new FeederIO() {});
         shooter = new Shooter(new ShooterIO() {});
-        // fieldCam = new FieldCam();
-        // dCam = new DetectorCam();
+        fCam = new FieldCam();
+        dCam = new DetectorCam();
         intake = new Intake(new IntakeIO() {});
         elevator = new Elevator(new ElevatorIO() {});
         break;
@@ -145,8 +145,8 @@ public class RobotContainer {
         feeder = new Feeder(new FeederIO() {});
         // vision = new Vision();
         // feeder = new Feeder(new FeederIO() {});
-        // fieldCam = new FieldCam();
-        // dCam = new DetectorCam();
+        fCam = new FieldCam();
+        dCam = new DetectorCam();
         intake = new Intake(new IntakeIO() {});
         elevator = new Elevator(new ElevatorIO() {});
         break;
@@ -225,12 +225,13 @@ public class RobotContainer {
     // operatorController.x().whileTrue(new SetPivotVoltage(intake, -1));
     // elevator.setDefaultCommand(new RunElevatorVoltage(elevator, operatorController::getRightY));
     elevator.setDefaultCommand(new RunElevator(elevator, operatorController::getRightY));
-    wrist.setDefaultCommand(new RunWrist(wrist, elevator));
+    // wrist.setDefaultCommand(new RunWrist(wrist, elevator));
     feeder.setDefaultCommand(new RunFeeder(feeder, intake));
-    operatorController.a().onTrue(new SetWristPosition(wrist, 45));
-    operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
-    operatorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));
+    //operatorController.a().onTrue(new SetWristPosition(wrist, 45));
+    //operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
+    //operatorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));
     driverController.a().onTrue(new SetGyroYaw(drive, 0));
+    
   }
 
   //public Command FollowPath()

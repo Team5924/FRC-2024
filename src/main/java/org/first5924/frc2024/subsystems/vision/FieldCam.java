@@ -30,10 +30,10 @@ public class FieldCam extends SubsystemBase {
     xBotPose = botPoseArray[0];
     yBotPose = botPoseArray[1]; 
     yawBotPose = botPoseArray[5];
-    SmartDashboard.putNumber("Bot Pose X", xBotPose);
-    SmartDashboard.putNumber("Bot Pose y", yBotPose);
+    //SmartDashboard.putNumber("Bot Pose X", xBotPose);
+    //SmartDashboard.putNumber("Bot Pose y", yBotPose);
     SmartDashboard.putNumber("Distance to speaker meters", getDistanceToRedSpeakerMeters());
-    SmartDashboard.putNumber("Target angle", getRedShooterAngle());
+    //SmartDashboard.putNumber("Target angle", getRedShooterAngle());
 
     
   }
