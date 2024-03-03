@@ -7,6 +7,7 @@
 
 package org.first5924.frc2024.subsystems.drive;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -21,6 +22,7 @@ import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -28,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import org.first5924.frc2024.constants.DriveConstants;
+import org.first5924.frc2024.constants.FieldConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
@@ -43,7 +46,7 @@ public class Drive extends SubsystemBase {
       new Translation2d(-DriveConstants.kTrackWidthX / 2, -DriveConstants.kTrackWidthY / 2)
     );
 
-  private SwerveDriveOdometry odometry;
+  private SwerveDrivePoseEstimator poseEstimator;
 
   // For SysId
   private final MutableMeasure<Voltage> appliedVoltageMutableMeasure = MutableMeasure.mutable(Units.Volts.of(0));
@@ -63,7 +66,7 @@ public class Drive extends SubsystemBase {
     for (var module : modules) {
       module.setBrakeMode(false);
     }
-    odometry = new SwerveDriveOdometry(
+    poseEstimator = new SwerveDriveOdometry(
       kinematics,
       new Rotation2d(gyroInputs.yawPositionRad),
       new SwerveModulePosition[] {
@@ -140,7 +143,7 @@ public class Drive extends SubsystemBase {
       module.periodic();
     }
 
-    odometry.update(
+    poseEstimator.update(
       new Rotation2d(gyroInputs.yawPositionRad),
       new SwerveModulePosition[] {
         modules[0].getPosition(),
@@ -149,8 +152,8 @@ public class Drive extends SubsystemBase {
         modules[3].getPosition(),
       });
 
-    SmartDashboard.putNumber("X", odometry.getPoseMeters().getX());
-    SmartDashboard.putNumber("Y", odometry.getPoseMeters().getY());
+    SmartDashboard.putNumber("X", poseEstimator.getPoseMeters().getX());
+    SmartDashboard.putNumber("Y", poseEstimator.getPoseMeters().getY());
   }
 
   /** Stops the drive. */
@@ -190,11 +193,23 @@ public class Drive extends SubsystemBase {
   }
 
   public Pose2d getPose() {
-    return odometry.getPoseMeters();
+    return poseEstimator.getPoseMeters();
+  }
+
+  public double getDistanceToSpeakerCenter(Alliance alliance) {
+    return alliance == Alliance.Blue ?
+      FieldConstants.kBlueSpeakerCenterFieldTranslation.getDistance(getPose().getTranslation()) :
+      FieldConstants.kRedSpeakerCenterFieldTranslation.getDistance(getPose().getTranslation());
+  }
+
+  public double getRotationRadiansToPointToSpeakerCenter(Alliance alliance) {
+    return alliance == Alliance.Blue ?
+      FieldConstants.kBlueSpeakerCenterFieldTranslation.minus(getPose().getTranslation()).getAngle().getRadians() :
+      FieldConstants.kRedSpeakerCenterFieldTranslation.minus(getPose().getTranslation()).getAngle().getRadians();
   }
 
   public void resetPose(Pose2d pose) {
-    odometry.resetPosition(
+    poseEstimator.resetPosition(
       pose.getRotation(),
       new SwerveModulePosition[] {
         modules[0].getPosition(),

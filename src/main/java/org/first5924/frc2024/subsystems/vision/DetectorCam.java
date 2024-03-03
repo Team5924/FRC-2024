@@ -4,16 +4,14 @@
 
 package org.first5924.frc2024.subsystems.vision;
 
-import org.first5924.frc2024.subsystems.vision.LimelightHelpers;
-import org.first5924.frc2024.subsystems.vision.LimelightHelpers.LimelightResults;
-import org.first5924.frc2024.subsystems.vision.LimelightHelpers.LimelightTarget_Detector;
 import org.first5924.frc2024.constants.VisionConstants;
+import org.first5924.lib.LimelightHelpers;
+import org.first5924.lib.LimelightHelpers.LimelightResults;
+import org.first5924.lib.LimelightHelpers.LimelightTarget_Detector;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 

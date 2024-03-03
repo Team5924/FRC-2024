@@ -10,7 +10,7 @@ import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
-  /** Creates a new PivotSubsystem. */
+  /** Creates a new Intake. */
   private final IntakeIO io;
   private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
 

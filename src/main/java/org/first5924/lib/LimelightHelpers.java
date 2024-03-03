@@ -1,5 +1,6 @@
-package org.first5924.lib;
 //LimelightHelpers v1.2.1 (March 1, 2023)
+
+package org.first5924.lib;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -764,7 +765,7 @@ public class LimelightHelpers {
         try {
             results = mapper.readValue(getJSONDump(limelightName), LimelightResults.class);
         } catch (JsonProcessingException e) {
-            // System.err.println("lljson error: " + e.getMessage());
+            System.err.println("lljson error: " + e.getMessage());
         }
 
         long end = System.nanoTime();
