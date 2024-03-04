@@ -39,6 +39,7 @@ public class DriveWithJoysticks extends Command {
     this.fieldCentricSupplier = fieldCentricSupplier;
     this.slowMode = slowMode;
     this.autoRotateTowardsAllianceSpeaker = autoRotateTowardsAllianceSpeaker;
+    autoRotationPidController.enableContinuousInput(-Math.PI, Math.PI);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drive);
   }
@@ -79,7 +80,7 @@ public class DriveWithJoysticks extends Command {
         MathUtil.clamp(
           autoRotationPidController.calculate(
             drive.getYaw().getRadians(),
-            drive.getFieldRotationRadiansToPointToSpeakerCenter(autoRotateTowardsAllianceSpeaker)
+            drive.getFieldRotationRadiansToPointShooterAtSpeakerCenter(autoRotateTowardsAllianceSpeaker)
           ),
           -DriveConstants.kNormalModeRotationMultiplier,
           DriveConstants.kNormalModeRotationMultiplier
