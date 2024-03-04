@@ -81,7 +81,7 @@ public class Drive extends SubsystemBase {
   public void periodic() {
     Logger.recordOutput("Estimated Pose", getEstimatedPose());
     Logger.recordOutput("Distance to Center of Red Speaker", getDistanceToSpeakerCenter(Alliance.Red));
-    Logger.recordOutput("Field Angle to Face Speaker", getFieldRotationRadiansToPointToSpeakerCenter(Alliance.Red));
+    Logger.recordOutput("Field Angle to Face Speaker", getFieldRotationRadiansToPointShooterAtSpeakerCenter(Alliance.Red));
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Drive/Gyro", gyroInputs);
     for (var module : modules) {
@@ -206,10 +206,10 @@ public class Drive extends SubsystemBase {
       FieldConstants.kRedSpeakerCenterFieldTranslation.getDistance(getEstimatedPose().getTranslation());
   }
 
-  public double getFieldRotationRadiansToPointToSpeakerCenter(Alliance alliance) {
+  public double getFieldRotationRadiansToPointShooterAtSpeakerCenter(Alliance alliance) {
     return alliance == Alliance.Blue ?
-      FieldConstants.kBlueSpeakerCenterFieldTranslation.minus(getEstimatedPose().getTranslation()).getAngle().getRadians() :
-      FieldConstants.kRedSpeakerCenterFieldTranslation.minus(getEstimatedPose().getTranslation()).getAngle().getRadians();
+      FieldConstants.kBlueSpeakerCenterFieldTranslation.minus(getEstimatedPose().getTranslation()).getAngle().plus(new Rotation2d(Math.PI)).getRadians() :
+      FieldConstants.kRedSpeakerCenterFieldTranslation.minus(getEstimatedPose().getTranslation()).getAngle().plus(new Rotation2d(Math.PI)).getRadians();
   }
 
   public void resetPose(Pose2d pose) {
