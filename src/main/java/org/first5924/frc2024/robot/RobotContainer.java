@@ -20,7 +20,7 @@ import org.first5924.frc2024.commands.feeder.ReverseFeederIfIntakePositioned;
 import org.first5924.frc2024.commands.feeder.RunFeeder;
 import org.first5924.frc2024.commands.wrist.RunWrist;
 import org.first5924.frc2024.commands.wrist.WristManualControl;
-import org.first5924.frc2024.commands.shooter.ShooterOn;
+import org.first5924.frc2024.commands.shooter.EnableShooter;
 import org.first5924.frc2024.commands.vision.RunVisionPoseEstimation;
 import org.first5924.frc2024.constants.RobotConstants;
 import org.first5924.frc2024.constants.WristAndElevatorState;
@@ -209,7 +209,7 @@ public class RobotContainer {
       new SetIntakeState(intake, intake.getIntakeStateBeforeEject())
     );
 
-    operatorController.y().whileTrue(new ShooterOn(shooter));
+    operatorController.y().onTrue(new EnableShooter(shooter, true)).onFalse(new EnableShooter(shooter, false));
     operatorController.leftBumper().onTrue(new ParallelCommandGroup(
       new SetIntakeState(intake, IntakeState.RETRACT),
       new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW)

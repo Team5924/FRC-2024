@@ -7,12 +7,14 @@ package org.first5924.frc2024.commands.shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.first5924.frc2024.subsystems.shooter.Shooter;
 
-public class ShooterOn extends Command {
+public class EnableShooter extends Command {
   /** Creates a new ShooterOn. */
   private final Shooter shooter;
+  private final boolean enable;
 
-  public ShooterOn(Shooter shooter) {
+  public EnableShooter(Shooter shooter, boolean enable) {
     this.shooter = shooter;
+    this.enable = enable;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
   }
@@ -24,13 +26,16 @@ public class ShooterOn extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setPercent(1);
+    if (enable) {
+      shooter.setPercent(1);
+    } else {
+      shooter.setPercent(0);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.setPercent(0);
   }
 
   // Returns true when the command should end.
