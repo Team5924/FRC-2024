@@ -37,7 +37,7 @@ public class RunFeeder extends Command {
   public void execute() {
     double deadbandedLeftJoystickY = MathUtil.applyDeadband(leftJoystickY.getAsDouble(), 0.2);
     if (deadbandedLeftJoystickY != 0) {
-      feeder.setPercent(deadbandedLeftJoystickY);
+      feeder.setPercent(-deadbandedLeftJoystickY);
     } else if (intake.getIntakeState() == IntakeState.FLOOR && !feeder.isNoteFullyIn()) {
       feeder.setPercent(IntakeConstants.kFloorRollerPercent);
     } else {

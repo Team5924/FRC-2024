@@ -20,10 +20,14 @@ public class Wrist extends SubsystemBase {
   public Wrist(WristIO io) {
     this.io = io;
 
-    lowAimInterpolatingDoubleTreeMap.put(0.99, 50.0);
-    lowAimInterpolatingDoubleTreeMap.put(2.0, 40.0);
-    lowAimInterpolatingDoubleTreeMap.put(3.0, 30.0);
-    lowAimInterpolatingDoubleTreeMap.put(4.05, 232.2);
+    lowAimInterpolatingDoubleTreeMap.put(0.9892, 50.8);
+    lowAimInterpolatingDoubleTreeMap.put(1.2615, 46.4);
+    lowAimInterpolatingDoubleTreeMap.put(1.503, 42.4);
+    lowAimInterpolatingDoubleTreeMap.put(1.7575, 39.02);
+    lowAimInterpolatingDoubleTreeMap.put(2.00, 36.03);
+    lowAimInterpolatingDoubleTreeMap.put(2.245, 33.75);
+    lowAimInterpolatingDoubleTreeMap.put(2.48, 31.5);
+    lowAimInterpolatingDoubleTreeMap.put(2.74, 29.36);
   }
 
   @Override

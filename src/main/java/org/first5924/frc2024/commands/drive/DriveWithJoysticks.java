@@ -76,9 +76,14 @@ public class DriveWithJoysticks extends Command {
       drive.drive(
         xPercent * DriveConstants.kMaxLinearSpeed,
         yPercent * DriveConstants.kMaxLinearSpeed,
-        autoRotationPidController.calculate(
-          drive.getYaw().getRadians(),
-          drive.getFieldRotationRadiansToPointToSpeakerCenter(autoRotateTowardsAllianceSpeaker)),
+        MathUtil.clamp(
+          autoRotationPidController.calculate(
+            drive.getYaw().getRadians(),
+            drive.getFieldRotationRadiansToPointToSpeakerCenter(autoRotateTowardsAllianceSpeaker)
+          ),
+          -DriveConstants.kNormalModeRotationMultiplier,
+          DriveConstants.kNormalModeRotationMultiplier
+        ) * DriveConstants.kMaxAngularSpeedRad,
         fieldCentricSupplier.getAsBoolean(),
         slowMode
       );

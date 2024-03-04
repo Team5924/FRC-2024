@@ -4,6 +4,7 @@
 
 package org.first5924.frc2024.subsystems.intake;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
@@ -26,6 +27,7 @@ public class Intake extends SubsystemBase {
     // This method will be called once per scheduler run
     io.updateInputs(inputs);
     Logger.processInputs("Intake", inputs);
+    SmartDashboard.putString("Intake State Before", getIntakeStateBeforeEject().toString());
   }
 
   public void setIntakeState(IntakeState intakeState) {

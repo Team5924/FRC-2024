@@ -78,6 +78,27 @@ public class Drive extends SubsystemBase {
     );
   }
 
+  public void periodic() {
+    Logger.recordOutput("Estimated Pose", getEstimatedPose());
+    Logger.recordOutput("Distance to Center of Red Speaker", getDistanceToSpeakerCenter(Alliance.Red));
+    Logger.recordOutput("Field Angle to Face Speaker", getFieldRotationRadiansToPointToSpeakerCenter(Alliance.Red));
+    gyroIO.updateInputs(gyroInputs);
+    Logger.processInputs("Drive/Gyro", gyroInputs);
+    for (var module : modules) {
+      module.periodic();
+    }
+
+    poseEstimator.update(
+      new Rotation2d(gyroInputs.yawPositionRad),
+      new SwerveModulePosition[] {
+        modules[0].getPosition(),
+        modules[1].getPosition(),
+        modules[2].getPosition(),
+        modules[3].getPosition(),
+      }
+    );
+  }
+
   public void drive(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean fieldCentric, boolean slowMode) {
     double speedMultiplier = slowMode ? DriveConstants.kSlowModeMovementMultiplier : 1;
     double rotationMultiplier = slowMode ? DriveConstants.kSlowModeRotationMultiplier : DriveConstants.kNormalModeRotationMultiplier;
@@ -131,26 +152,6 @@ public class Drive extends SubsystemBase {
       chassisSpeeds.omegaRadiansPerSecond,
       false,
       false);
-  }
-
-  public void periodic() {
-    Logger.recordOutput("Estimated Pose", getEstimatedPose());
-    Logger.recordOutput("Distance to Center of Red Speaker", getDistanceToSpeakerCenter(Alliance.Red));
-    gyroIO.updateInputs(gyroInputs);
-    Logger.processInputs("Drive/Gyro", gyroInputs);
-    for (var module : modules) {
-      module.periodic();
-    }
-
-    poseEstimator.update(
-      new Rotation2d(gyroInputs.yawPositionRad),
-      new SwerveModulePosition[] {
-        modules[0].getPosition(),
-        modules[1].getPosition(),
-        modules[2].getPosition(),
-        modules[3].getPosition(),
-      }
-    );
   }
 
   /** Stops the drive. */

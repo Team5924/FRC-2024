@@ -7,12 +7,12 @@ import org.first5924.frc2024.subsystems.wrist.Wrist;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class SetWristVoltage extends Command {
+public class WristManualControl extends Command {
   /** Creates a new SetWristAngle. */
   private final Wrist wrist;
   private final DoubleSupplier joystickY;
 
-  public SetWristVoltage(Wrist wrist, DoubleSupplier joystickY) {
+  public WristManualControl(Wrist wrist, DoubleSupplier joystickY) {
     this.wrist = wrist;
     this.joystickY = joystickY;
     addRequirements(wrist);

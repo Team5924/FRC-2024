@@ -14,11 +14,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.first5924.frc2024.commands.SetWristAndElevatorState;
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
-
+import org.first5924.frc2024.commands.elevator.ElevatorManualControl;
 import org.first5924.frc2024.commands.feeder.RunFeederToFeedShooter;
 import org.first5924.frc2024.commands.feeder.ReverseFeederIfIntakePositioned;
 import org.first5924.frc2024.commands.feeder.RunFeeder;
 import org.first5924.frc2024.commands.wrist.RunWrist;
+import org.first5924.frc2024.commands.wrist.WristManualControl;
 import org.first5924.frc2024.commands.shooter.ShooterOn;
 import org.first5924.frc2024.commands.vision.RunVisionPoseEstimation;
 import org.first5924.frc2024.constants.RobotConstants;
@@ -64,7 +65,7 @@ public class RobotContainer {
   private final Drive drive;
   private final Intake intake;
   private final Vision vision;
-  private final DetectorCam dCam;
+  // private final DetectorCam dCam;
   private final Feeder feeder;
   private final Shooter shooter;
   private final Elevator elevator;
@@ -90,7 +91,7 @@ public class RobotContainer {
         );
         intake = new Intake(new IntakeIOTalonFX());
         vision = new Vision(new VisionIOReal());
-        dCam = new DetectorCam();
+        // dCam = new DetectorCam();
         feeder = new Feeder(new FeederIOTalonFX());
         shooter = new Shooter(new ShooterIOTalonFX());
         elevator = new Elevator(new ElevatorIOTalonFX());
@@ -107,7 +108,7 @@ public class RobotContainer {
         );
         intake = new Intake(new IntakeIO() {});
         vision = new Vision(new VisionIO() {});
-        dCam = new DetectorCam();
+        // dCam = new DetectorCam();
         feeder = new Feeder(new FeederIO() {});
         shooter = new Shooter(new ShooterIO() {});
         elevator = new Elevator(new ElevatorIO() {});
@@ -124,7 +125,7 @@ public class RobotContainer {
         );
         intake = new Intake(new IntakeIO() {});
         vision = new Vision(new VisionIO() {});
-        dCam = new DetectorCam();
+        // dCam = new DetectorCam();
         feeder = new Feeder(new FeederIO() {});
         shooter = new Shooter(new ShooterIO() {});
         elevator = new Elevator(new ElevatorIO() {});
@@ -192,7 +193,7 @@ public class RobotContainer {
     vision.setDefaultCommand(new RunVisionPoseEstimation(drive, vision));
 
     intake.setDefaultCommand(new RunIntake(intake));
-    operatorController.x().onTrue(
+    operatorController.back().onTrue(
       new SetIntakeState(intake, IntakeState.EJECT)
     ).onFalse(
       new SetIntakeState(intake, intake.getIntakeStateBeforeEject())
@@ -219,11 +220,14 @@ public class RobotContainer {
     ));
 
     wrist.setDefaultCommand(new RunWrist(wrist, elevator, drive));
+    operatorController.leftStick().onTrue(new WristManualControl(wrist, operatorController::getRightY));
+
     // elevator.setDefaultCommand(new RunElevator(elevator, operatorController::getRightY));
+    // operatorController.rightStick().onTrue(new ElevatorControlManual(elevator, operatorController::getRightY));
 
     operatorController.a().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
     operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_HIGH));
-    operatorController.y().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
+    operatorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
     operatorController.start().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.CLIMB));
   }
 

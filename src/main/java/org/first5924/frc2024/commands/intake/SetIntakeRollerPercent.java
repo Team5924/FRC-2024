@@ -9,12 +9,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import org.first5924.frc2024.subsystems.intake.Intake;
 
 
-public class SetRollerPercent extends Command {
+public class SetIntakeRollerPercent extends Command {
   private final Intake intake;
   private final double percent;
 
   /** Creates a new Spin. */
-  public SetRollerPercent(Intake intake, double percent) {
+  public SetIntakeRollerPercent(Intake intake, double percent) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.intake = intake;
     this.percent = percent;

@@ -8,15 +8,17 @@ import java.util.function.DoubleSupplier;
 
 import org.first5924.frc2024.subsystems.elevator.Elevator;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class RunElevatorVoltage extends Command {
+public class ElevatorManualControl extends Command {
   Elevator elevator;
-  DoubleSupplier operatorJoystickLeftY;
+  DoubleSupplier joystickY;
+
   /** Creates a new RunElevatorVoltage. */
-  public RunElevatorVoltage(Elevator elevator, DoubleSupplier operatorJoystickLeftY) {
+  public ElevatorManualControl(Elevator elevator, DoubleSupplier joystickY) {
     this.elevator = elevator;
-    this.operatorJoystickLeftY = operatorJoystickLeftY;
+    this.joystickY = joystickY;
     addRequirements(elevator);
   }
 
@@ -27,7 +29,7 @@ public class RunElevatorVoltage extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elevator.setVoltage(operatorJoystickLeftY.getAsDouble() * 4);
+    elevator.setVoltage(MathUtil.applyDeadband(joystickY.getAsDouble(), 0.2) * 4);
   }
 
   // Called once the command ends or is interrupted.
