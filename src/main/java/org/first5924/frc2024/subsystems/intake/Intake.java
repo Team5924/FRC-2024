@@ -38,6 +38,7 @@ public class Intake extends SubsystemBase {
   public IntakeState getIntakeState() {
     return intakeState;
   }
+
   public IntakeState getIntakeStateBeforeEject() {
     return intakeStateBeforeEject;
   }
@@ -52,5 +53,9 @@ public class Intake extends SubsystemBase {
 
   public void setPivotVoltage(double volts) {
     io.setPivotVoltage(volts);
+  }
+
+  public boolean isReadyToEject() {
+    return Math.abs(inputs.pivotAngleDegrees - IntakeState.EJECT.getPivotAngle()) < 5;
   }
 }

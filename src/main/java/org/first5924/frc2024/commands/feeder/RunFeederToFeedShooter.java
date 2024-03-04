@@ -8,11 +8,11 @@ import org.first5924.frc2024.subsystems.feeder.Feeder;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class FeedShooter extends Command {
+public class RunFeederToFeedShooter extends Command {
   /** Creates a new slowFeeder. */
   private final Feeder feeder;
 
-  public FeedShooter(Feeder feeder) {
+  public RunFeederToFeedShooter(Feeder feeder) {
     this.feeder = feeder;
     addRequirements(feeder);
     // Use addRequirements() here to declare subsystem dependencies.

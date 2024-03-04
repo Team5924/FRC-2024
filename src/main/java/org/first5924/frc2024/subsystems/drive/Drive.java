@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.Distance;
@@ -80,20 +79,18 @@ public class Drive extends SubsystemBase {
   }
 
   public void drive(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean fieldCentric, boolean slowMode) {
-    double speedMult = slowMode ? DriveConstants.kSlowModeMovementMultiplier : 1;
-    double rotationMult = slowMode ? DriveConstants.kSlowModeRotationMultiplier : 1;
+    double speedMultiplier = slowMode ? DriveConstants.kSlowModeMovementMultiplier : 1;
+    double rotationMultiplier = slowMode ? DriveConstants.kSlowModeRotationMultiplier : DriveConstants.kNormalModeRotationMultiplier;
 
     SmartDashboard.putBoolean("Slow Mode", slowMode);
-    SmartDashboard.putNumber("Speed Multiplier", speedMult);
-    SmartDashboard.putNumber("Rotation Multiplier", rotationMult);
 
     ChassisSpeeds speeds = fieldCentric ?
       ChassisSpeeds.fromFieldRelativeSpeeds(
-        vxMetersPerSecond * speedMult,
-        vyMetersPerSecond * speedMult,
-        omegaRadiansPerSecond * rotationMult,
+        vxMetersPerSecond * speedMultiplier,
+        vyMetersPerSecond * speedMultiplier,
+        omegaRadiansPerSecond * rotationMultiplier,
         new Rotation2d(gyroInputs.yawPositionRad)) :
-      new ChassisSpeeds(vxMetersPerSecond * speedMult, vyMetersPerSecond * speedMult, omegaRadiansPerSecond * rotationMult);
+      new ChassisSpeeds(vxMetersPerSecond * speedMultiplier, vyMetersPerSecond * speedMultiplier, omegaRadiansPerSecond * rotationMultiplier);
     SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DriveConstants.kMaxLinearSpeed);
     for (int i = 0; i < 4; i++) {
@@ -167,12 +164,14 @@ public class Drive extends SubsystemBase {
     gyroIO.setGyroYaw(yaw);
   }
 
-  /** Returns the current pitch (Y rotation). */
+  public Rotation2d getYaw() {
+    return new Rotation2d(gyroInputs.yawPositionRad);
+  }
+
   public Rotation2d getPitch() {
     return new Rotation2d(gyroInputs.pitchPositionRad);
   }
 
-  /** Returns the current roll (X rotation). */
   public Rotation2d getRoll() {
     return new Rotation2d(gyroInputs.rollPositionRad);
   }
@@ -206,7 +205,7 @@ public class Drive extends SubsystemBase {
       FieldConstants.kRedSpeakerCenterFieldTranslation.getDistance(getEstimatedPose().getTranslation());
   }
 
-  public double getRotationRadiansToPointToSpeakerCenter(Alliance alliance) {
+  public double getFieldRotationRadiansToPointToSpeakerCenter(Alliance alliance) {
     return alliance == Alliance.Blue ?
       FieldConstants.kBlueSpeakerCenterFieldTranslation.minus(getEstimatedPose().getTranslation()).getAngle().getRadians() :
       FieldConstants.kRedSpeakerCenterFieldTranslation.minus(getEstimatedPose().getTranslation()).getAngle().getRadians();

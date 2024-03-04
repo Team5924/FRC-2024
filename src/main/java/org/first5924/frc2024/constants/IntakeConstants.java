@@ -18,14 +18,14 @@ public class IntakeConstants {
   public static final double kFloorPivotAngleDegrees = 95;
   public static final double kFloorRollerPercent = 0.9;
 
-  public static final double kFeederPivotAngleDegrees = 95;
-  public static final double kFeederRollerPercent = 0;
+  public static final double kFeederPivotAngleDegrees = 35;
+  public static final double kFeederRollerPercent = 0.9;
 
   public static final double kRetractPivotAngleDegrees = 0;
   public static final double kRetractRollerPercent = 0;
 
-  public static final double kEjectPivotAngleDegrees = 45;
-  public static final double kEjectRollerPercent = -0.35;
+  public static final double kEjectPivotAngleDegrees = 95;
+  public static final double kEjectRollerPercent = -0.9;
 
   public static enum IntakeState {
     FLOOR(kFloorPivotAngleDegrees, kFloorRollerPercent),

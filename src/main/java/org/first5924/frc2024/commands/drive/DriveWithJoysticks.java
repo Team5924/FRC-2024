@@ -8,7 +8,10 @@
 package org.first5924.frc2024.commands.drive;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
@@ -23,26 +26,19 @@ public class DriveWithJoysticks extends Command {
   private final DoubleSupplier rightJoystickXSupplier;
   private final BooleanSupplier fieldCentricSupplier;
   private final boolean slowMode;
+  private final Alliance autoRotateTowardsAllianceSpeaker;
+
+  private final PIDController autoRotationPidController = new PIDController(DriveConstants.kRobotRotationKp, 0, 0);
 
   /** Creates a new DriveWithJoysticks. */
-  public DriveWithJoysticks(Drive drive, DoubleSupplier leftXSupplier, DoubleSupplier leftYSupplier, DoubleSupplier rightXSupplier, BooleanSupplier fieldCentricSupplier) {
-    this.drive = drive;
-    this.leftJoystickXSupplier = leftXSupplier;
-    this.leftJoystickYSupplier = leftYSupplier;
-    this.rightJoystickXSupplier = rightXSupplier;
-    this.fieldCentricSupplier = fieldCentricSupplier;
-    this.slowMode = false;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(drive);
-  }
-
-  public DriveWithJoysticks(Drive drive, DoubleSupplier leftXSupplier, DoubleSupplier leftYSupplier, DoubleSupplier rightXSupplier, BooleanSupplier fieldCentricSupplier, boolean slowMode) {
+  public DriveWithJoysticks(Drive drive, DoubleSupplier leftXSupplier, DoubleSupplier leftYSupplier, DoubleSupplier rightXSupplier, BooleanSupplier fieldCentricSupplier, boolean slowMode, Alliance autoRotateTowardsAllianceSpeaker) {
     this.drive = drive;
     this.leftJoystickXSupplier = leftXSupplier;
     this.leftJoystickYSupplier = leftYSupplier;
     this.rightJoystickXSupplier = rightXSupplier;
     this.fieldCentricSupplier = fieldCentricSupplier;
     this.slowMode = slowMode;
+    this.autoRotateTowardsAllianceSpeaker = autoRotateTowardsAllianceSpeaker;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drive);
   }
@@ -68,13 +64,25 @@ public class DriveWithJoysticks extends Command {
     double yPercent = -Math.copySign(deadbandedLeftXJoystick * deadbandedLeftXJoystick, deadbandedLeftXJoystick);
     double rotationPercent = -Math.copySign(deadbandedRightXJoystick * deadbandedRightXJoystick, deadbandedRightXJoystick) * DriveConstants.kAngularSpeedMultiplier;
 
-    drive.drive(
-      xPercent * DriveConstants.kMaxLinearSpeed,
-      yPercent * DriveConstants.kMaxLinearSpeed,
-      rotationPercent * DriveConstants.kMaxAngularSpeedRad,
-      fieldCentricSupplier.getAsBoolean(),
-      slowMode
-    );
+    if (autoRotateTowardsAllianceSpeaker == null) {
+      drive.drive(
+        xPercent * DriveConstants.kMaxLinearSpeed,
+        yPercent * DriveConstants.kMaxLinearSpeed,
+        rotationPercent * DriveConstants.kMaxAngularSpeedRad,
+        fieldCentricSupplier.getAsBoolean(),
+        slowMode
+      );
+    } else {
+      drive.drive(
+        xPercent * DriveConstants.kMaxLinearSpeed,
+        yPercent * DriveConstants.kMaxLinearSpeed,
+        autoRotationPidController.calculate(
+          drive.getYaw().getRadians(),
+          drive.getFieldRotationRadiansToPointToSpeakerCenter(autoRotateTowardsAllianceSpeaker)),
+        fieldCentricSupplier.getAsBoolean(),
+        slowMode
+      );
+    }
   }
 
   @Override

@@ -6,40 +6,26 @@ package org.first5924.frc2024.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
-import java.util.function.BooleanSupplier;
-
-import org.first5924.frc2024.commands.AutoAimAndShoot;
 import org.first5924.frc2024.commands.SetWristAndElevatorState;
-import org.first5924.frc2024.commands.TeleopAimAndShoot;
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
 
-import org.first5924.frc2024.commands.feeder.FeedShooter;
+import org.first5924.frc2024.commands.feeder.RunFeederToFeedShooter;
+import org.first5924.frc2024.commands.feeder.ReverseFeederIfIntakePositioned;
 import org.first5924.frc2024.commands.feeder.RunFeeder;
 import org.first5924.frc2024.commands.wrist.RunWrist;
-import org.first5924.frc2024.commands.wrist.SetWristPosition;
 import org.first5924.frc2024.commands.shooter.ShooterOn;
-import org.first5924.frc2024.commands.vision.DriveToNote;
 import org.first5924.frc2024.commands.vision.RunVisionPoseEstimation;
-import org.first5924.frc2024.commands.vision.TurnToSpeaker;
-import org.first5924.frc2024.commands.wrist.SetWristVoltage;
-import org.first5924.frc2024.commands.elevator.RunElevator;
-import org.first5924.frc2024.commands.elevator.RunElevatorVoltage;
-import org.first5924.frc2024.commands.elevator.SetHeight;
 import org.first5924.frc2024.constants.RobotConstants;
 import org.first5924.frc2024.constants.WristAndElevatorState;
 import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
 import org.first5924.frc2024.commands.intake.RunIntake;
 import org.first5924.frc2024.commands.intake.SetIntakeState;
-import org.first5924.frc2024.commands.intake.SetPivotVoltage;
-import org.first5924.frc2024.commands.intake.SetRollerPercent;
 import org.first5924.frc2024.subsystems.intake.Intake;
 import org.first5924.frc2024.subsystems.intake.IntakeIO;
 import org.first5924.frc2024.subsystems.intake.IntakeIOTalonFX;
@@ -75,29 +61,26 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // Subsystems
-
+  private final Drive drive;
+  private final Intake intake;
+  private final Vision vision;
+  private final DetectorCam dCam;
   private final Feeder feeder;
   private final Shooter shooter;
-  private final Wrist wrist;
-  private final Drive drive;
-  private final DetectorCam dCam;
-  private final Intake intake;
   private final Elevator elevator;
-  private final Vision vision;
+  private final Wrist wrist;
 
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
-  private final LoggedDashboardChooser<Boolean> swerveModeChooser = new LoggedDashboardChooser<>("Swerve Mode Chooser");
 
+  private final LoggedDashboardChooser<Boolean> swerveModeChooser = new LoggedDashboardChooser<>("Swerve Mode Chooser");
+  private final LoggedDashboardChooser<Alliance> allianceChooser = new LoggedDashboardChooser<>("Alliance Chooser");
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (RobotConstants.kCurrentMode) {
       // Real robot, instantiate hardware IO implementations
       case REAL:
-        shooter = new Shooter(new ShooterIOTalonFX());
-        wrist = new Wrist(new WristIOTalonFX() {});
         drive = new Drive(
           new GyroIOPigeon2(),
           new ModuleIOTalonFX(0),
@@ -105,19 +88,16 @@ public class RobotContainer {
           new ModuleIOTalonFX(2),
           new ModuleIOTalonFX(3)
         );
-
-        feeder = new Feeder(new FeederIOTalonFX());
-        vision = new Vision(new VisionIOReal());
-
-        // feeder = new Feeder(new FeederIOTalonFX());
-        dCam = new DetectorCam();
         intake = new Intake(new IntakeIOTalonFX());
+        vision = new Vision(new VisionIOReal());
+        dCam = new DetectorCam();
+        feeder = new Feeder(new FeederIOTalonFX());
+        shooter = new Shooter(new ShooterIOTalonFX());
         elevator = new Elevator(new ElevatorIOTalonFX());
+        wrist = new Wrist(new WristIOTalonFX() {});
         break;
-
       // Sim robot, instantiate physics sim IO implementations
       case SIM:
-        wrist = new Wrist(new WristIO() {});
         drive = new Drive(
           new GyroIO() {},
           new ModuleIO() {},
@@ -125,43 +105,39 @@ public class RobotContainer {
           new ModuleIO() {},
           new ModuleIO() {}
         );
+        intake = new Intake(new IntakeIO() {});
+        vision = new Vision(new VisionIO() {});
+        dCam = new DetectorCam();
         feeder = new Feeder(new FeederIO() {});
         shooter = new Shooter(new ShooterIO() {});
-        dCam = new DetectorCam();
-        intake = new Intake(new IntakeIO() {});
         elevator = new Elevator(new ElevatorIO() {});
-        vision = new Vision(new VisionIO() {});
+        wrist = new Wrist(new WristIO() {});
         break;
-
       // Replayed robot, disable IO implementations
       default:
-        shooter = new Shooter(new ShooterIO() {});
-        wrist = new Wrist(new WristIO() {});
         drive = new Drive(
-          new GyroIOPigeon2(),
-          new ModuleIOTalonFX(0),
-          new ModuleIOTalonFX(1),
-          new ModuleIOTalonFX(2),
-          new ModuleIOTalonFX(3)
+          new GyroIO() {},
+          new ModuleIO() {},
+          new ModuleIO() {},
+          new ModuleIO() {},
+          new ModuleIO() {}
         );
-        feeder = new Feeder(new FeederIO() {});
-        // vision = new Vision();
-        // feeder = new Feeder(new FeederIO() {});
-        dCam = new DetectorCam();
         intake = new Intake(new IntakeIO() {});
-        elevator = new Elevator(new ElevatorIO() {});
         vision = new Vision(new VisionIO() {});
+        dCam = new DetectorCam();
+        feeder = new Feeder(new FeederIO() {});
+        shooter = new Shooter(new ShooterIO() {});
+        elevator = new Elevator(new ElevatorIO() {});
+        wrist = new Wrist(new WristIO() {});
         break;
     }
 
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
 
-    //Logger.recordOutput("Is Note In", feeder.isNoteIn());
-    // SmartDashboard.putData("Auto Mode Chooser", autoModeChooser);
-    //SmartDashboard.putBoolean("is note in feeder?", feeder.isNoteIn());
-    // autoModeChooser = null;
-    // Configure the button bindings
+    allianceChooser.addDefaultOption("Red", Alliance.Red);
+    allianceChooser.addOption("Blue", Alliance.Blue);
+
     configureButtonBindings();
   }
 
@@ -172,52 +148,67 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    operatorController.y().whileTrue(new ShooterOn(shooter));
-    vision.setDefaultCommand(new RunVisionPoseEstimation(drive, vision));
-    // wrist.setDefaultCommand(new SetWristVoltage(wrist, operatorController::getLeftY));
+    // Driver
     drive.setDefaultCommand(new DriveWithJoysticks(
       drive,
       driverController::getLeftX,
       driverController::getLeftY,
       driverController::getRightX,
       swerveModeChooser::get,
-      false
+      false,
+      null
     ));
-    driverController.rightBumper().onTrue(new DriveWithJoysticks(
+    driverController.rightBumper().whileTrue(new DriveWithJoysticks(
       drive,
       driverController::getLeftX,
       driverController::getLeftY,
       driverController::getRightX,
       swerveModeChooser::get,
-      true
+      true,
+      null
     ));
-    // driverController.rightBumper().onFalse(new DriveWithJoysticks(
-    //   drive,
-    //   driverController::getLeftX,
-    //   driverController::getLeftY,
-    //   driverController::getRightX,
-    //   swerveModeChooser::get,
-    //   () -> false
-    // ));
-    // driverController.a().onTrue(new SetGyroYaw(drive, 0));
-    // feeder.setDefaultCommand(new FeederSlow(feeder));
+    driverController.a().whileTrue(new DriveWithJoysticks(
+      drive,
+      driverController::getLeftX,
+      driverController::getLeftY,
+      driverController::getRightX,
+      swerveModeChooser::get,
+      false,
+      allianceChooser.get()
+    ));
+    driverController.x().whileTrue(new DriveWithJoysticks(
+      drive,
+      driverController::getLeftX,
+      driverController::getLeftY,
+      driverController::getRightX,
+      swerveModeChooser::get,
+      true,
+      allianceChooser.get()
+    ));
+    driverController.b().onTrue(new SetGyroYaw(drive, 0));
+    // Uncomment and bind to auto drive to amp
+    // driverController.leftBumper();
 
-    //
-    // THIS IS TEMPORARY, IT WILL BE IN AUTONOMOUS
-    // driverController.b().onTrue(new DriveToNote(dCam::getNoteX, dCam::getNoteY, dCam.hasTarget(), drive));
-    //feeder.setDefaultCommand(new FeederSlow(feeder));
-    // operatorController.b().whileTrue(new FeederSlow(feeder, operatorController::getRightY));
-    operatorController.leftTrigger(0.75).whileTrue(new FeedShooter(feeder));
-    // operatorController.y().whileTrue(new TeleopAimAndShoot(feeder, shooter, wrist, wrist::getAngleDegrees, fieldCam::getRedShooterAngle));
-    // operatorController.x().whileTrue(new PIDTest(wrist));
-    // //driverController.y().onTrue(FollowPath());
-    // driverController.leftTrigger().whileTrue(new TurnToSpeaker(drive, fieldCam::getBotYaw, fieldCam::getYawToRedSpeaker));
-    // wrist.setDefaultCommand(new RotateWrist(wrist, operatorController::getRightY));
-    // operatorController.leftBumper().onTrue(new SetIntakeState(intake, IntakeState.RETRACT));
-    // operatorController.rightBumper().onTrue(new SetIntakeState(intake, IntakeState.FLOOR));
-    // operatorController.rightTrigger(0.75).onTrue(new SetIntakeState(intake, IntakeState.EJECT));
-    // operatorController.rightTrigger(0.75).onFalse(new SetIntakeState(intake, intake.getIntakeStateBeforeEject()));
+    vision.setDefaultCommand(new RunVisionPoseEstimation(drive, vision));
+
     intake.setDefaultCommand(new RunIntake(intake));
+    operatorController.x().onTrue(
+      new SetIntakeState(intake, IntakeState.EJECT)
+    ).onFalse(
+      new SetIntakeState(intake, intake.getIntakeStateBeforeEject())
+    );
+
+    feeder.setDefaultCommand(new RunFeeder(feeder, intake, operatorController::getLeftY));
+    operatorController.rightTrigger(0.75).whileTrue(new RunFeederToFeedShooter(feeder));
+
+    operatorController.leftTrigger().whileTrue(new ParallelCommandGroup(
+      new ReverseFeederIfIntakePositioned(feeder, intake),
+      new SetIntakeState(intake, IntakeState.EJECT)
+    )).onFalse(
+      new SetIntakeState(intake, intake.getIntakeStateBeforeEject())
+    );
+
+    operatorController.y().whileTrue(new ShooterOn(shooter));
     operatorController.leftBumper().onTrue(new ParallelCommandGroup(
       new SetIntakeState(intake, IntakeState.RETRACT),
       new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW)
@@ -226,39 +217,15 @@ public class RobotContainer {
       new SetIntakeState(intake, IntakeState.FLOOR),
       new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE)
     ));
-    operatorController.rightTrigger(0.75).onTrue(new SetIntakeState(intake, IntakeState.EJECT));
-    // operatorController.rightTrigger(0.75).onFalse(new SetIntakeState(intake, intake.getIntakeStateBeforeEject()));
-    // operatorController.a().whileTrue(new SetRollerVoltage(intake, 4));
-    // operatorController.b().whileTrue(new SetPivotVoltage(intake, 1));
-    // operatorController.x().whileTrue(new SetPivotVoltage(intake, -1));
-    // elevator.setDefaultCommand(new RunElevatorVoltage(elevator, operatorController::getRightY));
-    elevator.setDefaultCommand(new RunElevator(elevator, operatorController::getRightY));
-    wrist.setDefaultCommand(new RunWrist(wrist, elevator, drive));
-    feeder.setDefaultCommand(new RunFeeder(feeder, intake));
-    //operatorController.a().onTrue(new SetWristPosition(wrist, 45));
-    //operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
-    //operatorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));
-    // operatorController.a().onTrue(new SetWristPosition(wrist, 45));
-    operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
-    operatorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
-    driverController.a().onTrue(new SetGyroYaw(drive, 0));
-    driverController.b().onTrue(new SetIntakeState(intake, IntakeState.FEEDER));
-  }
 
-  //public Command FollowPath()
-  //{
-  //  return Choreo.choreoSwerveCommand
-  //  (Choreo.getTrajectory("NewPath"), //will need to make sendable chooser in the future
-  //  () -> drive.getPose(),
-  //  Choreo.choreoSwerveController(
-  //    new PIDController(DriveConstants.kDriveKp, 0, 0), 
-  //    new PIDController(DriveConstants.kDriveKp, 0, 0),
-  //    new PIDController(DriveConstants.kDriveKp, 0, 0)),
-  //  (ChassisSpeeds speeds) ->
-  //    drive.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false), 
-  //  () -> false,
-  //  drive);
-  //}
+    wrist.setDefaultCommand(new RunWrist(wrist, elevator, drive));
+    // elevator.setDefaultCommand(new RunElevator(elevator, operatorController::getRightY));
+
+    operatorController.a().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
+    operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_HIGH));
+    operatorController.y().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
+    operatorController.start().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.CLIMB));
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -268,19 +235,6 @@ public class RobotContainer {
 
 
   public Command getAutonomousCommand() {
-    // return Choreo.choreoSwerveCommand
-    // (Choreo.getTrajectory("NewPath"), //will need to make sendable chooser in the future
-    // () -> drive.getPose(),
-    // Choreo.choreoSwerveController(
-    //   new PIDController(DriveConstants.kDriveKp, 0, 0),
-    //   new PIDController(DriveConstants.kDriveKp, 0, 0),
-    //   new PIDController(DriveConstants.kDriveKp, 0, 0)),
-    // (ChassisSpeeds speeds) ->
-    //   drive.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false), 
-    // () -> false,
-    // drive);
-
-    // return new SequentialCommandGroup(new AutoAimAndShoot(feeder, shooter, wrist, wrist::getAngleDegrees, fieldCam::getRedShooterAngle));
     return null;
   }
 }
