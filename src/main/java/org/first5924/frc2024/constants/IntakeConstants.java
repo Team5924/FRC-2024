@@ -19,7 +19,7 @@ public class IntakeConstants {
   public static final double kFloorRollerPercent = 0.9;
 
   public static final double kFeederPivotAngleDegrees = 35;
-  public static final double kFeederRollerPercent = 0.9;
+  public static final double kFeederRollerPercent = 0.8;
 
   public static final double kRetractPivotAngleDegrees = 0;
   public static final double kRetractRollerPercent = 0;

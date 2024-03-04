@@ -4,6 +4,7 @@
 
 package org.first5924.frc2024.commands.feeder;
 
+import org.first5924.frc2024.constants.IntakeConstants;
 import org.first5924.frc2024.subsystems.feeder.Feeder;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,8 +26,7 @@ public class RunFeederToFeedShooter extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //feeder.setPercent(MathUtil.applyDeadband(mJoystickY.getAsDouble(), 0.2));
-    feeder.setPercent(0.9);
+    feeder.setPercent(IntakeConstants.kFeederRollerPercent);
   }
 
   // Called once the command ends or is interrupted.
