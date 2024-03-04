@@ -26,7 +26,7 @@ public class RunFeederToFeedShooter extends Command {
   @Override
   public void execute() {
     //feeder.setPercent(MathUtil.applyDeadband(mJoystickY.getAsDouble(), 0.2));
-    feeder.setPercent(0.7);
+    feeder.setPercent(0.9);
   }
 
   // Called once the command ends or is interrupted.
