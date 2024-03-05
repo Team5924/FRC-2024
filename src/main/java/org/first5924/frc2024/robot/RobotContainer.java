@@ -4,6 +4,7 @@
 
 package org.first5924.frc2024.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -13,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import org.first5924.frc2024.commands.SetWristAndElevatorState;
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
-import org.first5924.frc2024.commands.drive.SetGyroYaw;
+import org.first5924.frc2024.commands.drive.ResetGyroYaw;
 import org.first5924.frc2024.commands.elevator.ElevatorManualControl;
 import org.first5924.frc2024.commands.feeder.RunFeederStateMachine;
 import org.first5924.frc2024.commands.feeder.SetFeederState;
@@ -54,6 +55,8 @@ import org.first5924.frc2024.subsystems.elevator.ElevatorIO;
 import org.first5924.frc2024.subsystems.elevator.ElevatorIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -75,7 +78,6 @@ public class RobotContainer {
   private final CommandXboxController operatorController = new CommandXboxController(1);
 
   private final LoggedDashboardChooser<Boolean> swerveModeChooser = new LoggedDashboardChooser<>("Swerve Mode Chooser");
-  private final LoggedDashboardChooser<Alliance> allianceChooser = new LoggedDashboardChooser<>("Alliance Chooser");
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -136,9 +138,6 @@ public class RobotContainer {
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
 
-    allianceChooser.addDefaultOption("Red", Alliance.Red);
-    allianceChooser.addOption("Blue", Alliance.Blue);
-
     configureButtonBindings();
   }
 
@@ -156,8 +155,9 @@ public class RobotContainer {
       driverController::getLeftY,
       driverController::getRightX,
       swerveModeChooser::get,
+      DriverStation.getAlliance().get(),
       false,
-      null
+      false
     ));
     driverController.rightBumper().whileTrue(new DriveWithJoysticks(
       drive,
@@ -165,8 +165,9 @@ public class RobotContainer {
       driverController::getLeftY,
       driverController::getRightX,
       swerveModeChooser::get,
+      DriverStation.getAlliance().get(),
       true,
-      null
+      false
     ));
     driverController.a().whileTrue(new DriveWithJoysticks(
       drive,
@@ -174,8 +175,9 @@ public class RobotContainer {
       driverController::getLeftY,
       driverController::getRightX,
       swerveModeChooser::get,
+      DriverStation.getAlliance().get(),
       false,
-      allianceChooser.get()
+      true
     ));
     driverController.x().whileTrue(new DriveWithJoysticks(
       drive,
@@ -183,10 +185,11 @@ public class RobotContainer {
       driverController::getLeftY,
       driverController::getRightX,
       swerveModeChooser::get,
+      DriverStation.getAlliance().get(),
       true,
-      allianceChooser.get()
+      true
     ));
-    driverController.b().onTrue(new SetGyroYaw(drive, 0));
+    driverController.b().onTrue(new ResetGyroYaw(drive, DriverStation.getAlliance().get()));
     // Uncomment and bind to auto drive to amp
     // driverController.leftBumper();
 

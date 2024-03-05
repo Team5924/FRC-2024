@@ -9,6 +9,7 @@ package org.first5924.frc2024.commands.drive;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -25,20 +26,22 @@ public class DriveWithJoysticks extends Command {
   private final DoubleSupplier leftJoystickYSupplier;
   private final DoubleSupplier rightJoystickXSupplier;
   private final BooleanSupplier fieldCentricSupplier;
+  private final Alliance alliance;
   private final boolean slowMode;
-  private final Alliance autoRotateTowardsAllianceSpeaker;
+  private final boolean enableAutoRotateShooterToSpeaker;
 
   private final PIDController autoRotationPidController = new PIDController(DriveConstants.kRobotRotationKp, 0, 0);
 
   /** Creates a new DriveWithJoysticks. */
-  public DriveWithJoysticks(Drive drive, DoubleSupplier leftXSupplier, DoubleSupplier leftYSupplier, DoubleSupplier rightXSupplier, BooleanSupplier fieldCentricSupplier, boolean slowMode, Alliance autoRotateTowardsAllianceSpeaker) {
+  public DriveWithJoysticks(Drive drive, DoubleSupplier leftXSupplier, DoubleSupplier leftYSupplier, DoubleSupplier rightXSupplier, BooleanSupplier fieldCentricSupplier, Alliance alliance, boolean slowMode, boolean enableAutoRotateShooterToSpeaker) {
     this.drive = drive;
     this.leftJoystickXSupplier = leftXSupplier;
     this.leftJoystickYSupplier = leftYSupplier;
     this.rightJoystickXSupplier = rightXSupplier;
     this.fieldCentricSupplier = fieldCentricSupplier;
+    this.alliance = alliance;
     this.slowMode = slowMode;
-    this.autoRotateTowardsAllianceSpeaker = autoRotateTowardsAllianceSpeaker;
+    this.enableAutoRotateShooterToSpeaker = enableAutoRotateShooterToSpeaker;
     autoRotationPidController.enableContinuousInput(-Math.PI, Math.PI);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drive);
@@ -65,26 +68,30 @@ public class DriveWithJoysticks extends Command {
     double yPercent = -Math.copySign(deadbandedLeftXJoystick * deadbandedLeftXJoystick, deadbandedLeftXJoystick);
     double rotationPercent = -Math.copySign(deadbandedRightXJoystick * deadbandedRightXJoystick, deadbandedRightXJoystick) * DriveConstants.kAngularSpeedMultiplier;
 
-    if (autoRotateTowardsAllianceSpeaker == null) {
+    int allianceDirectionMultiplier = DriverStation.getAlliance().get() == Alliance.Blue ? 1 : -1;
+    double speedMultiplier = slowMode ? DriveConstants.kSlowModeMovementMultiplier : 1;
+    double rotationMultiplier = slowMode ? DriveConstants.kSlowModeRotationMultiplier : DriveConstants.kNormalModeRotationMultiplier;
+
+    if (enableAutoRotateShooterToSpeaker == false) {
       drive.drive(
-        xPercent * DriveConstants.kMaxLinearSpeed,
-        yPercent * DriveConstants.kMaxLinearSpeed,
-        rotationPercent * DriveConstants.kMaxAngularSpeedRad,
+        xPercent * DriveConstants.kMaxLinearSpeed * speedMultiplier * allianceDirectionMultiplier,
+        yPercent * DriveConstants.kMaxLinearSpeed * speedMultiplier * allianceDirectionMultiplier,
+        rotationPercent * DriveConstants.kMaxAngularSpeedRad * rotationMultiplier,
         fieldCentricSupplier.getAsBoolean(),
         slowMode
       );
     } else {
       drive.drive(
-        xPercent * DriveConstants.kMaxLinearSpeed,
-        yPercent * DriveConstants.kMaxLinearSpeed,
+        xPercent * DriveConstants.kMaxLinearSpeed * speedMultiplier * allianceDirectionMultiplier,
+        yPercent * DriveConstants.kMaxLinearSpeed * speedMultiplier * allianceDirectionMultiplier,
         MathUtil.clamp(
           autoRotationPidController.calculate(
             drive.getYaw().getRadians(),
-            drive.getFieldRotationRadiansToPointShooterAtSpeakerCenter(autoRotateTowardsAllianceSpeaker)
+            drive.getFieldRotationRadiansToPointShooterAtSpeakerCenter(alliance)
           ),
           -DriveConstants.kNormalModeRotationMultiplier,
           DriveConstants.kNormalModeRotationMultiplier
-        ) * DriveConstants.kMaxAngularSpeedRad,
+        ) * DriveConstants.kMaxAngularSpeedRad * rotationMultiplier,
         fieldCentricSupplier.getAsBoolean(),
         slowMode
       );

@@ -21,6 +21,7 @@ import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
@@ -31,6 +32,11 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.first5924.frc2024.constants.DriveConstants;
 import org.first5924.frc2024.constants.FieldConstants;
 import org.littletonrobotics.junction.Logger;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 public class Drive extends SubsystemBase {
   private final GyroIO gyroIO;
@@ -76,6 +82,26 @@ public class Drive extends SubsystemBase {
       },
       new Pose2d()
     );
+
+    AutoBuilder.configureHolonomic(
+            this::getEstimatedPose, // Robot pose supplier
+            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            this::driveRobotRelativeFromChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+            DriveConstants.kHolonomicPathFollowerConfig,
+            () -> {
+              // Boolean supplier that controls when the path will be mirrored for the red alliance
+              // This will flip the path being followed to the red side of the field.
+              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+              var alliance = DriverStation.getAlliance();
+              if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+              }
+              return false;
+            },
+            this // Reference to this subsystem to set requirements
+    );
   }
 
   public void periodic() {
@@ -100,18 +126,15 @@ public class Drive extends SubsystemBase {
   }
 
   public void drive(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean fieldCentric, boolean slowMode) {
-    double speedMultiplier = slowMode ? DriveConstants.kSlowModeMovementMultiplier : 1;
-    double rotationMultiplier = slowMode ? DriveConstants.kSlowModeRotationMultiplier : DriveConstants.kNormalModeRotationMultiplier;
-
     SmartDashboard.putBoolean("Slow Mode", slowMode);
 
     ChassisSpeeds speeds = fieldCentric ?
       ChassisSpeeds.fromFieldRelativeSpeeds(
-        vxMetersPerSecond * speedMultiplier,
-        vyMetersPerSecond * speedMultiplier,
-        omegaRadiansPerSecond * rotationMultiplier,
+        vxMetersPerSecond,
+        vyMetersPerSecond,
+        omegaRadiansPerSecond,
         new Rotation2d(gyroInputs.yawPositionRad)) :
-      new ChassisSpeeds(vxMetersPerSecond * speedMultiplier, vyMetersPerSecond * speedMultiplier, omegaRadiansPerSecond * rotationMultiplier);
+      new ChassisSpeeds(vxMetersPerSecond, vyMetersPerSecond, omegaRadiansPerSecond);
     SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DriveConstants.kMaxLinearSpeed);
     for (int i = 0; i < 4; i++) {
@@ -145,7 +168,16 @@ public class Drive extends SubsystemBase {
     return routine.dynamic(direction);
   }
 
-  public void robotRelativeDriveFromChassisSpeeds(ChassisSpeeds chassisSpeeds) {
+  public ChassisSpeeds getChassisSpeeds() {
+    return kinematics.toChassisSpeeds(
+      modules[0].getState(),
+      modules[1].getState(),
+      modules[2].getState(),
+      modules[3].getState()
+    );
+  }
+
+  public void driveRobotRelativeFromChassisSpeeds(ChassisSpeeds chassisSpeeds) {
     drive(
       chassisSpeeds.vxMetersPerSecond,
       chassisSpeeds.vyMetersPerSecond,
@@ -222,15 +254,6 @@ public class Drive extends SubsystemBase {
         modules[3].getPosition(),
       },
       pose
-    );
-  }
-
-  public ChassisSpeeds getChassisSpeeds() {
-    return kinematics.toChassisSpeeds(
-      modules[0].getState(),
-      modules[1].getState(),
-      modules[2].getState(),
-      modules[3].getState()
     );
   }
 }

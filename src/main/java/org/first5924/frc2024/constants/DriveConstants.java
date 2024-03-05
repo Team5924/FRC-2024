@@ -4,6 +4,10 @@
 
 package org.first5924.frc2024.constants;
 
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
@@ -55,4 +59,12 @@ public class DriveConstants {
   public static final double kSlowModeRotationMultiplier = 0.25;
 
   public static final double kNormalModeRotationMultiplier = 0.7;
+
+  public static final HolonomicPathFollowerConfig kHolonomicPathFollowerConfig = new HolonomicPathFollowerConfig(
+    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+    new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+    kMaxLinearSpeed, // Max module speed, in m/s
+    Math.sqrt(Math.pow(kTrackWidthX / 2, 2) + Math.pow(kTrackWidthY / 2, 2)), // Drive base radius in meters. Distance from robot center to furthest module.
+    new ReplanningConfig() // Default path replanning config. See the API for the options here
+  );
 }
