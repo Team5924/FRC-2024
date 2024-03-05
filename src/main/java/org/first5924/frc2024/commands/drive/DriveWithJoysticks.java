@@ -13,12 +13,15 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import org.first5924.frc2024.constants.DriveConstants;
 import org.first5924.frc2024.constants.InputConstants;
 import org.first5924.frc2024.subsystems.drive.Drive;
+import org.littletonrobotics.junction.Logger;
 
 public class DriveWithJoysticks extends Command {
   private final Drive drive;
@@ -26,20 +29,20 @@ public class DriveWithJoysticks extends Command {
   private final DoubleSupplier leftJoystickYSupplier;
   private final DoubleSupplier rightJoystickXSupplier;
   private final BooleanSupplier fieldCentricSupplier;
-  private final Alliance alliance;
+  private final Supplier<Optional<Alliance>> allianceSupplier;
   private final boolean slowMode;
   private final boolean enableAutoRotateShooterToSpeaker;
 
   private final PIDController autoRotationPidController = new PIDController(DriveConstants.kRobotRotationKp, 0, 0);
 
   /** Creates a new DriveWithJoysticks. */
-  public DriveWithJoysticks(Drive drive, DoubleSupplier leftXSupplier, DoubleSupplier leftYSupplier, DoubleSupplier rightXSupplier, BooleanSupplier fieldCentricSupplier, Alliance alliance, boolean slowMode, boolean enableAutoRotateShooterToSpeaker) {
+  public DriveWithJoysticks(Drive drive, DoubleSupplier leftXSupplier, DoubleSupplier leftYSupplier, DoubleSupplier rightXSupplier, BooleanSupplier fieldCentricSupplier, Supplier<Optional<Alliance>> allianceSupplier, boolean slowMode, boolean enableAutoRotateShooterToSpeaker) {
     this.drive = drive;
     this.leftJoystickXSupplier = leftXSupplier;
     this.leftJoystickYSupplier = leftYSupplier;
     this.rightJoystickXSupplier = rightXSupplier;
     this.fieldCentricSupplier = fieldCentricSupplier;
-    this.alliance = alliance;
+    this.allianceSupplier = allianceSupplier;
     this.slowMode = slowMode;
     this.enableAutoRotateShooterToSpeaker = enableAutoRotateShooterToSpeaker;
     autoRotationPidController.enableContinuousInput(-Math.PI, Math.PI);
@@ -81,13 +84,22 @@ public class DriveWithJoysticks extends Command {
         slowMode
       );
     } else {
+      double p = MathUtil.clamp(
+          autoRotationPidController.calculate(
+            drive.getYaw().getRadians(),
+            drive.getFieldRotationRadiansToPointShooterAtSpeakerCenter(allianceSupplier.get().get())
+          ),
+          -DriveConstants.kNormalModeRotationMultiplier,
+          DriveConstants.kNormalModeRotationMultiplier
+        );
+      Logger.recordOutput("Rotation Setpoint", p);
       drive.drive(
         xPercent * DriveConstants.kMaxLinearSpeed * speedMultiplier * allianceDirectionMultiplier,
         yPercent * DriveConstants.kMaxLinearSpeed * speedMultiplier * allianceDirectionMultiplier,
         MathUtil.clamp(
           autoRotationPidController.calculate(
             drive.getYaw().getRadians(),
-            drive.getFieldRotationRadiansToPointShooterAtSpeakerCenter(alliance)
+            drive.getFieldRotationRadiansToPointShooterAtSpeakerCenter(allianceSupplier.get().get())
           ),
           -DriveConstants.kNormalModeRotationMultiplier,
           DriveConstants.kNormalModeRotationMultiplier

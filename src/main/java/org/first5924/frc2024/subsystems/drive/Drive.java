@@ -108,6 +108,7 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("Estimated Pose", getEstimatedPose());
     Logger.recordOutput("Distance to Center of Red Speaker", getDistanceToSpeakerCenter(Alliance.Red));
     Logger.recordOutput("Field Angle to Face Speaker", getFieldRotationRadiansToPointShooterAtSpeakerCenter(Alliance.Red));
+    Logger.recordOutput("Estimated Rotation", getEstimatedPose().getRotation().getRadians());
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Drive/Gyro", gyroInputs);
     for (var module : modules) {

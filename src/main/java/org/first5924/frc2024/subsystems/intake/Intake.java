@@ -28,6 +28,7 @@ public class Intake extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Intake", inputs);
     SmartDashboard.putString("Intake State Before", getStateBeforeEject().toString());
+    SmartDashboard.putString("Intake State", getState().toString());
   }
 
   public void setState(IntakeState state) {

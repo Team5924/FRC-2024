@@ -11,13 +11,13 @@ public class FeederConstants {
 
   public static final double kDistanceWhenNoteIn = 45;
 
-  public static final double kPushPercent = 0.3;
-  public static final double kPushTime = 0.5;
+  public static final double kPushPercent = 0.9;
+  public static final double kPushTime = 1.2;
 
-  public static final double kAlignPercent = -0.3;
-  public static final double kAlignTime = 0.2;
+  public static final double kAlignPercent = -0.17;
+  public static final double kAlignTime = 0.1;
 
-  public static final double kTimeInRetractToDisable = 3;
+  public static final double kTimeInRetractToDisable = 2;
 
   public static enum FeederState {
     MANUAL,

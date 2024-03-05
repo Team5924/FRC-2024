@@ -26,6 +26,7 @@ public class Feeder extends SubsystemBase {
     // This method will be called once per scheduler run
     io.updateInputs(inputs);
     Logger.processInputs("Feeder", inputs);
+    SmartDashboard.putString("Feeder State", getState().toString());
     isNoteFullyIn();
   }
 

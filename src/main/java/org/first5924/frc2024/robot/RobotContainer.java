@@ -4,13 +4,18 @@
 
 package org.first5924.frc2024.robot;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+
+import java.util.function.DoubleSupplier;
 
 import org.first5924.frc2024.commands.SetWristAndElevatorState;
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
@@ -19,6 +24,7 @@ import org.first5924.frc2024.commands.elevator.ElevatorManualControl;
 import org.first5924.frc2024.commands.feeder.RunFeederStateMachine;
 import org.first5924.frc2024.commands.feeder.SetFeederState;
 import org.first5924.frc2024.commands.wrist.RunWristStateMachine;
+import org.first5924.frc2024.commands.wrist.SetWristPositionShuffleboard;
 import org.first5924.frc2024.commands.wrist.WristManualControl;
 import org.first5924.frc2024.commands.shooter.EnableShooter;
 import org.first5924.frc2024.commands.vision.RunVisionPoseEstimation;
@@ -56,6 +62,7 @@ import org.first5924.frc2024.subsystems.elevator.ElevatorIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 
 /**
@@ -78,6 +85,7 @@ public class RobotContainer {
   private final CommandXboxController operatorController = new CommandXboxController(1);
 
   private final LoggedDashboardChooser<Boolean> swerveModeChooser = new LoggedDashboardChooser<>("Swerve Mode Chooser");
+  private final LoggedDashboardChooser<String> autoModeChooser = new LoggedDashboardChooser<>("Auto Mode Chooser");
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -155,7 +163,7 @@ public class RobotContainer {
       driverController::getLeftY,
       driverController::getRightX,
       swerveModeChooser::get,
-      DriverStation.getAlliance().get(),
+      DriverStation::getAlliance,
       false,
       false
     ));
@@ -165,7 +173,7 @@ public class RobotContainer {
       driverController::getLeftY,
       driverController::getRightX,
       swerveModeChooser::get,
-      DriverStation.getAlliance().get(),
+      DriverStation::getAlliance,
       true,
       false
     ));
@@ -175,7 +183,7 @@ public class RobotContainer {
       driverController::getLeftY,
       driverController::getRightX,
       swerveModeChooser::get,
-      DriverStation.getAlliance().get(),
+      DriverStation::getAlliance,
       false,
       true
     ));
@@ -185,11 +193,11 @@ public class RobotContainer {
       driverController::getLeftY,
       driverController::getRightX,
       swerveModeChooser::get,
-      DriverStation.getAlliance().get(),
+      DriverStation::getAlliance,
       true,
       true
     ));
-    driverController.b().onTrue(new ResetGyroYaw(drive, DriverStation.getAlliance().get()));
+    driverController.b().onTrue(new ResetGyroYaw(drive, DriverStation::getAlliance));
     // Uncomment and bind to auto drive to amp
     // driverController.leftBumper();
 
@@ -220,8 +228,11 @@ public class RobotContainer {
     // Triggers elevator and wrist state change to INTAKE
     operatorController.rightBumper().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.FLOOR));
 
-    wrist.setDefaultCommand(new RunWristStateMachine(wrist, elevator, drive));
-    operatorController.leftStick().onTrue(new WristManualControl(wrist, operatorController::getRightY));
+    // wrist.setDefaultCommand(new RunWristStateMachine(wrist, elevator, drive));
+    // operatorController.leftStick().onTrue(new WristManualControl(wrist, operatorController::getRightY));
+    GenericEntry wristAngleSetter = Shuffleboard.getTab("SmartDashboard").add("Wrist Angle Setter", 30).getEntry();
+    DoubleSupplier doubleSupplier = () -> wristAngleSetter.getDouble(30);
+    operatorController.leftStick().onTrue(new SetWristPositionShuffleboard(wrist, doubleSupplier));
 
     // elevator.setDefaultCommand(new RunElevator(elevator, operatorController::getRightY));
     // operatorController.rightStick().onTrue(new ElevatorControlManual(elevator, operatorController::getRightY));
@@ -240,7 +251,7 @@ public class RobotContainer {
 
 
   public Command getAutonomousCommand() {
-    return null;
+    return new PathPlannerAuto(autoModeChooser.get());
   }
 }
 
