@@ -20,14 +20,14 @@ import au.grapplerobotics.LaserCan.TimingBudget;
 
 /** Add your docs here. */
 public class FeederIOTalonFX implements FeederIO {
-  private final TalonFX talon = new TalonFX(FeederConstants.talonId);
+  private final TalonFX talon = new TalonFX(FeederConstants.kTalonId);
   private LaserCan laserCan;
 
   private final DutyCycleOut dutyCycleOut = new DutyCycleOut(0).withEnableFOC(true);
 
   public FeederIOTalonFX() {
     try {
-      laserCan = new LaserCan(FeederConstants.laserCanId);
+      laserCan = new LaserCan(FeederConstants.kLaserCanId);
       laserCan.setRangingMode(RangingMode.SHORT);
       laserCan.setRegionOfInterest(new RegionOfInterest(8, 8, 6, 6));
       laserCan.setTimingBudget(TimingBudget.TIMING_BUDGET_20MS);

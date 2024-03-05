@@ -2,21 +2,21 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.first5924.frc2024.commands.feeder;
-
-import org.first5924.frc2024.constants.IntakeConstants;
-import org.first5924.frc2024.subsystems.feeder.Feeder;
+package org.first5924.frc2024.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class RunFeederToFeedShooter extends Command {
-  /** Creates a new slowFeeder. */
-  private final Feeder feeder;
+import org.first5924.frc2024.subsystems.intake.Intake;
 
-  public RunFeederToFeedShooter(Feeder feeder) {
-    this.feeder = feeder;
-    addRequirements(feeder);
+
+public class RunIntakeStateMachine extends Command {
+  private final Intake intake;
+
+  /** Creates a new Spin. */
+  public RunIntakeStateMachine(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.intake = intake;
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
@@ -26,14 +26,13 @@ public class RunFeederToFeedShooter extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    feeder.setPercent(IntakeConstants.kFeederRollerPercent);
+    intake.setPivotPosition(intake.getState().getPivotAngle());
+    intake.setRollerPercent(intake.getState().getRollerPercent());
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    feeder.setPercent(0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

@@ -13,13 +13,13 @@ import org.first5924.frc2024.subsystems.wrist.Wrist;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class RunWrist extends Command {
+public class RunWristStateMachine extends Command {
   private final Wrist wrist;
   private final Elevator elevator;
   private final Drive drive;
 
   /** Creates a new RunWristAndElevator. */
-  public RunWrist(Wrist wrist, Elevator elevator, Drive drive) {
+  public RunWristStateMachine(Wrist wrist, Elevator elevator, Drive drive) {
     this.wrist = wrist;
     this.elevator = elevator;
     this.drive = drive;

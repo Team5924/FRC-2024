@@ -4,6 +4,8 @@
 
 package org.first5924.frc2024.subsystems.feeder;
 
+import org.first5924.frc2024.constants.FeederConstants;
+import org.first5924.frc2024.constants.FeederConstants.FeederState;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Feeder extends SubsystemBase {
   private final FeederIO io;
   private final FeederIOInputsAutoLogged inputs = new FeederIOInputsAutoLogged();
+
+  private FeederState state = FeederState.MANUAL;
 
   public Feeder(FeederIO io) {
     this.io = io;
@@ -25,6 +29,14 @@ public class Feeder extends SubsystemBase {
     isNoteFullyIn();
   }
 
+  public FeederState getState() {
+    return state;
+  }
+
+  public void setState(FeederState state) {
+    this.state = state;
+  }
+
   public double getLaserCanMeasurementMillimeters() {
     return inputs.laserCanMeasurementMillimeters;
   }
@@ -34,7 +46,8 @@ public class Feeder extends SubsystemBase {
   }
 
   public boolean isNoteFullyIn() {
-    SmartDashboard.putBoolean("Is Note Fully In", inputs.laserCanMeasurementMillimeters < 40);
-    return inputs.laserCanMeasurementMillimeters < 40;
+    boolean isNoteFullyIn = inputs.laserCanMeasurementMillimeters <= FeederConstants.kDistanceWhenNoteIn;
+    SmartDashboard.putBoolean("Is Note Fully In", isNoteFullyIn);
+    return isNoteFullyIn;
   }
 }

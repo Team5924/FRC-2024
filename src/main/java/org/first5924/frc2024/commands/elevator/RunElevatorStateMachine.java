@@ -12,12 +12,12 @@ import org.first5924.frc2024.subsystems.elevator.Elevator;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class RunElevator extends Command {
+public class RunElevatorStateMachine extends Command {
   private final Elevator elevator;
   private final DoubleSupplier rightJoystickY;
 
   /** Creates a new RunWristAndElevator. */
-  public RunElevator(Elevator elevator, DoubleSupplier rightJoystickY) {
+  public RunElevatorStateMachine(Elevator elevator, DoubleSupplier rightJoystickY) {
     this.elevator = elevator;
     this.rightJoystickY = rightJoystickY;
     // Use addRequirements() here to declare subsystem dependencies.

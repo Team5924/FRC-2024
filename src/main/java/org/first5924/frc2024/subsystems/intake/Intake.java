@@ -15,8 +15,8 @@ public class Intake extends SubsystemBase {
   private final IntakeIO io;
   private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
 
-  private IntakeState intakeState = IntakeState.RETRACT;
-  private IntakeState intakeStateBeforeEject = IntakeState.RETRACT;
+  private IntakeState state = IntakeState.RETRACT;
+  private IntakeState stateBeforeEject = IntakeState.RETRACT;
 
   public Intake(IntakeIO io) {
     this.io = io;
@@ -27,22 +27,22 @@ public class Intake extends SubsystemBase {
     // This method will be called once per scheduler run
     io.updateInputs(inputs);
     Logger.processInputs("Intake", inputs);
-    SmartDashboard.putString("Intake State Before", getIntakeStateBeforeEject().toString());
+    SmartDashboard.putString("Intake State Before", getStateBeforeEject().toString());
   }
 
-  public void setIntakeState(IntakeState intakeState) {
-    this.intakeState = intakeState;
-    if (intakeState != IntakeState.EJECT) {
-      intakeStateBeforeEject = intakeState;
+  public void setState(IntakeState state) {
+    this.state = state;
+    if (state != IntakeState.EJECT) {
+      stateBeforeEject = state;
     }
   }
 
-  public IntakeState getIntakeState() {
-    return intakeState;
+  public IntakeState getState() {
+    return state;
   }
 
-  public IntakeState getIntakeStateBeforeEject() {
-    return intakeStateBeforeEject;
+  public IntakeState getStateBeforeEject() {
+    return stateBeforeEject;
   }
 
   public void setRollerPercent(double percent) {
