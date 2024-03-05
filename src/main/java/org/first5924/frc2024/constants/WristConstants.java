@@ -18,4 +18,5 @@ public class WristConstants {
   public static final double kClimbAngle = 53;
 
   public static final double kPeakVoltage = 4;
+  public static final double kMaxAngle = 50.8;
 }

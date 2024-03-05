@@ -5,10 +5,13 @@
 package org.first5924.frc2024.subsystems.wrist;
 
 import org.first5924.frc2024.constants.WristAndElevatorState;
+import org.first5924.frc2024.constants.WristConstants;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.first5924.frc2024.subsystems.elevator.Elevator;
 
 public class Wrist extends SubsystemBase {
   /** Creates a new Wrist. */
@@ -44,13 +47,27 @@ public class Wrist extends SubsystemBase {
     return inputs.wristAngleDegrees;
   }
 
-  public void setAngle(double degrees) {
-    io.setAngle(degrees);
+  public void setAngle(double degrees, double currentHeight) {
+    io.setAngle(MathUtil.clamp(degrees, this.getWristMinAngle(currentHeight), this.getWristMaxAngle(currentHeight)));
+  }
+
+  public double getWristMaxAngle(double currentHeight) {
+    return WristConstants.kMaxAngle; 
+  }
+
+  public double getWristMinAngle(double currentHeight) {
+    if (currentHeight <= 5) {
+     return 50;  
+    } else  {
+      return 4;
+     }
   }
 
   public void setVoltage(double volts) {
     io.setVoltage(volts);
   }
+
+
 
   public double calculateWristAngle(WristAndElevatorState wristAndElevatorState, double distance) {
     if (wristAndElevatorState == WristAndElevatorState.AIM_LOW) {

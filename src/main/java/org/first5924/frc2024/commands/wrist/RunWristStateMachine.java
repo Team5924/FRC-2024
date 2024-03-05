@@ -50,6 +50,7 @@ public class RunWristStateMachine extends Command {
         wrist.setAngle(WristConstants.kClimbAngle);
         break;
     }
+  
   }
 
   // Called once the command ends or is interrupted.
