@@ -6,18 +6,19 @@ package org.first5924.frc2024.commands.drive;
 
 import org.first5924.frc2024.subsystems.drive.Drive;
 
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class SetGyroYaw extends InstantCommand {
+public class ResetGyroYaw extends InstantCommand {
   private final Drive drive;
-  private final double yaw;
+  private final Alliance alliance;
 
-  public SetGyroYaw(Drive drive, double yaw) {
+  public ResetGyroYaw(Drive drive, Alliance alliance) {
     this.drive = drive;
-    this.yaw = yaw;
+    this.alliance = alliance;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drive);
   }
@@ -25,6 +26,10 @@ public class SetGyroYaw extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    drive.setGyroYaw(yaw);
+    if (alliance == Alliance.Blue) {
+      drive.setGyroYaw(0);
+    } else {
+      drive.setGyroYaw(180);
+    }
   }
 }
