@@ -18,14 +18,14 @@ import org.first5924.frc2024.commands.elevator.ElevatorManualControl;
 import org.first5924.frc2024.commands.feeder.RunFeederToFeedShooter;
 import org.first5924.frc2024.commands.feeder.ReverseFeederIfIntakePositioned;
 import org.first5924.frc2024.commands.feeder.RunFeeder;
-import org.first5924.frc2024.commands.wrist.RunWrist;
+import org.first5924.frc2024.commands.wrist.RunWristStateMachine;
 import org.first5924.frc2024.commands.wrist.WristManualControl;
 import org.first5924.frc2024.commands.shooter.EnableShooter;
 import org.first5924.frc2024.commands.vision.RunVisionPoseEstimation;
 import org.first5924.frc2024.constants.RobotConstants;
 import org.first5924.frc2024.constants.WristAndElevatorState;
 import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
-import org.first5924.frc2024.commands.intake.RunIntake;
+import org.first5924.frc2024.commands.intake.RunIntakeStateMachine;
 import org.first5924.frc2024.commands.intake.SetIntakeState;
 import org.first5924.frc2024.subsystems.intake.Intake;
 import org.first5924.frc2024.subsystems.intake.IntakeIO;
@@ -192,11 +192,11 @@ public class RobotContainer {
 
     vision.setDefaultCommand(new RunVisionPoseEstimation(drive, vision));
 
-    intake.setDefaultCommand(new RunIntake(intake));
+    intake.setDefaultCommand(new RunIntakeStateMachine(intake));
     operatorController.back().onTrue(
-      new SetIntakeState(intake, IntakeState.EJECT)
+      new SetIntakeState(intake, elevator, IntakeState.EJECT)
     ).onFalse(
-      new SetIntakeState(intake, intake.getIntakeStateBeforeEject())
+      new SetIntakeState(intake, elevator, intake.getStateBeforeEject())
     );
 
     feeder.setDefaultCommand(new RunFeeder(feeder, intake, operatorController::getLeftY));
@@ -204,22 +204,18 @@ public class RobotContainer {
 
     operatorController.leftTrigger().whileTrue(new ParallelCommandGroup(
       new ReverseFeederIfIntakePositioned(feeder, intake),
-      new SetIntakeState(intake, IntakeState.EJECT)
+      new SetIntakeState(intake, elevator, IntakeState.EJECT)
     )).onFalse(
-      new SetIntakeState(intake, intake.getIntakeStateBeforeEject())
+      new SetIntakeState(intake, elevator, intake.getStateBeforeEject())
     );
 
     operatorController.y().onTrue(new EnableShooter(shooter, true)).onFalse(new EnableShooter(shooter, false));
-    operatorController.leftBumper().onTrue(new ParallelCommandGroup(
-      new SetIntakeState(intake, IntakeState.RETRACT),
-      new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW)
-    ));
-    operatorController.rightBumper().onTrue(new ParallelCommandGroup(
-      new SetIntakeState(intake, IntakeState.FLOOR),
-      new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE)
-    ));
+    // Triggers elevator and wrist state change to AIM_LOW
+    operatorController.leftBumper().onTrue(new SetIntakeState(intake, elevator, IntakeState.RETRACT));
+    // Triggers elevator and wrist state change to INTAKE
+    operatorController.rightBumper().onTrue(new SetIntakeState(intake, elevator, IntakeState.FLOOR));
 
-    wrist.setDefaultCommand(new RunWrist(wrist, elevator, drive));
+    wrist.setDefaultCommand(new RunWristStateMachine(wrist, elevator, drive));
     operatorController.leftStick().onTrue(new WristManualControl(wrist, operatorController::getRightY));
 
     // elevator.setDefaultCommand(new RunElevator(elevator, operatorController::getRightY));
