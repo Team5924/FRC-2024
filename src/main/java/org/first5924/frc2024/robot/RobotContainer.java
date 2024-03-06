@@ -231,6 +231,9 @@ public class RobotContainer {
 
     wrist.setDefaultCommand(new RunWristStateMachine(wrist, elevator, drive));
     operatorController.leftStick().onTrue(new WristManualControl(wrist, operatorController::getRightY));
+    // GenericEntry wristAngleSetter = Shuffleboard.getTab("SmartDashboard").add("Wrist Angle Setter", 30).getEntry();
+    // DoubleSupplier doubleSupplier = () -> wristAngleSetter.getDouble(30);
+    // operatorController.leftStick().onTrue(new SetWristPositionShuffleboard(wrist, elevator, doubleSupplier));
 
     elevator.setDefaultCommand(new RunElevatorStateMachine(elevator, operatorController::getRightY));
     operatorController.rightStick().onTrue(new ElevatorManualControl(elevator, operatorController::getRightY));

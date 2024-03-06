@@ -5,8 +5,10 @@
 package org.first5924.frc2024.subsystems.wrist;
 
 import org.first5924.frc2024.constants.WristAndElevatorState;
+import org.first5924.frc2024.constants.WristConstants;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -16,6 +18,7 @@ public class Wrist extends SubsystemBase {
   private final WristIOInputsAutoLogged inputs = new WristIOInputsAutoLogged();
 
   private final InterpolatingDoubleTreeMap lowAimInterpolatingDoubleTreeMap = new InterpolatingDoubleTreeMap();
+  private final InterpolatingDoubleTreeMap minWristAngleFromElevatorInterpolatingDoubleTreeMap = new InterpolatingDoubleTreeMap();
 
   public Wrist(WristIO io) {
     this.io = io;
@@ -30,6 +33,8 @@ public class Wrist extends SubsystemBase {
     lowAimInterpolatingDoubleTreeMap.put(2.74, 29.36);
     lowAimInterpolatingDoubleTreeMap.put(3.04, 27.246);
     lowAimInterpolatingDoubleTreeMap.put(3.23, 25.45);
+
+    minWristAngleFromElevatorInterpolatingDoubleTreeMap.put(0.0, 0.0);
   }
 
   @Override
@@ -37,15 +42,19 @@ public class Wrist extends SubsystemBase {
     // This method will be called once per scheduler run
     io.updateInputs(inputs);
     Logger.processInputs("Wrist", inputs);
-    SmartDashboard.putNumber("Wrist angle", getAngleDegrees());
+    SmartDashboard.putNumber("Wrist Angle", getAngleDegrees());
   }
 
   public double getAngleDegrees() {
     return inputs.wristAngleDegrees;
   }
 
-  public void setAngle(double degrees) {
-    io.setAngle(degrees);
+  public void setAngle(double degrees, double currentHeight) {
+    io.setAngle(MathUtil.clamp(degrees, getWristMinAngle(currentHeight), WristConstants.kMaxAngle));
+  }
+
+  public double getWristMinAngle(double currentHeight) {
+    return minWristAngleFromElevatorInterpolatingDoubleTreeMap.get(currentHeight);
   }
 
   public void setVoltage(double volts) {
@@ -58,6 +67,6 @@ public class Wrist extends SubsystemBase {
       SmartDashboard.putNumber("Time", System.currentTimeMillis());
       return lowAimInterpolatingDoubleTreeMap.get(distance);
     }
-    return 0;
+    return 30;
   }
 }
