@@ -44,6 +44,10 @@ public class Elevator extends SubsystemBase {
     return drumRotationGuess;
   }
 
+  public double getHeightMeters() {
+    return inputs.elevatorHeightMeters;
+  }
+
   public void setVoltage(double volts) {
     io.setVoltage(volts);
   }

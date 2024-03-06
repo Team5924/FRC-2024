@@ -36,21 +36,20 @@ public class RunWristStateMachine extends Command {
   public void execute() {
     switch(elevator.getWristAndElevatorState()) {
       case INTAKE:
-        wrist.setAngle(WristConstants.kIntakeAngle);
+        wrist.setAngle(WristConstants.kIntakeAngle, elevator.getHeightMeters());
         break;
       case AMP:
-        wrist.setAngle(WristConstants.kAmpAngle);
+        wrist.setAngle(WristConstants.kAmpAngle, elevator.getHeightMeters());
         break;
       case AIM_LOW:
-        wrist.setAngle(wrist.calculateWristAngle(WristAndElevatorState.AIM_LOW, drive.getDistanceToSpeakerCenter(Alliance.Red)));
+        wrist.setAngle(wrist.calculateWristAngle(WristAndElevatorState.AIM_LOW, drive.getDistanceToSpeakerCenter(Alliance.Red)), elevator.getHeightMeters());
         break;
       case AIM_HIGH:
         break;
       case CLIMB:
-        wrist.setAngle(WristConstants.kClimbAngle);
+        wrist.setAngle(WristConstants.kClimbAngle, elevator.getHeightMeters());
         break;
     }
-  
   }
 
   // Called once the command ends or is interrupted.
