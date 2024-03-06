@@ -10,6 +10,7 @@ import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.elevator.Elevator;
 import org.first5924.frc2024.subsystems.wrist.Wrist;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -42,7 +43,7 @@ public class RunWristStateMachine extends Command {
         wrist.setAngle(WristConstants.kAmpAngle);
         break;
       case AIM_LOW:
-        wrist.setAngle(wrist.calculateWristAngle(WristAndElevatorState.AIM_LOW, drive.getDistanceToSpeakerCenter(Alliance.Red)));
+        wrist.setAngle(wrist.calculateWristAngle(WristAndElevatorState.AIM_LOW, drive.getDistanceToSpeakerCenter(DriverStation.getAlliance().get())));
         break;
       case AIM_HIGH:
         break;

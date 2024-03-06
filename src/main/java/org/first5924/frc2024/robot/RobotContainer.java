@@ -21,6 +21,7 @@ import org.first5924.frc2024.commands.SetWristAndElevatorState;
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.ResetGyroYaw;
 import org.first5924.frc2024.commands.elevator.ElevatorManualControl;
+import org.first5924.frc2024.commands.elevator.RunElevatorStateMachine;
 import org.first5924.frc2024.commands.feeder.RunFeederStateMachine;
 import org.first5924.frc2024.commands.feeder.SetFeederState;
 import org.first5924.frc2024.commands.wrist.RunWristStateMachine;
@@ -228,17 +229,14 @@ public class RobotContainer {
     // Triggers elevator and wrist state change to INTAKE
     operatorController.rightBumper().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.FLOOR));
 
-    // wrist.setDefaultCommand(new RunWristStateMachine(wrist, elevator, drive));
-    // operatorController.leftStick().onTrue(new WristManualControl(wrist, operatorController::getRightY));
-    GenericEntry wristAngleSetter = Shuffleboard.getTab("SmartDashboard").add("Wrist Angle Setter", 30).getEntry();
-    DoubleSupplier doubleSupplier = () -> wristAngleSetter.getDouble(30);
-    operatorController.leftStick().onTrue(new SetWristPositionShuffleboard(wrist, doubleSupplier));
+    wrist.setDefaultCommand(new RunWristStateMachine(wrist, elevator, drive));
+    operatorController.leftStick().onTrue(new WristManualControl(wrist, operatorController::getRightY));
 
-    // elevator.setDefaultCommand(new RunElevator(elevator, operatorController::getRightY));
-    // operatorController.rightStick().onTrue(new ElevatorControlManual(elevator, operatorController::getRightY));
+    elevator.setDefaultCommand(new RunElevatorStateMachine(elevator, operatorController::getRightY));
+    operatorController.rightStick().onTrue(new ElevatorManualControl(elevator, operatorController::getRightY));
 
     operatorController.a().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
-    operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_HIGH));
+    operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));
     operatorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
     operatorController.start().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.CLIMB));
   }

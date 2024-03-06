@@ -56,7 +56,7 @@ public class ModuleIOTalonFX implements ModuleIO {
         driveTalon = new TalonFX(DriveConstants.kLeftFrontDriveTalonId, "drive");
         turnTalon = new TalonFX(DriveConstants.kLeftFrontTurnTalonId, "drive");
         turnCanCoder = new CANcoder(DriveConstants.kLeftFrontCanCoderId, "drive");
-        isDriveMotorInverted = false;
+        isDriveMotorInverted = true;
         isTurnMotorInverted = true;
         absoluteEncoderOffsetRad = DriveConstants.kLeftFrontCanCoderOffsetRad;
         break;
@@ -64,7 +64,7 @@ public class ModuleIOTalonFX implements ModuleIO {
         driveTalon = new TalonFX(DriveConstants.kRightFrontDriveTalonId, "drive");
         turnTalon = new TalonFX(DriveConstants.kRightFrontTurnTalonId, "drive");
         turnCanCoder = new CANcoder(DriveConstants.kRightFrontCanCoderId, "drive");
-        isDriveMotorInverted = true;
+        isDriveMotorInverted = false;
         isTurnMotorInverted = true;
         absoluteEncoderOffsetRad = DriveConstants.kRightFrontCanCoderOffsetRad;
         break;
@@ -80,7 +80,7 @@ public class ModuleIOTalonFX implements ModuleIO {
         driveTalon = new TalonFX(DriveConstants.kRightBackDriveTalonId, "drive");
         turnTalon = new TalonFX(DriveConstants.kRightBackTurnTalonId, "drive");
         turnCanCoder = new CANcoder(DriveConstants.kRightBackCanCoderId, "drive");
-        isDriveMotorInverted = true;
+        isDriveMotorInverted = false;
         isTurnMotorInverted = true;
         absoluteEncoderOffsetRad = DriveConstants.kRightBackCanCoderOffsetRad;
         break;

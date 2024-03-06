@@ -28,7 +28,7 @@ public class ElevatorConstants {
   public static final double kReverseSoftLimitThreshold = 0;
 
   public static final double kIntakeHeight = 0;
-  public static final double kAmpHeight = 0.3;
+  public static final double kAmpHeight = 0.4;
   public static final double kAimLowHeight = 0;
   public static final double kAimHighHeight = 0;
 }
