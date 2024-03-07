@@ -4,12 +4,17 @@
 
 package org.first5924.frc2024.subsystems.wrist;
 
+import java.util.Map;
+
 import org.first5924.frc2024.constants.WristAndElevatorState;
 import org.first5924.frc2024.constants.WristConstants;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Wrist extends SubsystemBase {
@@ -60,6 +65,15 @@ public class Wrist extends SubsystemBase {
     return minWristAngleFromElevatorInterpolatingDoubleTreeMap.get(currentHeight);
   }
 
+  public double getShuffleboardAngle() {
+    GenericEntry degrees = Shuffleboard.getTab("SmartDashboard")
+      .add("ideal angle", 90)
+      .withWidget(BuiltInWidgets.kNumberSlider)
+      .withProperties(Map.of("min", -90, "max", 90)) // specify widget properties here
+      .getEntry();
+
+    return degrees.getDouble(inputs.wristAngleDegrees) ;
+  }
   public void setVoltage(double volts) {
     io.setVoltage(volts);
   }
