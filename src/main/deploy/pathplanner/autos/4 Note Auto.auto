@@ -2,15 +2,52 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 2,
-      "y": 2
+      "x": 1.45,
+      "y": 5.55
     },
     "rotation": 0
   },
   "command": {
     "type": "sequential",
     "data": {
-      "commands": []
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Bumper to Close B"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Close B to Bumper"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Bumper to Close A"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Close A to Bumper"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Bumper to Close C"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Close C to Bumper"
+          }
+        }
+      ]
     }
   },
   "folder": null,
