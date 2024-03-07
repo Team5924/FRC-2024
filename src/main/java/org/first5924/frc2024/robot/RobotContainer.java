@@ -225,7 +225,7 @@ public class RobotContainer {
 
     operatorController.y().onTrue(new EnableShooter(shooter, elevator, true)).onFalse(new EnableShooter(shooter, elevator, false));
     // Triggers elevator and wrist state change to AIM_LOW
-    operatorController.leftBumper().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.RETRACT));
+    operatorController.leftBumper().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.START));
     // Triggers elevator and wrist state change to INTAKE
     operatorController.rightBumper().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.FLOOR));
 

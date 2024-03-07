@@ -24,6 +24,9 @@ public class IntakeConstants {
   public static final double kRetractPivotAngleDegrees = 0;
   public static final double kRetractRollerPercent = 0;
 
+  public static final double kStartPivotAngleDegrees = 5;
+  public static final double kStartRollerPercent = 0;
+
   public static final double kEjectPivotAngleDegrees = 95;
   public static final double kEjectRollerPercent = -0.9;
 
@@ -31,7 +34,8 @@ public class IntakeConstants {
     FLOOR(kFloorPivotAngleDegrees, kFloorRollerPercent),
     FEEDER(kFeederPivotAngleDegrees, kFeederRollerPercent),
     RETRACT(kRetractPivotAngleDegrees, kRetractRollerPercent),
-    EJECT(kEjectPivotAngleDegrees, kEjectRollerPercent);
+    EJECT(kEjectPivotAngleDegrees, kEjectRollerPercent),
+    START(kStartPivotAngleDegrees, kStartRollerPercent);
 
     private final double pivotAngle;
     private final double rollerPercent;
