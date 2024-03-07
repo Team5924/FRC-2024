@@ -4,6 +4,8 @@
 
 package org.first5924.frc2024.subsystems.wrist;
 
+import java.util.Map;
+
 import org.first5924.frc2024.constants.WristAndElevatorState;
 import org.first5924.frc2024.constants.WristConstants;
 import org.littletonrobotics.junction.Logger;
@@ -47,11 +49,7 @@ public class Wrist extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Wrist", inputs);
     SmartDashboard.putNumber("Wrist Angle", getAngleDegrees());
-    public double degrees = Shuffleboard.getTab("Drive")
-      .add("ideal angle", 90)
-      .withWidget(BuiltInWidgets.kNumberSlider)
-      .withProperties(Map.of("min", -90, "max", 90)) // specify widget properties here
-      .getEntry();
+
   }
 
   public double getAngleDegrees() {
@@ -64,13 +62,22 @@ public class Wrist extends SubsystemBase {
 
   public void setAngleFromDash() {
     
-    io.setAngle();
+    io.setAngle(this.getIdealAngle());
   }
 
   public double getWristMinAngle(double currentHeight) {
     return minWristAngleFromElevatorInterpolatingDoubleTreeMap.get(currentHeight);
   }
 
+  public double getIdealAngle () {
+    GenericEntry degrees = Shuffleboard.getTab("SmartDashboard")
+      .add("ideal angle", 90)
+      .withWidget(BuiltInWidgets.kNumberSlider)
+      .withProperties(Map.of("min", -90, "max", 90)) // specify widget properties here
+      .getEntry();
+
+    return degrees.getDouble(inputs.wristAngleDegrees) ;
+  }
   public void setVoltage(double volts) {
     io.setVoltage(volts);
   }
