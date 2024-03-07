@@ -5,5 +5,6 @@ public enum WristAndElevatorState {
   AIM_HIGH,
   AMP,
   INTAKE,
-  CLIMB;
+  CLIMB,
+  CLIMB_MAX_HEIGHT;
 }

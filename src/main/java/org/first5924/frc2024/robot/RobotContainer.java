@@ -205,11 +205,12 @@ public class RobotContainer {
     vision.setDefaultCommand(new RunVisionPoseEstimation(drive, vision));
 
     intake.setDefaultCommand(new RunIntakeStateMachine(intake));
-    operatorController.back().onTrue(
+    operatorController.x().onTrue(
       new SetIntakeState(intake, elevator, feeder, IntakeState.EJECT)
     ).onFalse(
       new SetIntakeState(intake, elevator, feeder, intake.getStateBeforeEject())
     );
+    operatorController.povUp().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.START));
 
     feeder.setDefaultCommand(new RunFeederStateMachine(feeder, intake, operatorController::getLeftY));
     operatorController.rightTrigger(0.75)
@@ -229,19 +230,16 @@ public class RobotContainer {
     // Triggers elevator and wrist state change to INTAKE
     operatorController.rightBumper().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.FLOOR));
 
-    //wrist.setDefaultCommand(new RunWristStateMachine(wrist, elevator, drive));
-    //operatorController.leftStick().onTrue(new WristManualControl(wrist, operatorController::getRightY));
-    // GenericEntry wristAngleSetter = Shuffleboard.getTab("SmartDashboard").add("Wrist Angle Setter", 30).getEntry();
-    // DoubleSupplier doubleSupplier = () -> wristAngleSetter.getDouble(30);
-    // operatorController.leftStick().onTrue(new SetWristPositionShuffleboard(wrist, elevator, doubleSupplier));
+    wrist.setDefaultCommand(new RunWristStateMachine(wrist, elevator, drive));
+    operatorController.leftStick().toggleOnTrue(new WristManualControl(wrist, operatorController::getRightY));
+    operatorController.povDown().toggleOnTrue(new SetWristPositionShuffleboard(wrist));
 
     elevator.setDefaultCommand(new RunElevatorStateMachine(elevator, operatorController::getRightY));
-    operatorController.rightStick().onTrue(new ElevatorManualControl(elevator, operatorController::getRightY));
-    operatorController.povDown().onTrue(new SetWristPositionShuffleboard(wrist));
-    //operatorController.a().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
-    //operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));
-    //peratorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
-    //operatorController.start().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.CLIMB));
+    operatorController.rightStick().toggleOnTrue(new ElevatorManualControl(elevator, operatorController::getRightY));
+    operatorController.a().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
+    operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));
+    operatorController.y().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
+    operatorController.start().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.CLIMB));
   }
 
   /**
