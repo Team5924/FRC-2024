@@ -29,7 +29,7 @@ public class ElevatorManualControl extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elevator.setVoltage(MathUtil.applyDeadband(joystickY.getAsDouble(), 0.2) * 4);
+    elevator.setVoltage(-MathUtil.applyDeadband(joystickY.getAsDouble(), 0.2) * 4);
   }
 
   // Called once the command ends or is interrupted.
