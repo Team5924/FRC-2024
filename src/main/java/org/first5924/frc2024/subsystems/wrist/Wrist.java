@@ -10,6 +10,10 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Wrist extends SubsystemBase {
@@ -43,6 +47,11 @@ public class Wrist extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Wrist", inputs);
     SmartDashboard.putNumber("Wrist Angle", getAngleDegrees());
+    public double degrees = Shuffleboard.getTab("Drive")
+      .add("ideal angle", 90)
+      .withWidget(BuiltInWidgets.kNumberSlider)
+      .withProperties(Map.of("min", -90, "max", 90)) // specify widget properties here
+      .getEntry();
   }
 
   public double getAngleDegrees() {
@@ -51,6 +60,11 @@ public class Wrist extends SubsystemBase {
 
   public void setAngle(double degrees, double currentHeight) {
     io.setAngle(MathUtil.clamp(degrees, getWristMinAngle(currentHeight), WristConstants.kMaxAngle));
+  }
+
+  public void setAngleFromDash() {
+    
+    io.setAngle();
   }
 
   public double getWristMinAngle(double currentHeight) {
