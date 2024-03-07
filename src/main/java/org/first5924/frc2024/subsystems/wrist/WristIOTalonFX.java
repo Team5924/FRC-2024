@@ -58,7 +58,7 @@ public class WristIOTalonFX implements WristIO {
     feedbackConfigs.FeedbackRemoteSensorID = canCoder.getDeviceID();
     feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
     feedbackConfigs.SensorToMechanismRatio = 1.0;
-    feedbackConfigs.RotorToSensorRatio = 208.33;
+    feedbackConfigs.RotorToSensorRatio = WristConstants.kGearRatio;
 
     Slot0Configs slot0Configs = new Slot0Configs();
     slot0Configs.kP = WristConstants.kP;
