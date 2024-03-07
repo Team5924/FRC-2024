@@ -15,7 +15,6 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Wrist extends SubsystemBase {
@@ -49,7 +48,6 @@ public class Wrist extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Wrist", inputs);
     SmartDashboard.putNumber("Wrist Angle", getAngleDegrees());
-
   }
 
   public double getAngleDegrees() {
@@ -60,16 +58,11 @@ public class Wrist extends SubsystemBase {
     io.setAngle(MathUtil.clamp(degrees, getWristMinAngle(currentHeight), WristConstants.kMaxAngle));
   }
 
-  public void setAngleFromDash() {
-    
-    io.setAngle(this.getIdealAngle());
-  }
-
   public double getWristMinAngle(double currentHeight) {
     return minWristAngleFromElevatorInterpolatingDoubleTreeMap.get(currentHeight);
   }
 
-  public double getIdealAngle () {
+  public double getShuffleboardAngle() {
     GenericEntry degrees = Shuffleboard.getTab("SmartDashboard")
       .add("ideal angle", 90)
       .withWidget(BuiltInWidgets.kNumberSlider)

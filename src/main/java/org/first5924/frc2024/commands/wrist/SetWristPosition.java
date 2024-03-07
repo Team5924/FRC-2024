@@ -11,12 +11,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class SetWristPosition extends Command {
   private final Wrist wrist;
-
+  private final Elevator elevator;
   private final double degrees;
 
   /** Creates a new PIDTest. */
-  public SetWristPosition(Wrist wrist, double degrees) {
+  public SetWristPosition(Wrist wrist, Elevator elevator, double degrees) {
     this.wrist = wrist;
+    this.elevator = elevator;
     this.degrees = degrees;
     addRequirements(wrist);
   }
@@ -28,7 +29,7 @@ public class SetWristPosition extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    wrist.setAngleFromDash();
+    wrist.setAngle(degrees, elevator.getHeightMeters());
   }
 
   // Called once the command ends or is interrupted.
