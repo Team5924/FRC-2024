@@ -28,6 +28,8 @@ public class Intake extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Intake", inputs);
     SmartDashboard.putString("Intake State Before", getIntakeStateBeforeEject().toString());
+    SmartDashboard.putNumber("Intake Angle", inputs.pivotAngleDegrees);
+    SmartDashboard.putBoolean("Is Ready to Eject?", isReadyToEject());
   }
 
   public void setIntakeState(IntakeState intakeState) {

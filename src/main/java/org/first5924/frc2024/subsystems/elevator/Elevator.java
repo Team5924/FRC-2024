@@ -28,6 +28,11 @@ public class Elevator extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Elevator", inputs);
     SmartDashboard.putString("Wrist and Elevator State", getWristAndElevatorState().toString());
+
+    // TODO: test if this works!
+    double elevatorHeightPercent = (inputs.elevatorHeightMeters - ((double)ElevatorConstants.kLaserCanReadingAtLowestMillimeters) / 1000) / ElevatorConstants.kForwardSoftLimitThreshold;
+    String elevatorHeightPercentString = String.valueOf(elevatorHeightPercent);
+    SmartDashboard.putString("Elevator Height %", elevatorHeightPercentString);
   }
 
   public WristAndElevatorState getWristAndElevatorState() {
