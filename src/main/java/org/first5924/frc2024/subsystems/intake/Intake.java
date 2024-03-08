@@ -29,6 +29,8 @@ public class Intake extends SubsystemBase {
     Logger.processInputs("Intake", inputs);
     SmartDashboard.putString("Intake State Before", getStateBeforeEject().toString());
     SmartDashboard.putString("Intake State", getState().toString());
+    SmartDashboard.putNumber("Intake Angle", inputs.pivotAngleDegrees);
+    SmartDashboard.putBoolean("Is Ready to Eject?", isReadyToEject());
   }
 
   public void setState(IntakeState state) {

@@ -29,11 +29,6 @@ public class DriveConstants {
   public static final int kLeftBackCanCoderId = 10;
   public static final int kRightBackCanCoderId = 7;
 
-  // public static final double kLeftFrontCanCoderOffsetRad = 2.469;
-  // public static final double kRightFrontCanCoderOffsetRad = 0.2347;
-  // public static final double kLeftBackCanCoderOffsetRad = -1.6904;
-  // public static final double kRightBackCanCoderOffsetRad = 2.1514;
-
   public static final double kLeftFrontCanCoderOffsetRad = -0.6427;
   public static final double kRightFrontCanCoderOffsetRad = -2.8939;
   public static final double kLeftBackCanCoderOffsetRad = -1.6884;
@@ -44,7 +39,6 @@ public class DriveConstants {
 
   public static final double kMaxLinearSpeed = Units.feetToMeters(16.0);
   public static final double kMaxAngularSpeedRad = kMaxLinearSpeed / Math.hypot(kTrackWidthX / 2, kTrackWidthY / 2);
-  public static final double kAngularSpeedMultiplier = 0.45;
 
   public static final double kWheelRadius = Units.inchesToMeters(2.0);
 
@@ -61,9 +55,9 @@ public class DriveConstants {
   public static final double kEncoderToTurnRatio = 396/35;
 
   public static final double kSlowModeMovementMultiplier = 0.19;
-  public static final double kSlowModeRotationMultiplier = 0.25;
+  public static final double kSlowModeRotationMultiplier = 0.2;
 
-  public static final double kNormalModeRotationMultiplier = 0.7;
+  public static final double kNormalModeRotationMultiplier = 0.5;
 
   public static final HolonomicPathFollowerConfig kHolonomicPathFollowerConfig = new HolonomicPathFollowerConfig(
     new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants

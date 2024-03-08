@@ -12,8 +12,10 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import java.util.function.DoubleSupplier;
 
@@ -63,6 +65,8 @@ import org.first5924.frc2024.subsystems.elevator.ElevatorIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.fasterxml.jackson.core.sym.Name;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 
@@ -144,8 +148,24 @@ public class RobotContainer {
         break;
     }
 
+    NamedCommands.registerCommand("setIntakeStateFloor", new SetIntakeState(intake, elevator, feeder, IntakeState.FLOOR));
+    NamedCommands.registerCommand("setIntakeStateFloorOff", new SetIntakeState(intake, elevator, feeder, IntakeState.FLOOR_OFF));
+    NamedCommands.registerCommand("setIntakeStateRetract", new SetIntakeState(intake, elevator, feeder, IntakeState.RETRACT));
+    NamedCommands.registerCommand("setWristAndElevatorStateAimLow", new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
+    NamedCommands.registerCommand("enableShooter", new EnableShooter(shooter, elevator, true));
+    NamedCommands.registerCommand("disableShooter", new EnableShooter(shooter, elevator, false));
+    NamedCommands.registerCommand("setFeederStateFeedShooter", new SetFeederState(feeder, FeederState.FEED_SHOOTER));
+    NamedCommands.registerCommand("setFeederStateManual", new SetFeederState(feeder, FeederState.MANUAL));
+
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
+
+    autoModeChooser.addDefaultOption("4 Note Auto", "4 Note Auto");
+    autoModeChooser.addOption("Nothing", "Nothing");
+    autoModeChooser.addOption("SysId Quasistatic Forward", "SysId Quasistatic Forward");
+    autoModeChooser.addOption("SysId Quasistatic Reverse", "SysId Quasistatic Reverse");
+    autoModeChooser.addOption("SysId Dynamic Forward", "SysId Dynamic Forward");
+    autoModeChooser.addOption("SysId Dynamic Reverse", "SysId Dynamic Reverse");
 
     configureButtonBindings();
   }
@@ -205,11 +225,12 @@ public class RobotContainer {
     vision.setDefaultCommand(new RunVisionPoseEstimation(drive, vision));
 
     intake.setDefaultCommand(new RunIntakeStateMachine(intake));
-    operatorController.back().onTrue(
+    operatorController.x().onTrue(
       new SetIntakeState(intake, elevator, feeder, IntakeState.EJECT)
     ).onFalse(
       new SetIntakeState(intake, elevator, feeder, intake.getStateBeforeEject())
     );
+    operatorController.povUp().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.START));
 
     feeder.setDefaultCommand(new RunFeederStateMachine(feeder, intake, operatorController::getLeftY));
     operatorController.rightTrigger(0.75)
@@ -230,17 +251,14 @@ public class RobotContainer {
     operatorController.rightBumper().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.FLOOR));
 
     wrist.setDefaultCommand(new RunWristStateMachine(wrist, elevator, drive));
-    operatorController.leftStick().onTrue(new WristManualControl(wrist, operatorController::getRightY));
-    // GenericEntry wristAngleSetter = Shuffleboard.getTab("SmartDashboard").add("Wrist Angle Setter", 30).getEntry();
-    // DoubleSupplier doubleSupplier = () -> wristAngleSetter.getDouble(30);
-    // operatorController.leftStick().onTrue(new SetWristPositionShuffleboard(wrist, elevator, doubleSupplier));
+    operatorController.leftStick().toggleOnTrue(new WristManualControl(wrist, operatorController::getRightY));
+    operatorController.povDown().toggleOnTrue(new SetWristPositionShuffleboard(wrist));
 
     elevator.setDefaultCommand(new RunElevatorStateMachine(elevator, operatorController::getRightY));
-    operatorController.rightStick().onTrue(new ElevatorManualControl(elevator, operatorController::getRightY));
-
+    operatorController.rightStick().toggleOnTrue(new ElevatorManualControl(elevator, operatorController::getRightY));
     operatorController.a().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
     operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));
-    operatorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
+    operatorController.y().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
     operatorController.start().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.CLIMB));
   }
 
@@ -252,7 +270,20 @@ public class RobotContainer {
 
 
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto(autoModeChooser.get());
+    switch (autoModeChooser.get()) {
+      case "SysId Quasistatic Forward":
+        return drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward);
+      case "SysId Quasistatic Reverse":
+        return drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse);
+      case "SysId Dynamic Forward":
+        return drive.sysIdDynamic(SysIdRoutine.Direction.kForward);
+      case "SysId Dynamic Reverse":
+        return drive.sysIdDynamic(SysIdRoutine.Direction.kReverse);
+      case "Nothing":
+        return new InstantCommand();
+      default:
+        return new PathPlannerAuto(autoModeChooser.get());
+    }
   }
 }
 

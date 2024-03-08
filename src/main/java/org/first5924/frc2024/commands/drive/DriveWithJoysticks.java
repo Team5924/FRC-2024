@@ -69,7 +69,7 @@ public class DriveWithJoysticks extends Command {
     // Negative signs because y joystick up is - and because x joystick left is -
     double xPercent = -Math.copySign(deadbandedLeftYJoystick * deadbandedLeftYJoystick, deadbandedLeftYJoystick);
     double yPercent = -Math.copySign(deadbandedLeftXJoystick * deadbandedLeftXJoystick, deadbandedLeftXJoystick);
-    double rotationPercent = -Math.copySign(deadbandedRightXJoystick * deadbandedRightXJoystick, deadbandedRightXJoystick) * DriveConstants.kAngularSpeedMultiplier;
+    double rotationPercent = -Math.copySign(deadbandedRightXJoystick * deadbandedRightXJoystick, deadbandedRightXJoystick);
 
     int allianceDirectionMultiplier = DriverStation.getAlliance().get() == Alliance.Blue ? 1 : -1;
     double speedMultiplier = slowMode ? DriveConstants.kSlowModeMovementMultiplier : 1;

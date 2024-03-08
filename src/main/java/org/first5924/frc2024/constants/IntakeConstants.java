@@ -32,6 +32,7 @@ public class IntakeConstants {
 
   public static enum IntakeState {
     FLOOR(kFloorPivotAngleDegrees, kFloorRollerPercent),
+    FLOOR_OFF(kFloorPivotAngleDegrees, 0),
     FEEDER(kFeederPivotAngleDegrees, kFeederRollerPercent),
     RETRACT(kRetractPivotAngleDegrees, kRetractRollerPercent),
     EJECT(kEjectPivotAngleDegrees, kEjectRollerPercent),
