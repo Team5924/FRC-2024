@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.53,
-        "y": 4.12
+        "x": 1.7,
+        "y": 5.548282439157472
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9959177705669857,
-        "y": 4.843089550954835
+        "x": 2.270000000000001,
+        "y": 5.548282439157472
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.45,
-        "y": 5.55
+        "x": 2.534260082409054,
+        "y": 5.548282439157472
       },
       "prevControl": {
-        "x": 1.82148486695243,
-        "y": 5.047049684809182
+        "x": 2.042214492393959,
+        "y": 5.548282439157472
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,34 +30,10 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "Intake Off",
-      "waypointRelativePos": 0.8,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "setIntakeStateFloorOff"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "setWristAndElevatorStateAimLow"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

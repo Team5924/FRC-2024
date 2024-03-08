@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.62,
-        "y": 6.73
+        "x": 2.663955564022239,
+        "y": 6.726706036745408
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.266446609406726,
-        "y": 6.3764466094067265
+        "x": 2.336500269432328,
+        "y": 6.336460013003886
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.45,
+        "x": 1.7,
         "y": 5.55
       },
       "prevControl": {
-        "x": 1.8530508652763318,
-        "y": 5.953050865276332
+        "x": 2.081466240820533,
+        "y": 6.004613762951278
       },
       "nextControl": null,
       "isLocked": false,
@@ -36,34 +36,10 @@
     }
   ],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "Intake Off",
-      "waypointRelativePos": 0.8,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "setIntakeStateFloorOff"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "setWristAndElevatorStateAimLow"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -75,7 +51,7 @@
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 45.0,
+    "rotation": 50.0,
     "velocity": 0.0
   },
   "useDefaultConstraints": true
