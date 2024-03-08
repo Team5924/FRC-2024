@@ -17,6 +17,7 @@ import org.first5924.frc2024.commands.SetWristAndElevatorState;
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
 import org.first5924.frc2024.commands.drive.ResetGyroYaw;
 import org.first5924.frc2024.commands.elevator.ElevatorManualControl;
+import org.first5924.frc2024.commands.elevator.RunElevatorStateMachine;
 import org.first5924.frc2024.commands.feeder.RunFeederStateMachine;
 import org.first5924.frc2024.commands.feeder.SetFeederState;
 import org.first5924.frc2024.commands.wrist.RunWristStateMachine;
@@ -247,7 +248,7 @@ public class RobotContainer {
     operatorController.leftStick().toggleOnTrue(new WristManualControl(wrist, operatorController::getRightY));
     operatorController.povDown().toggleOnTrue(new SetWristPositionShuffleboard(wrist));
 
-    // elevator.setDefaultCommand(new RunElevatorStateMachine(elevator, operatorController::getRightY));
+    elevator.setDefaultCommand(new RunElevatorStateMachine(elevator, operatorController::getRightY));
     operatorController.rightStick().toggleOnTrue(new ElevatorManualControl(elevator, operatorController::getRightY));
     operatorController.a().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
     operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));

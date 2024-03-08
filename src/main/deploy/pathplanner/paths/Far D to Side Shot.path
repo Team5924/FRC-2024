@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.759595360959959,
-        "y": 0.2275857026468513
+        "x": 4.656922106008209,
+        "y": 0.39836140622240634
       },
       "isLocked": false,
       "linkedName": null
@@ -30,7 +30,48 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Intake Retract",
+      "waypointRelativePos": 0.4,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "setIntakeStateRetract"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Auto Aim and Shooter On",
+      "waypointRelativePos": 0.75,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "setShooterStateOn"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "setWristAndElevatorStateAimLow"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
@@ -45,7 +86,7 @@
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": -67.25,
+    "rotation": 29.52,
     "velocity": 0
   },
   "useDefaultConstraints": false

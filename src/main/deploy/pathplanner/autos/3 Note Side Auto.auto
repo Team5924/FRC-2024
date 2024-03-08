@@ -12,6 +12,48 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "setShooterStateOn"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setWristAndElevatorStateAimLow"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateFeedShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateManual"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setShooterStateOff"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Side Shot to Far D"
@@ -24,6 +66,30 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateFeedShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateManual"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setShooterStateOff"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Side Shot to Far E"
@@ -33,6 +99,18 @@
           "type": "path",
           "data": {
             "pathName": "Far E to Side Shot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.3
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateFeedShooter"
           }
         }
       ]
