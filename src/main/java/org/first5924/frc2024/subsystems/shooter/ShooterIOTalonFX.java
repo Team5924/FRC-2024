@@ -25,7 +25,7 @@ public class ShooterIOTalonFX implements ShooterIO {
 
   public ShooterIOTalonFX() {
     MotorOutputConfigs upperMotorOutputConfigs = new MotorOutputConfigs();
-    upperMotorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    upperMotorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
     upperMotorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
 
     CurrentLimitsConfigs bothMotorsCurrentLimitsConfigs = new CurrentLimitsConfigs();
@@ -44,8 +44,16 @@ public class ShooterIOTalonFX implements ShooterIO {
     );
 
     MotorOutputConfigs lowerMotorOutputConfigs = new MotorOutputConfigs();
-    lowerMotorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
+    lowerMotorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
     lowerMotorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
+
+    lowerTalon.getConfigurator().apply(
+      new TalonFXConfiguration()
+        .withMotorOutput(lowerMotorOutputConfigs)
+        .withCurrentLimits(bothMotorsCurrentLimitsConfigs)
+        .withClosedLoopRamps(RobotConstants.kClosedLoopRampsConfigs)
+        .withOpenLoopRamps(RobotConstants.kOpenLoopRampsConfigs)
+    );
   }
 
   @Override
@@ -63,6 +71,6 @@ public class ShooterIOTalonFX implements ShooterIO {
   @Override
   public void setPercent(double percent) {
     upperTalon.setControl(dutyCycleOut.withOutput(percent));
-    lowerTalon.setControl(new StrictFollower(upperTalon.getDeviceID()));
+    lowerTalon.setControl(dutyCycleOut.withOutput(percent));
   }
 }

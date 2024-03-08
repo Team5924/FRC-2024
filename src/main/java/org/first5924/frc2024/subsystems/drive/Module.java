@@ -62,10 +62,10 @@ public class Module {
     optimizedState.speedMetersPerSecond *= Math.cos(turnFeedback.getPositionError());
 
     // Run drive controller
-    double velocityRadPerSec = optimizedState.speedMetersPerSecond / DriveConstants.kWheelRadius;
+    double speedMetersPerSec = optimizedState.speedMetersPerSecond;
     io.setDriveVoltage(
-      driveFeedforward.calculate(velocityRadPerSec)
-      + driveFeedback.calculate(inputs.driveVelocityRadPerSec, velocityRadPerSec)
+      driveFeedforward.calculate(speedMetersPerSec)
+      + driveFeedback.calculate(inputs.driveVelocityRadPerSec * DriveConstants.kWheelRadius, speedMetersPerSec)
     );
 
     return optimizedState;

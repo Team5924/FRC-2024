@@ -8,9 +8,12 @@ import org.first5924.frc2024.constants.FeederConstants;
 import org.first5924.frc2024.constants.RobotConstants;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
@@ -34,6 +37,11 @@ public class FeederIOTalonFX implements FeederIO {
     } catch (ConfigurationFailedException e) {
       System.out.println("Configuration failed! " + e);
     }
+
+    MotorOutputConfigs feederMotorOutputConfigs = new MotorOutputConfigs();
+    feederMotorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    feederMotorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+
     CurrentLimitsConfigs feederCurrentLimitsConfigs = new CurrentLimitsConfigs();
     feederCurrentLimitsConfigs.SupplyCurrentLimit = 40;
     feederCurrentLimitsConfigs.SupplyCurrentThreshold = 40;
@@ -43,6 +51,7 @@ public class FeederIOTalonFX implements FeederIO {
 
     talon.getConfigurator().apply(
       new TalonFXConfiguration()
+        .withMotorOutput(feederMotorOutputConfigs)
         .withCurrentLimits(feederCurrentLimitsConfigs)
         .withClosedLoopRamps(RobotConstants.kClosedLoopRampsConfigs)
         .withOpenLoopRamps(RobotConstants.kOpenLoopRampsConfigs)

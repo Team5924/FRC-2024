@@ -14,13 +14,19 @@
         {
           "type": "named",
           "data": {
-            "name": "enableShooter"
+            "name": "setShooterStateOn"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setWristAndElevatorStateAimLow"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.75
+            "waitTime": 0.5
           }
         },
         {
@@ -50,31 +56,43 @@
         {
           "type": "named",
           "data": {
-            "name": "disableShooter"
+            "name": "setShooterStateOff"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Bumper to Close B"
+            "pathName": "Close Shot to Close B"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Close B to Bumper"
+            "pathName": "Close B to Close Shot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "enableShooter"
+            "name": "setWristAndElevatorStateAimLow"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setShooterStateOn"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setIntakeStateFloorOff"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.75
+            "waitTime": 0.5
           }
         },
         {
@@ -104,31 +122,43 @@
         {
           "type": "named",
           "data": {
-            "name": "disableShooter"
+            "name": "setShooterStateOff"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Bumper to Close A"
+            "pathName": "Close Shot to Close A"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Close A to Bumper"
+            "pathName": "Close A to Close Shot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "enableShooter"
+            "name": "setWristAndElevatorStateAimLow"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setIntakeStateFloorOff"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setShooterStateOn"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.75
+            "waitTime": 0.5
           }
         },
         {
@@ -158,31 +188,43 @@
         {
           "type": "named",
           "data": {
-            "name": "disableShooter"
+            "name": "setShooterStateOff"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Bumper to Close C"
+            "pathName": "Close Shot to Close C"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Close C to Bumper"
+            "pathName": "Close C to Close Shot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "enableShooter"
+            "name": "setWristAndElevatorStateAimLow"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setShooterStateOn"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setIntakeStateFloorOff"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.75
+            "waitTime": 0.5
           }
         },
         {
@@ -212,13 +254,13 @@
         {
           "type": "named",
           "data": {
-            "name": "disableShooter"
+            "name": "setShooterStateOff"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Bumper to Top Midfield"
+            "pathName": "Close Shot to Top Midfield"
           }
         }
       ]

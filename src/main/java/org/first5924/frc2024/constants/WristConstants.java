@@ -11,14 +11,14 @@ public class WristConstants {
 
   public static final double kP = 450;
 
-  public static final double kCanCoderOffset = 0.436;
+  public static final double kCanCoderOffset = -0.275;
 
   public static final double kGearRatio = 282.24;
 
-  public static final double kIntakeAngle = 41;
+  public static final double kIntakeAngle = 37;
   public static final double kAmpAngle = -30.5;
   public static final double kClimbAngle = 53;
 
   public static final double kPeakVoltage = 7;
-  public static final double kMaxAngle = 50.8;
+  public static final double kMaxAngle = 49;
 }

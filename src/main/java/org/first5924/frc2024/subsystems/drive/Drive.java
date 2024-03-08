@@ -59,7 +59,7 @@ public class Drive extends SubsystemBase {
   private final MutableMeasure<Velocity<Distance>> velocityMutableMeasure = MutableMeasure.mutable(Units.MetersPerSecond.of(0));
   private SysIdRoutine routine = new SysIdRoutine(
     new SysIdRoutine.Config(),
-    new SysIdRoutine.Mechanism(this::driveVoltageForCharacterization, null, this)
+    new SysIdRoutine.Mechanism(this::driveVoltageForCharacterization, this::logDriveForCharacterization, this)
   );
 
   public Drive(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO) {
@@ -69,7 +69,7 @@ public class Drive extends SubsystemBase {
     modules[2] = new Module(blModuleIO, 2);
     modules[3] = new Module(brModuleIO, 3);
     for (var module : modules) {
-      module.setBrakeMode(false);
+      module.setBrakeMode(true);
     }
     poseEstimator = new SwerveDrivePoseEstimator(
       kinematics,

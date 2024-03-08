@@ -14,6 +14,7 @@ public interface WristIO {
     public double motorCurrentAmps = 0.0;
     public double motorAppliedVolts = 0.0;
     public double wristAngleDegrees = 0.0;
+    public double canCoderAngle = 0.0;
   }
 
   /** Updates the set of loggable inputs. */

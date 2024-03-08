@@ -29,12 +29,14 @@ import org.first5924.frc2024.commands.feeder.SetFeederState;
 import org.first5924.frc2024.commands.wrist.RunWristStateMachine;
 import org.first5924.frc2024.commands.wrist.SetWristPositionShuffleboard;
 import org.first5924.frc2024.commands.wrist.WristManualControl;
-import org.first5924.frc2024.commands.shooter.EnableShooter;
+import org.first5924.frc2024.commands.shooter.RunShooterStateMachine;
+import org.first5924.frc2024.commands.shooter.SetShooterState;
 import org.first5924.frc2024.commands.vision.RunVisionPoseEstimation;
 import org.first5924.frc2024.constants.RobotConstants;
 import org.first5924.frc2024.constants.WristAndElevatorState;
 import org.first5924.frc2024.constants.FeederConstants.FeederState;
 import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
+import org.first5924.frc2024.constants.ShooterConstants.ShooterState;
 import org.first5924.frc2024.commands.intake.RunIntakeStateMachine;
 import org.first5924.frc2024.commands.intake.SetIntakeState;
 import org.first5924.frc2024.subsystems.intake.Intake;
@@ -152,8 +154,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("setIntakeStateFloorOff", new SetIntakeState(intake, elevator, feeder, IntakeState.FLOOR_OFF));
     NamedCommands.registerCommand("setIntakeStateRetract", new SetIntakeState(intake, elevator, feeder, IntakeState.RETRACT));
     NamedCommands.registerCommand("setWristAndElevatorStateAimLow", new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
-    NamedCommands.registerCommand("enableShooter", new EnableShooter(shooter, elevator, true));
-    NamedCommands.registerCommand("disableShooter", new EnableShooter(shooter, elevator, false));
+    NamedCommands.registerCommand("setShooterStateOn", new SetShooterState(shooter, ShooterState.ON));
+    NamedCommands.registerCommand("setShooterStateOff", new SetShooterState(shooter, ShooterState.OFF));
     NamedCommands.registerCommand("setFeederStateFeedShooter", new SetFeederState(feeder, FeederState.FEED_SHOOTER));
     NamedCommands.registerCommand("setFeederStateManual", new SetFeederState(feeder, FeederState.MANUAL));
 
@@ -230,7 +232,7 @@ public class RobotContainer {
     ).onFalse(
       new SetIntakeState(intake, elevator, feeder, intake.getStateBeforeEject())
     );
-    operatorController.povUp().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.START));
+    // operatorController.povUp().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.START));
 
     feeder.setDefaultCommand(new RunFeederStateMachine(feeder, intake, operatorController::getLeftY));
     operatorController.rightTrigger(0.75)
@@ -244,9 +246,10 @@ public class RobotContainer {
       new SetFeederState(feeder, FeederState.MANUAL)
     ));
 
-    operatorController.y().onTrue(new EnableShooter(shooter, elevator, true)).onFalse(new EnableShooter(shooter, elevator, false));
+    shooter.setDefaultCommand(new RunShooterStateMachine(shooter, elevator));
+    operatorController.y().onTrue(new SetShooterState(shooter, ShooterState.ON)).onFalse(new SetShooterState(shooter, ShooterState.OFF));
     // Triggers elevator and wrist state change to AIM_LOW
-    operatorController.leftBumper().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.START));
+    operatorController.leftBumper().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.RETRACT));
     // Triggers elevator and wrist state change to INTAKE
     operatorController.rightBumper().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.FLOOR));
 
@@ -254,7 +257,7 @@ public class RobotContainer {
     operatorController.leftStick().toggleOnTrue(new WristManualControl(wrist, operatorController::getRightY));
     operatorController.povDown().toggleOnTrue(new SetWristPositionShuffleboard(wrist));
 
-    elevator.setDefaultCommand(new RunElevatorStateMachine(elevator, operatorController::getRightY));
+    // elevator.setDefaultCommand(new RunElevatorStateMachine(elevator, operatorController::getRightY));
     operatorController.rightStick().toggleOnTrue(new ElevatorManualControl(elevator, operatorController::getRightY));
     operatorController.a().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
     operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));

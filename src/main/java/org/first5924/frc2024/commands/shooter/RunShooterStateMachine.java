@@ -10,16 +10,14 @@ import org.first5924.frc2024.constants.WristAndElevatorState;
 import org.first5924.frc2024.subsystems.elevator.Elevator;
 import org.first5924.frc2024.subsystems.shooter.Shooter;
 
-public class EnableShooter extends Command {
+public class RunShooterStateMachine extends Command {
   /** Creates a new ShooterOn. */
   private final Shooter shooter;
   private final Elevator elevator;
-  private final boolean enable;
 
-  public EnableShooter(Shooter shooter, Elevator elevator, boolean enable) {
+  public RunShooterStateMachine(Shooter shooter, Elevator elevator) {
     this.shooter = shooter;
     this.elevator = elevator;
-    this.enable = enable;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
   }
@@ -31,14 +29,17 @@ public class EnableShooter extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (enable) {
-      if (elevator.getWristAndElevatorState() == WristAndElevatorState.AMP) {
-        shooter.setPercent(0.3);
-      } else {
-        shooter.setPercent(1);
-      }
-    } else {
-      shooter.setPercent(0);
+    switch (shooter.getState()) {
+      case ON:
+        if (elevator.getWristAndElevatorState() == WristAndElevatorState.AMP) {
+          shooter.setPercent(0.3);
+        } else {
+          shooter.setPercent(1);
+        }
+        break;
+      case OFF:
+        shooter.setPercent(0);
+        break;
     }
   }
 

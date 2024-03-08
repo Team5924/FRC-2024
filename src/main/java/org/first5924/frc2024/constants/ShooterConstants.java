@@ -6,7 +6,11 @@ package org.first5924.frc2024.constants;
 
 /** Add your docs here. */
 public class ShooterConstants {
-    //Placeholder values for future change
     public static final int upperMotorID = 57;
     public static final int lowerMotorID = 56;
+
+    public static enum ShooterState {
+      ON,
+      OFF
+    }
 }

@@ -42,10 +42,10 @@ public class DriveConstants {
 
   public static final double kWheelRadius = Units.inchesToMeters(2.0);
 
-  public static final double kDriveKp = 0.1;
+  public static final double kDriveKp = 0.9;
   public static final double kDriveKd = 0.0;
-  public static final double kDriveKs = 0.18868;
-  public static final double kDriveKv = 0.12825;
+  public static final double kDriveKs = 0.17957;
+  public static final double kDriveKv = 2.1474;
   public static final double kTurnKp = 3.5;
   public static final double kTurnKd = 0;
 
