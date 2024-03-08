@@ -252,7 +252,7 @@ public class RobotContainer {
     operatorController.a().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
     operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));
     operatorController.y().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
-    operatorController.start().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.CLIMB));
+    operatorController.start().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.CLIMB_MAX_HEIGHT));
   }
 
   /**
