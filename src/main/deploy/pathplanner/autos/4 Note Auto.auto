@@ -12,6 +12,48 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "enableShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.75
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateFeedShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setIntakeStateFloor"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateManual"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "disableShooter"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Bumper to Close B"
@@ -21,6 +63,48 @@
           "type": "path",
           "data": {
             "pathName": "Close B to Bumper"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "enableShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.75
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateFeedShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setIntakeStateFloor"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateManual"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "disableShooter"
           }
         },
         {
@@ -36,6 +120,48 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "enableShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.75
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateFeedShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setIntakeStateFloor"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateManual"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "disableShooter"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Bumper to Close C"
@@ -45,6 +171,54 @@
           "type": "path",
           "data": {
             "pathName": "Close C to Bumper"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "enableShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.75
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateFeedShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setIntakeStateRetract"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateManual"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "disableShooter"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Bumper to Top Midfield"
           }
         }
       ]

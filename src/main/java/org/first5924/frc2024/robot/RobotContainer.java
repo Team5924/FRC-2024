@@ -12,8 +12,10 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import java.util.function.DoubleSupplier;
 
@@ -63,6 +65,8 @@ import org.first5924.frc2024.subsystems.elevator.ElevatorIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.fasterxml.jackson.core.sym.Name;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 
@@ -144,9 +148,25 @@ public class RobotContainer {
         break;
     }
 
+    NamedCommands.registerCommand("setIntakeStateFloor", new SetIntakeState(intake, elevator, feeder, IntakeState.FLOOR));
+    NamedCommands.registerCommand("setIntakeStateFloorOff", new SetIntakeState(intake, elevator, feeder, IntakeState.FLOOR_OFF));
+    NamedCommands.registerCommand("setIntakeStateRetract", new SetIntakeState(intake, elevator, feeder, IntakeState.RETRACT));
+    NamedCommands.registerCommand("setWristAndElevatorStateAimLow", new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
+    NamedCommands.registerCommand("enableShooter", new EnableShooter(shooter, elevator, true));
+    NamedCommands.registerCommand("disableShooter", new EnableShooter(shooter, elevator, false));
+    NamedCommands.registerCommand("setFeederStateFeedShooter", new SetFeederState(feeder, FeederState.FEED_SHOOTER));
+    NamedCommands.registerCommand("setFeederStateManual", new SetFeederState(feeder, FeederState.MANUAL));
+
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
-    
+
+    autoModeChooser.addDefaultOption("4 Note Auto", "4 Note Auto");
+    autoModeChooser.addOption("Nothing", "Nothing");
+    autoModeChooser.addOption("SysId Quasistatic Forward", "SysId Quasistatic Forward");
+    autoModeChooser.addOption("SysId Quasistatic Reverse", "SysId Quasistatic Reverse");
+    autoModeChooser.addOption("SysId Dynamic Forward", "SysId Dynamic Forward");
+    autoModeChooser.addOption("SysId Dynamic Reverse", "SysId Dynamic Reverse");
+
     configureButtonBindings();
   }
 
@@ -250,7 +270,20 @@ public class RobotContainer {
 
 
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto(autoModeChooser.get());
+    switch (autoModeChooser.get()) {
+      case "SysId Quasistatic Forward":
+        return drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward);
+      case "SysId Quasistatic Reverse":
+        return drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse);
+      case "SysId Dynamic Forward":
+        return drive.sysIdDynamic(SysIdRoutine.Direction.kForward);
+      case "SysId Dynamic Reverse":
+        return drive.sysIdDynamic(SysIdRoutine.Direction.kReverse);
+      case "Nothing":
+        return new InstantCommand();
+      default:
+        return new PathPlannerAuto(autoModeChooser.get());
+    }
   }
 }
 
