@@ -47,7 +47,7 @@ public class RunWristStateMachine extends Command {
       case AIM_HIGH:
         break;
       case CLIMB:
-        wrist.setAngle(WristConstants.kClimbAngle, elevator.getHeightMeters());
+        wrist.setMaxAngleClimb(elevator.getHeightMeters());
         break;
       case CLIMB_MAX_HEIGHT:
         wrist.setAngle(WristConstants.kClimbAngle, elevator.getHeightMeters());

@@ -49,7 +49,7 @@ public class RunElevatorStateMachine extends Command {
         elevator.setVoltage(MathUtil.applyDeadband(-rightJoystickY.getAsDouble(), 0.1) * ElevatorConstants.kPeakForwardVoltage);
         break;
       case CLIMB_MAX_HEIGHT: {
-        elevator.setHeight(ElevatorConstants.kAmpHeight);
+        elevator.setHeight(ElevatorConstants.kMaxHeight);
         if (Math.abs(rightJoystickY.getAsDouble()) > 0.1) {
           elevator.setWristAndElevatorState(WristAndElevatorState.CLIMB);
         }

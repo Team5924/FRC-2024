@@ -24,6 +24,7 @@ public class Wrist extends SubsystemBase {
 
   private final InterpolatingDoubleTreeMap lowAimInterpolatingDoubleTreeMap = new InterpolatingDoubleTreeMap();
   private final InterpolatingDoubleTreeMap minWristAngleFromElevatorInterpolatingDoubleTreeMap = new InterpolatingDoubleTreeMap();
+  private final InterpolatingDoubleTreeMap maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap = new InterpolatingDoubleTreeMap();
 
   public Wrist(WristIO io) {
     this.io = io;
@@ -43,6 +44,9 @@ public class Wrist extends SubsystemBase {
     minWristAngleFromElevatorInterpolatingDoubleTreeMap.put(0.0965, -7.4);
     minWristAngleFromElevatorInterpolatingDoubleTreeMap.put(0.1596, -51.81);
     minWristAngleFromElevatorInterpolatingDoubleTreeMap.put(0.212, -74.004);
+
+    maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.put(-90.0, 0.59);
+    lowAimInterpolatingDoubleTreeMap.put(3.23, 0.0);
   }
 
   @Override
@@ -63,6 +67,10 @@ public class Wrist extends SubsystemBase {
 
   public double getWristMinAngle(double currentHeight) {
     return minWristAngleFromElevatorInterpolatingDoubleTreeMap.get(currentHeight);
+  }
+
+  public void setMaxAngleClimb(double currentHeight) {
+    setAngle(maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.get(currentHeight), currentHeight);
   }
 
   public double getShuffleboardAngle() {

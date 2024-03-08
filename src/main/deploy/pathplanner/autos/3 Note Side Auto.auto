@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.08,
+      "y": 4.19
+    },
+    "rotation": -67.25
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Side Shot to Far D"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Far D to Side Shot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Side Shot to Far E"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Far E to Side Shot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

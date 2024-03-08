@@ -29,6 +29,7 @@ public class ElevatorConstants {
 
   public static final double kIntakeHeight = 0;
   public static final double kAmpHeight = 0.58;
+  public static final double kMaxHeight = 0.59;
   public static final double kAimLowHeight = 0;
   public static final double kAimHighHeight = 0;
 }
