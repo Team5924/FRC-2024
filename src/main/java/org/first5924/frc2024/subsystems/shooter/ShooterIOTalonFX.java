@@ -25,7 +25,7 @@ public class ShooterIOTalonFX implements ShooterIO {
   public ShooterIOTalonFX() {
     MotorOutputConfigs upperMotorOutputConfigs = new MotorOutputConfigs();
     upperMotorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
-    upperMotorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
+    upperMotorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
 
     CurrentLimitsConfigs bothMotorsCurrentLimitsConfigs = new CurrentLimitsConfigs();
     bothMotorsCurrentLimitsConfigs.SupplyCurrentLimit = 40;

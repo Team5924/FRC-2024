@@ -50,12 +50,6 @@
         {
           "type": "named",
           "data": {
-            "name": "setFeederStateManual"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "setShooterStateOff"
           }
         },
@@ -116,12 +110,6 @@
         {
           "type": "named",
           "data": {
-            "name": "setFeederStateManual"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "setShooterStateOff"
           }
         },
@@ -177,12 +165,6 @@
           "type": "named",
           "data": {
             "name": "setIntakeStateFloor"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setFeederStateManual"
           }
         },
         {
