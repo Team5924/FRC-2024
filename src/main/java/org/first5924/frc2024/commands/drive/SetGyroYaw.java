@@ -15,24 +15,33 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ResetGyroYaw extends InstantCommand {
+public class SetGyroYaw extends InstantCommand {
   private final Drive drive;
+  private final double angle;
   private final Supplier<Optional<Alliance>> allianceSupplier;
+  private final boolean enableFlipIfRed;
 
-  public ResetGyroYaw(Drive drive, Supplier<Optional<Alliance>> allianceSupplier) {
+  public SetGyroYaw(Drive drive, double angle, Supplier<Optional<Alliance>> allianceSupplier, boolean enableFlipIfRed) {
     this.drive = drive;
+    this.angle = angle;
     this.allianceSupplier = allianceSupplier;
+    this.enableFlipIfRed = enableFlipIfRed;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(drive);
+    addRequirements();
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (allianceSupplier.get().get() == Alliance.Blue) {
-      drive.setGyroYaw(0);
+    if (allianceSupplier.get().get() == Alliance.Red && enableFlipIfRed) {
+      double flippedYaw = 180 - angle;
+      // Correcting for angle above 180 may be unnecessary, keep until tested to prove otherwise
+      if (flippedYaw > 180) {
+        flippedYaw -= 360;
+      }
+      drive.setGyroYaw(flippedYaw);
     } else {
-      drive.setGyroYaw(180);
+      drive.setGyroYaw(angle);
     }
   }
 }

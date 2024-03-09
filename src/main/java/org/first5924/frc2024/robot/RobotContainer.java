@@ -13,9 +13,10 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
+import org.first5924.frc2024.constants.DriveConstants;
 import org.first5924.frc2024.commands.SetWristAndElevatorState;
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
-import org.first5924.frc2024.commands.drive.ResetGyroYaw;
+import org.first5924.frc2024.commands.drive.SetGyroYaw;
 import org.first5924.frc2024.commands.elevator.ElevatorManualControl;
 import org.first5924.frc2024.commands.elevator.RunElevatorStateMachine;
 import org.first5924.frc2024.commands.feeder.RunFeederStateMachine;
@@ -149,6 +150,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("setShooterStateOff", new SetShooterState(shooter, ShooterState.OFF));
     NamedCommands.registerCommand("setFeederStateFeedShooter", new SetFeederState(feeder, FeederState.FEED_SHOOTER));
     NamedCommands.registerCommand("setFeederStateManual", new SetFeederState(feeder, FeederState.MANUAL));
+    NamedCommands.registerCommand("setGyroBottomStart", new SetGyroYaw(drive, DriveConstants.kBlueBottomAutoStartingYawDegrees, DriverStation::getAlliance, true));
 
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
@@ -213,7 +215,7 @@ public class RobotContainer {
       true,
       true
     ));
-    driverController.b().onTrue(new ResetGyroYaw(drive, DriverStation::getAlliance));
+    driverController.b().onTrue(new SetGyroYaw(drive, 0, DriverStation::getAlliance, true));
     // Uncomment and bind to auto drive to amp
     // driverController.leftBumper();
 
