@@ -4,24 +4,24 @@
     {
       "anchor": {
         "x": 7.93,
-        "y": 0.78
+        "y": 2.3
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.9300000000000015,
-        "y": 0.7800000000000001
+        "x": 4.832496542770864,
+        "y": 0.3236917092352707
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.0824308083801355,
-        "y": 4.194912463899002
+        "x": 0.98,
+        "y": 4.14
       },
       "prevControl": {
-        "x": 2.0177941466994045,
-        "y": 1.9639601501425228
+        "x": 2.4230331423625815,
+        "y": 3.0154199475065617
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "Intake Retract",
-      "waypointRelativePos": 0.8,
+      "waypointRelativePos": 0.4,
       "command": {
         "type": "parallel",
         "data": {
@@ -50,7 +50,7 @@
     },
     {
       "name": "Auto Aim and Shooter On",
-      "waypointRelativePos": 0.95,
+      "waypointRelativePos": 0.75,
       "command": {
         "type": "parallel",
         "data": {
@@ -80,13 +80,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -67.25,
+    "rotation": -56.49000000000001,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 21.95,
     "velocity": 0
   },
   "useDefaultConstraints": false

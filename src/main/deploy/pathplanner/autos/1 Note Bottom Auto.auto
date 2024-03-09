@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.08,
-      "y": 4.19
+      "x": 0.98,
+      "y": 4.14
     },
-    "rotation": -67.25
+    "rotation": -56.49000000000001
   },
   "command": {
     "type": "sequential",
@@ -54,63 +54,15 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Side Shot to Far D"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Far D to Side Shot"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "setFeederStateFeedShooter"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setFeederStateManual"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setShooterStateOff"
+            "name": "setIntakeStateRetract"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Side Shot to Far E"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Far E to Side Shot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.3
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setFeederStateFeedShooter"
+            "pathName": "Bottom Shot to Leave"
           }
         }
       ]
