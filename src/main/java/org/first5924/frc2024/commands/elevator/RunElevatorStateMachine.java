@@ -50,7 +50,7 @@ public class RunElevatorStateMachine extends Command {
         break;
       case CLIMB_MAX_HEIGHT: {
         elevator.setHeight(ElevatorConstants.kMaxHeight);
-        if (Math.abs(rightJoystickY.getAsDouble()) > 0.1) {
+        if (Math.abs(rightJoystickY.getAsDouble()) > 0.2) {
           elevator.setWristAndElevatorState(WristAndElevatorState.CLIMB);
         }
         break;

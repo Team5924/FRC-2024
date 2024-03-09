@@ -154,6 +154,7 @@ public class RobotContainer {
     swerveModeChooser.addOption("Robot Centric", false);
 
     autoModeChooser.addDefaultOption("4 Note Auto", "4 Note Auto");
+    autoModeChooser.addDefaultOption("3 Note Side Auto", "3 Note Side Auto");
     autoModeChooser.addOption("Nothing", "Nothing");
     autoModeChooser.addOption("SysId Quasistatic Forward", "SysId Quasistatic Forward");
     autoModeChooser.addOption("SysId Quasistatic Reverse", "SysId Quasistatic Reverse");
