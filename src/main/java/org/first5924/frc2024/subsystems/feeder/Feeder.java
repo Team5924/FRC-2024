@@ -26,8 +26,8 @@ public class Feeder extends SubsystemBase {
     // This method will be called once per scheduler run
     io.updateInputs(inputs);
     Logger.processInputs("Feeder", inputs);
-    SmartDashboard.putString("Feeder State", getState().toString());
-    isNoteFullyIn();
+
+    SmartDashboard.putBoolean("Note Fully In?", isNoteFullyIn());
   }
 
   public FeederState getState() {
@@ -47,8 +47,6 @@ public class Feeder extends SubsystemBase {
   }
 
   public boolean isNoteFullyIn() {
-    boolean isNoteFullyIn = inputs.laserCanMeasurementMillimeters <= FeederConstants.kDistanceWhenNoteIn;
-    SmartDashboard.putBoolean("Is Note Fully In", isNoteFullyIn);
-    return isNoteFullyIn;
+    return inputs.laserCanMeasurementMillimeters <= FeederConstants.kDistanceWhenNoteIn;
   }
 }

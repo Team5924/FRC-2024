@@ -15,7 +15,6 @@ import org.first5924.frc2024.subsystems.intake.Intake;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class RunFeederStateMachine extends Command {
@@ -41,7 +40,6 @@ public class RunFeederStateMachine extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Timer", timer.get());
     switch (feeder.getState()) {
       case MANUAL:
         feeder.setPercent(-MathUtil.applyDeadband(leftJoystickY.getAsDouble(), 0.2));

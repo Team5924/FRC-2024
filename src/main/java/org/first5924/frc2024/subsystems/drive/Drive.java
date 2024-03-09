@@ -102,12 +102,18 @@ public class Drive extends SubsystemBase {
   }
 
   public void periodic() {
+    SmartDashboard.putBoolean("Facing Alliance Speaker?", Math.abs(getYaw().getRadians() - getFieldRotationRadiansToPointShooterAtSpeakerCenter(DriverStation.getAlliance().get())) < 0.08);
+
     Logger.recordOutput("Estimated Pose", getEstimatedPose());
     Logger.recordOutput("Distance to Center of Blue Speaker", getDistanceToSpeakerCenter(Alliance.Blue));
-    Logger.recordOutput("Field Angle to Face Speaker", getFieldRotationRadiansToPointShooterAtSpeakerCenter(Alliance.Red));
+    Logger.recordOutput("Distance to Center of Red Speaker", getDistanceToSpeakerCenter(Alliance.Red));
+    Logger.recordOutput("Field Angle to Face Blue Speaker", getFieldRotationRadiansToPointShooterAtSpeakerCenter(Alliance.Blue));
+    Logger.recordOutput("Field Angle to Face Red Speaker", getFieldRotationRadiansToPointShooterAtSpeakerCenter(Alliance.Red));
     Logger.recordOutput("Estimated Rotation", getEstimatedPose().getRotation().getRadians());
+
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Drive/Gyro", gyroInputs);
+
     for (var module : modules) {
       module.periodic();
     }
@@ -124,8 +130,6 @@ public class Drive extends SubsystemBase {
   }
 
   public void drive(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean fieldCentric, boolean slowMode) {
-    SmartDashboard.putBoolean("Slow Mode", slowMode);
-
     ChassisSpeeds speeds = fieldCentric ?
       ChassisSpeeds.fromFieldRelativeSpeeds(
         vxMetersPerSecond,

@@ -89,8 +89,6 @@ public class Wrist extends SubsystemBase {
 
   public double calculateWristAngle(WristAndElevatorState wristAndElevatorState, double distance) {
     if (wristAndElevatorState == WristAndElevatorState.AIM_LOW) {
-      SmartDashboard.putNumber("Desired Angle", lowAimInterpolatingDoubleTreeMap.get(distance));
-      SmartDashboard.putNumber("Time", System.currentTimeMillis());
       return lowAimInterpolatingDoubleTreeMap.get(distance);
     }
     return 30;

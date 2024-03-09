@@ -10,7 +10,6 @@ import java.util.function.Supplier;
 import org.first5924.frc2024.subsystems.drive.Drive;
 
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -30,7 +29,6 @@ public class ResetGyroYaw extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    SmartDashboard.putString("Alliance", allianceSupplier.get().get().toString());
     if (allianceSupplier.get().get() == Alliance.Blue) {
       drive.setGyroYaw(0);
     } else {
