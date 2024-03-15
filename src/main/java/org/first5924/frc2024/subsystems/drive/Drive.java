@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import org.first5924.frc2024.constants.DriveConstants;
 import org.first5924.frc2024.constants.FieldConstants;
+import org.first5924.frc2024.constants.DriveConstants.DriveState;
 import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -39,6 +40,8 @@ public class Drive extends SubsystemBase {
   private final GyroIO gyroIO;
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
   private final Module[] modules = new Module[4]; // FL, FR, BL, BR
+  private DriveState driveState = DriveState.DRIVE;
+  private boolean slowMode = false;
 
   private SwerveDriveKinematics kinematics =
     new SwerveDriveKinematics(
@@ -258,4 +261,22 @@ public class Drive extends SubsystemBase {
       pose
     );
   }
+  
+  public void setDriveState(DriveState state){
+    driveState = state;
+  }
+
+  public DriveState getDriveState(){
+    return driveState;
+  }
+
+  public void setSlowMode(boolean slowMode){
+    this.slowMode = slowMode;
+  }
+
+  public boolean getSlowMode(){
+    return slowMode;
+  }
+
+
 }

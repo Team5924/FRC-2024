@@ -15,7 +15,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import org.first5924.frc2024.constants.DriveConstants;
 import org.first5924.frc2024.commands.SetWristAndElevatorState;
-import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
+import org.first5924.frc2024.commands.drive.RunDriveStateMachine;
+import org.first5924.frc2024.commands.drive.SetDriveState;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
 import org.first5924.frc2024.commands.elevator.ElevatorManualControl;
 import org.first5924.frc2024.commands.elevator.RunElevatorStateMachine;
@@ -29,6 +30,7 @@ import org.first5924.frc2024.commands.shooter.SetShooterState;
 import org.first5924.frc2024.commands.vision.RunVisionPoseEstimation;
 import org.first5924.frc2024.constants.RobotConstants;
 import org.first5924.frc2024.constants.WristAndElevatorState;
+import org.first5924.frc2024.constants.DriveConstants.DriveState;
 import org.first5924.frc2024.constants.FeederConstants.FeederState;
 import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
 import org.first5924.frc2024.constants.ShooterConstants.ShooterState;
@@ -48,6 +50,7 @@ import org.first5924.frc2024.subsystems.feeder.FeederIOTalonFX;
 import org.first5924.frc2024.subsystems.shooter.Shooter;
 import org.first5924.frc2024.subsystems.shooter.ShooterIO;
 import org.first5924.frc2024.subsystems.shooter.ShooterIOTalonFX;
+import org.first5924.frc2024.subsystems.vision.DetectorCam;
 import org.first5924.frc2024.subsystems.vision.Vision;
 import org.first5924.frc2024.subsystems.vision.VisionIO;
 import org.first5924.frc2024.subsystems.vision.VisionIOReal;
@@ -74,7 +77,7 @@ public class RobotContainer {
   private final Drive drive;
   private final Intake intake;
   private final Vision vision;
-  // private final DetectorCam dCam;
+  private final DetectorCam dCam;
   private final Feeder feeder;
   private final Shooter shooter;
   private final Elevator elevator;
@@ -100,7 +103,7 @@ public class RobotContainer {
         );
         intake = new Intake(new IntakeIOTalonFX());
         vision = new Vision(new VisionIOReal());
-        // dCam = new DetectorCam();
+        dCam = new DetectorCam();
         feeder = new Feeder(new FeederIOTalonFX());
         shooter = new Shooter(new ShooterIOTalonFX());
         elevator = new Elevator(new ElevatorIOTalonFX());
@@ -117,7 +120,7 @@ public class RobotContainer {
         );
         intake = new Intake(new IntakeIO() {});
         vision = new Vision(new VisionIO() {});
-        // dCam = new DetectorCam();
+        dCam = new DetectorCam();
         feeder = new Feeder(new FeederIO() {});
         shooter = new Shooter(new ShooterIO() {});
         elevator = new Elevator(new ElevatorIO() {});
@@ -134,7 +137,7 @@ public class RobotContainer {
         );
         intake = new Intake(new IntakeIO() {});
         vision = new Vision(new VisionIO() {});
-        // dCam = new DetectorCam();
+        dCam = new DetectorCam();
         feeder = new Feeder(new FeederIO() {});
         shooter = new Shooter(new ShooterIO() {});
         elevator = new Elevator(new ElevatorIO() {});
@@ -175,49 +178,33 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Driver
-    drive.setDefaultCommand(new DriveWithJoysticks(
+    drive.setDefaultCommand(new RunDriveStateMachine(
       drive,
       driverController::getLeftX,
       driverController::getLeftY,
       driverController::getRightX,
       swerveModeChooser::get,
       DriverStation::getAlliance,
-      false,
-      false
+      drive::getSlowMode,
+      dCam::getNoteAngleX,
+      dCam::getNoteAngleY
     ));
-    driverController.rightBumper().whileTrue(new DriveWithJoysticks(
-      drive,
-      driverController::getLeftX,
-      driverController::getLeftY,
-      driverController::getRightX,
-      swerveModeChooser::get,
-      DriverStation::getAlliance,
-      true,
-      false
-    ));
-    driverController.a().whileTrue(new DriveWithJoysticks(
-      drive,
-      driverController::getLeftX,
-      driverController::getLeftY,
-      driverController::getRightX,
-      swerveModeChooser::get,
-      DriverStation::getAlliance,
-      false,
-      true
-    ));
-    driverController.x().whileTrue(new DriveWithJoysticks(
-      drive,
-      driverController::getLeftX,
-      driverController::getLeftY,
-      driverController::getRightX,
-      swerveModeChooser::get,
-      DriverStation::getAlliance,
-      true,
-      true
-    ));
+
+    driverController.rightBumper()
+    .onTrue(new SetDriveState(drive, drive.getDriveState(), true))
+    .onFalse(new SetDriveState(drive, drive.getDriveState(), false));
+
+    driverController.a()
+    .onTrue(new SetDriveState(drive, DriveState.LOOKATSPEAKER, drive.getSlowMode()))
+    .onFalse(new SetDriveState(drive, DriveState.DRIVE, drive.getSlowMode()));
+
+    driverController.x()
+    .onTrue(new SetDriveState(drive, DriveState.DRIVETONOTE, drive.getSlowMode()))
+    .onFalse(new SetDriveState(drive, DriveState.DRIVE, drive.getSlowMode()));
     driverController.b().onTrue(new SetGyroYaw(drive, 0, DriverStation::getAlliance, true));
     // Uncomment and bind to auto drive to amp
     // driverController.leftBumper();
+
 
     vision.setDefaultCommand(new RunVisionPoseEstimation(drive, vision));
 

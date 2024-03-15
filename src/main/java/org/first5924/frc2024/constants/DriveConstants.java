@@ -68,4 +68,10 @@ public class DriveConstants {
   );
 
   public static final double kBlueBottomAutoStartingYawDegrees = -56.49;
+
+  public static enum DriveState{
+    DRIVE,
+    LOOKATSPEAKER,
+    DRIVETONOTE
+  }
 }
