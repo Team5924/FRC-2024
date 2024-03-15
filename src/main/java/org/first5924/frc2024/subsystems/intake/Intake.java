@@ -44,7 +44,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void setRollerPercent(double percent) {
-    io.setRollerPercent(percent);
+    io.setRollerPercent(-percent);
   }
 
   public void setPivotPosition(double degrees) {
@@ -52,7 +52,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void setPivotVoltage(double volts) {
-    io.setPivotVoltage(volts);
+    io.setPivotVoltage(-volts);
   }
 
   public boolean isReadyToEject() {
