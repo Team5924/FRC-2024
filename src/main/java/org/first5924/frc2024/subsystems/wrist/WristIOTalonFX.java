@@ -62,6 +62,7 @@ public class WristIOTalonFX implements WristIO {
 
     Slot0Configs slot0Configs = new Slot0Configs();
     slot0Configs.kP = WristConstants.kP;
+    slot0Configs.kG = Math.cos(canCoder.getPosition().getValueAsDouble() * 360);
 
     talon.getConfigurator().apply(
       new TalonFXConfiguration()
@@ -91,6 +92,8 @@ public class WristIOTalonFX implements WristIO {
     double rotations = degrees / 360;
     talon.setControl(positionVoltage.withPosition(rotations));
   }
+
+  
 
   @Override
   public void setVoltage(double volts) {
