@@ -4,24 +4,19 @@
 
 package org.first5924.frc2024.robot;
 
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
-import java.util.function.DoubleSupplier;
-
+import org.first5924.frc2024.constants.DriveConstants;
 import org.first5924.frc2024.commands.SetWristAndElevatorState;
 import org.first5924.frc2024.commands.drive.DriveWithJoysticks;
-import org.first5924.frc2024.commands.drive.ResetGyroYaw;
+import org.first5924.frc2024.commands.drive.SetGyroYaw;
 import org.first5924.frc2024.commands.elevator.ElevatorManualControl;
 import org.first5924.frc2024.commands.elevator.RunElevatorStateMachine;
 import org.first5924.frc2024.commands.feeder.RunFeederStateMachine;
@@ -53,7 +48,6 @@ import org.first5924.frc2024.subsystems.feeder.FeederIOTalonFX;
 import org.first5924.frc2024.subsystems.shooter.Shooter;
 import org.first5924.frc2024.subsystems.shooter.ShooterIO;
 import org.first5924.frc2024.subsystems.shooter.ShooterIOTalonFX;
-import org.first5924.frc2024.subsystems.vision.DetectorCam;
 import org.first5924.frc2024.subsystems.vision.Vision;
 import org.first5924.frc2024.subsystems.vision.VisionIO;
 import org.first5924.frc2024.subsystems.vision.VisionIOReal;
@@ -66,8 +60,6 @@ import org.first5924.frc2024.subsystems.elevator.ElevatorIO;
 import org.first5924.frc2024.subsystems.elevator.ElevatorIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-import com.fasterxml.jackson.core.sym.Name;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
@@ -158,11 +150,15 @@ public class RobotContainer {
     NamedCommands.registerCommand("setShooterStateOff", new SetShooterState(shooter, ShooterState.OFF));
     NamedCommands.registerCommand("setFeederStateFeedShooter", new SetFeederState(feeder, FeederState.FEED_SHOOTER));
     NamedCommands.registerCommand("setFeederStateManual", new SetFeederState(feeder, FeederState.MANUAL));
+    NamedCommands.registerCommand("setGyroBottomStart", new SetGyroYaw(drive, DriveConstants.kBlueBottomAutoStartingYawDegrees, DriverStation::getAlliance, true));
 
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
 
     autoModeChooser.addDefaultOption("4 Note Auto", "4 Note Auto");
+    autoModeChooser.addOption("3 Note Bottom Auto", "3 Note Bottom Auto");
+    autoModeChooser.addOption("1 Note Bottom Auto", "1 Note Bottom Auto");
+    autoModeChooser.addOption("1 Note Out the Way Auto", "1 Note Out the Way Auto");
     autoModeChooser.addOption("Nothing", "Nothing");
     autoModeChooser.addOption("SysId Quasistatic Forward", "SysId Quasistatic Forward");
     autoModeChooser.addOption("SysId Quasistatic Reverse", "SysId Quasistatic Reverse");
@@ -220,14 +216,14 @@ public class RobotContainer {
       true,
       true
     ));
-    driverController.b().onTrue(new ResetGyroYaw(drive, DriverStation::getAlliance));
+    driverController.b().onTrue(new SetGyroYaw(drive, 0, DriverStation::getAlliance, true));
     // Uncomment and bind to auto drive to amp
     // driverController.leftBumper();
 
     vision.setDefaultCommand(new RunVisionPoseEstimation(drive, vision));
 
     intake.setDefaultCommand(new RunIntakeStateMachine(intake));
-    operatorController.x().onTrue(
+    operatorController.a().onTrue(
       new SetIntakeState(intake, elevator, feeder, IntakeState.EJECT)
     ).onFalse(
       new SetIntakeState(intake, elevator, feeder, intake.getStateBeforeEject())
@@ -257,11 +253,10 @@ public class RobotContainer {
     operatorController.leftStick().toggleOnTrue(new WristManualControl(wrist, operatorController::getRightY));
     operatorController.povDown().toggleOnTrue(new SetWristPositionShuffleboard(wrist));
 
-    // elevator.setDefaultCommand(new RunElevatorStateMachine(elevator, operatorController::getRightY));
-    operatorController.rightStick().toggleOnTrue(new ElevatorManualControl(elevator, operatorController::getRightY));
-    operatorController.a().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE));
+    elevator.setDefaultCommand(new RunElevatorStateMachine(elevator, operatorController::getRightY));
+    operatorController.rightStick().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_HIGH));
     operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));
-    operatorController.y().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
+    operatorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
     operatorController.start().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.CLIMB));
   }
 

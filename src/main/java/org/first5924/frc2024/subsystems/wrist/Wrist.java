@@ -24,6 +24,7 @@ public class Wrist extends SubsystemBase {
 
   private final InterpolatingDoubleTreeMap lowAimInterpolatingDoubleTreeMap = new InterpolatingDoubleTreeMap();
   private final InterpolatingDoubleTreeMap minWristAngleFromElevatorInterpolatingDoubleTreeMap = new InterpolatingDoubleTreeMap();
+  private final InterpolatingDoubleTreeMap maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap = new InterpolatingDoubleTreeMap();
 
   public Wrist(WristIO io) {
     this.io = io;
@@ -43,6 +44,10 @@ public class Wrist extends SubsystemBase {
     minWristAngleFromElevatorInterpolatingDoubleTreeMap.put(0.0965, -7.4);
     minWristAngleFromElevatorInterpolatingDoubleTreeMap.put(0.1596, -51.81);
     minWristAngleFromElevatorInterpolatingDoubleTreeMap.put(0.212, -74.004);
+
+    maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.put(-90.0, 0.59);
+    maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.put(3.23, 0.0);
+    maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.put(0.0, 0.0);
   }
 
   @Override
@@ -65,6 +70,10 @@ public class Wrist extends SubsystemBase {
     return minWristAngleFromElevatorInterpolatingDoubleTreeMap.get(currentHeight);
   }
 
+  public void setMaxAngleClimb(double currentHeight) {
+    setAngle(maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.get(currentHeight), currentHeight);
+  }
+
   public double getShuffleboardAngle() {
     GenericEntry degrees = Shuffleboard.getTab("SmartDashboard")
       .add("ideal angle", 90)
@@ -80,8 +89,6 @@ public class Wrist extends SubsystemBase {
 
   public double calculateWristAngle(WristAndElevatorState wristAndElevatorState, double distance) {
     if (wristAndElevatorState == WristAndElevatorState.AIM_LOW) {
-      SmartDashboard.putNumber("Desired Angle", lowAimInterpolatingDoubleTreeMap.get(distance));
-      SmartDashboard.putNumber("Time", System.currentTimeMillis());
       return lowAimInterpolatingDoubleTreeMap.get(distance);
     }
     return 30;

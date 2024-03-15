@@ -7,6 +7,7 @@
 
 package org.first5924.frc2024.subsystems.drive;
 
+import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -34,9 +35,6 @@ import org.first5924.frc2024.constants.FieldConstants;
 import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
 
 public class Drive extends SubsystemBase {
   private final GyroIO gyroIO;
@@ -57,6 +55,8 @@ public class Drive extends SubsystemBase {
   private final MutableMeasure<Voltage> appliedVoltageMutableMeasure = MutableMeasure.mutable(Units.Volts.of(0));
   private final MutableMeasure<Distance> distanceMutableMeasure = MutableMeasure.mutable(Units.Meters.of(0));
   private final MutableMeasure<Velocity<Distance>> velocityMutableMeasure = MutableMeasure.mutable(Units.MetersPerSecond.of(0));
+  
+
   private SysIdRoutine routine = new SysIdRoutine(
     new SysIdRoutine.Config(),
     new SysIdRoutine.Mechanism(this::driveVoltageForCharacterization, this::logDriveForCharacterization, this)
@@ -84,33 +84,39 @@ public class Drive extends SubsystemBase {
     );
 
     AutoBuilder.configureHolonomic(
-            this::getEstimatedPose, // Robot pose supplier
-            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-            this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            this::driveRobotRelativeFromChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-            DriveConstants.kHolonomicPathFollowerConfig,
-            () -> {
-              // Boolean supplier that controls when the path will be mirrored for the red alliance
-              // This will flip the path being followed to the red side of the field.
-              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+      this::getEstimatedPose, // Robot pose supplier
+      this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+      this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+      this::driveRobotRelativeFromChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+      DriveConstants.kHolonomicPathFollowerConfig,
+      () -> {
+        // Boolean supplier that controls when the path will be mirrored for the red alliance
+        // This will flip the path being followed to the red side of the field.
+        // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-              var alliance = DriverStation.getAlliance();
-              if (alliance.isPresent()) {
-                return alliance.get() == DriverStation.Alliance.Red;
-              }
-              return false;
-            },
-            this // Reference to this subsystem to set requirements
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+          return alliance.get() == DriverStation.Alliance.Red;
+        }
+        return false;
+      },
+      this // Reference to this subsystem to set requirements
     );
   }
 
   public void periodic() {
+    SmartDashboard.putBoolean("Facing Alliance Speaker?", Math.abs(getYaw().getRadians() - getFieldRotationRadiansToPointShooterAtSpeakerCenter(DriverStation.getAlliance().get())) < 0.08);
+
     Logger.recordOutput("Estimated Pose", getEstimatedPose());
     Logger.recordOutput("Distance to Center of Blue Speaker", getDistanceToSpeakerCenter(Alliance.Blue));
-    Logger.recordOutput("Field Angle to Face Speaker", getFieldRotationRadiansToPointShooterAtSpeakerCenter(Alliance.Red));
+    Logger.recordOutput("Distance to Center of Red Speaker", getDistanceToSpeakerCenter(Alliance.Red));
+    Logger.recordOutput("Field Angle to Face Blue Speaker", getFieldRotationRadiansToPointShooterAtSpeakerCenter(Alliance.Blue));
+    Logger.recordOutput("Field Angle to Face Red Speaker", getFieldRotationRadiansToPointShooterAtSpeakerCenter(Alliance.Red));
     Logger.recordOutput("Estimated Rotation", getEstimatedPose().getRotation().getRadians());
+
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Drive/Gyro", gyroInputs);
+
     for (var module : modules) {
       module.periodic();
     }
@@ -127,8 +133,6 @@ public class Drive extends SubsystemBase {
   }
 
   public void drive(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean fieldCentric, boolean slowMode) {
-    SmartDashboard.putBoolean("Slow Mode", slowMode);
-
     ChassisSpeeds speeds = fieldCentric ?
       ChassisSpeeds.fromFieldRelativeSpeeds(
         vxMetersPerSecond,
@@ -159,13 +163,16 @@ public class Drive extends SubsystemBase {
       .voltage(appliedVoltageMutableMeasure.mut_replace(modules[1].getLastVoltage(), Units.Volts))
       .linearPosition(distanceMutableMeasure.mut_replace(modules[1].getPositionMeters(), Units.Meters))
       .linearVelocity(velocityMutableMeasure.mut_replace(modules[1].getVelocityMetersPerSec(), Units.MetersPerSecond));
+    
   }
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    SignalLogger.start();
     return routine.quasistatic(direction);
   }
 
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    SignalLogger.start();
     return routine.dynamic(direction);
   }
 
@@ -234,9 +241,11 @@ public class Drive extends SubsystemBase {
   }
 
   public double getDistanceToSpeakerCenter(Alliance alliance) {
-    return alliance == Alliance.Blue ?
+    double distance = alliance == Alliance.Blue ?
       FieldConstants.kBlueSpeakerCenterFieldTranslation.getDistance(getEstimatedPose().getTranslation()) :
       FieldConstants.kRedSpeakerCenterFieldTranslation.getDistance(getEstimatedPose().getTranslation());
+    SmartDashboard.putNumber("Distance to Center of Speaker", distance);
+    return distance;
   }
 
   public double getFieldRotationRadiansToPointShooterAtSpeakerCenter(Alliance alliance) {

@@ -1,0 +1,93 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.93,
+        "y": 2.3
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.832496542770864,
+        "y": 0.3236917092352707
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.98,
+        "y": 4.14
+      },
+      "prevControl": {
+        "x": 2.4230331423625815,
+        "y": 3.0154199475065617
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Intake Retract",
+      "waypointRelativePos": 0.4,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "setIntakeStateRetract"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Auto Aim and Shooter On",
+      "waypointRelativePos": 0.75,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "setShooterStateOn"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "setWristAndElevatorStateAimLow"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -56.49000000000001,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": 21.95,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}
