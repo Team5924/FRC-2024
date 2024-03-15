@@ -56,9 +56,9 @@ public class RunFeederStateMachine extends Command {
           feeder.setState(FeederState.MANUAL);
         } else if (timer.get() == 0 && intake.getState() != IntakeState.FLOOR && intake.getState() != IntakeState.FEEDER) {
           timer.start();
-          feeder.setPercent(IntakeConstants.kFloorRollerPercent);
+          feeder.setPercent(IntakeConstants.kFloorRollerPercent + 0.05);
         } else {
-          feeder.setPercent(IntakeConstants.kFloorRollerPercent);
+          feeder.setPercent(IntakeConstants.kFloorRollerPercent + 0.05);
         }
         break;
       case ALIGN:

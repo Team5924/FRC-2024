@@ -156,8 +156,9 @@ public class RobotContainer {
     swerveModeChooser.addOption("Robot Centric", false);
 
     autoModeChooser.addDefaultOption("4 Note Auto", "4 Note Auto");
-    autoModeChooser.addDefaultOption("3 Note Bottom Auto", "3 Note Bottom Auto");
-    autoModeChooser.addDefaultOption("1 Note Bottom Auto", "1 Note Bottom Auto");
+    autoModeChooser.addOption("3 Note Bottom Auto", "3 Note Bottom Auto");
+    autoModeChooser.addOption("1 Note Bottom Auto", "1 Note Bottom Auto");
+    autoModeChooser.addOption("1 Note Out the Way Auto", "1 Note Out the Way Auto");
     autoModeChooser.addOption("Nothing", "Nothing");
     autoModeChooser.addOption("SysId Quasistatic Forward", "SysId Quasistatic Forward");
     autoModeChooser.addOption("SysId Quasistatic Reverse", "SysId Quasistatic Reverse");
@@ -253,10 +254,10 @@ public class RobotContainer {
     operatorController.povDown().toggleOnTrue(new SetWristPositionShuffleboard(wrist));
 
     elevator.setDefaultCommand(new RunElevatorStateMachine(elevator, operatorController::getRightY));
-    operatorController.rightStick().toggleOnTrue(new ElevatorManualControl(elevator, operatorController::getRightY));
+    operatorController.rightStick().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_HIGH));
     operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));
     operatorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
-    operatorController.start().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.CLIMB_MAX_HEIGHT));
+    operatorController.start().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.CLIMB));
   }
 
   /**

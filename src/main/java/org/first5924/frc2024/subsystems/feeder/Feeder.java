@@ -27,7 +27,7 @@ public class Feeder extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Feeder", inputs);
 
-    SmartDashboard.putBoolean("Note Fully In?", isNoteFullyIn());
+    SmartDashboard.putBoolean("Note In?", isNoteIn());
   }
 
   public FeederState getState() {
@@ -46,7 +46,11 @@ public class Feeder extends SubsystemBase {
     io.setPercent(percent);
   }
 
-  public boolean isNoteFullyIn() {
+  public boolean isNoteIn() {
     return inputs.laserCanMeasurementMillimeters <= FeederConstants.kDistanceWhenNoteIn;
+  }
+
+  public boolean isNoteFullyIn() {
+    return inputs.laserCanMeasurementMillimeters <= FeederConstants.kDistanceWhenNoteFullyIn;
   }
 }

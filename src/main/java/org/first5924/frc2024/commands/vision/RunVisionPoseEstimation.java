@@ -31,7 +31,7 @@ public class RunVisionPoseEstimation extends Command {
   @Override
   public void execute() {
     Pose2d estimatedPose = vision.getBotPose2dBlue();
-    if (estimatedPose.getX() != 0 && estimatedPose.getY() != 0 && vision.getNumberFiducialsSpotted() >= 2) {
+    if (estimatedPose.getX() != 0 && estimatedPose.getY() != 0 && vision.getNumberFiducialsSpotted() >= 1) {
       drive.addVisionMeasurement(estimatedPose, Timer.getFPGATimestamp() - vision.getLatencySeconds());
     }
   }

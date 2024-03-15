@@ -56,7 +56,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Close Shot to Close B"
+            "pathName": "Start to Close B"
           }
         },
         {
@@ -206,7 +206,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.4
           }
         },
         {

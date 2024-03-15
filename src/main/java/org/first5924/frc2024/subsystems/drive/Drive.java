@@ -241,9 +241,11 @@ public class Drive extends SubsystemBase {
   }
 
   public double getDistanceToSpeakerCenter(Alliance alliance) {
-    return alliance == Alliance.Blue ?
+    double distance = alliance == Alliance.Blue ?
       FieldConstants.kBlueSpeakerCenterFieldTranslation.getDistance(getEstimatedPose().getTranslation()) :
       FieldConstants.kRedSpeakerCenterFieldTranslation.getDistance(getEstimatedPose().getTranslation());
+    SmartDashboard.putNumber("Distance to Center of Speaker", distance);
+    return distance;
   }
 
   public double getFieldRotationRadiansToPointShooterAtSpeakerCenter(Alliance alliance) {
