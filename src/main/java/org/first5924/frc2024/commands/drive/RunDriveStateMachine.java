@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 import org.first5924.frc2024.constants.DriveConstants;
 import org.first5924.frc2024.constants.InputConstants;
 import org.first5924.frc2024.constants.DriveConstants.DriveState;
+import org.first5924.frc2024.robot.RobotContainer;
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.littletonrobotics.junction.Logger;
 
@@ -86,7 +87,7 @@ public class RunDriveStateMachine extends Command {
     double rotationPercent = -Math.copySign(deadbandedRightXJoystick * deadbandedRightXJoystick, deadbandedRightXJoystick);
     slowMode = slowModeSupplier.getAsBoolean();
 
-    int allianceDirectionMultiplier = DriverStation.getAlliance().get() == Alliance.Blue ? 1 : -1;
+    int allianceDirectionMultiplier = RobotContainer.getAlliance() == Alliance.Blue ? 1 : -1;
     double speedMultiplier = slowMode ? DriveConstants.kSlowModeMovementMultiplier : 1;
     double rotationMultiplier = slowMode ? DriveConstants.kSlowModeRotationMultiplier : DriveConstants.kNormalModeRotationMultiplier;
 

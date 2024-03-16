@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.first5924.frc2024.constants.DriveConstants;
 import org.first5924.frc2024.constants.FieldConstants;
 import org.first5924.frc2024.constants.DriveConstants.DriveState;
+import org.first5924.frc2024.robot.RobotContainer;
 import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -105,7 +106,7 @@ public class Drive extends SubsystemBase {
   }
 
   public void periodic() {
-    SmartDashboard.putBoolean("Facing Alliance Speaker?", Math.abs(getYaw().getRadians() - getFieldRotationRadiansToPointShooterAtSpeakerCenter(DriverStation.getAlliance().get())) < 0.08);
+    SmartDashboard.putBoolean("Facing Alliance Speaker?", Math.abs(getYaw().getRadians() - getFieldRotationRadiansToPointShooterAtSpeakerCenter(RobotContainer.getAlliance())) < 0.08);
 
     Logger.recordOutput("Estimated Pose", getEstimatedPose());
     Logger.recordOutput("Distance to Center of Blue Speaker", getDistanceToSpeakerCenter(Alliance.Blue));
