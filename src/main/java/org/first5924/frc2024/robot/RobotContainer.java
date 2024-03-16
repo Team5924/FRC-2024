@@ -36,6 +36,7 @@ import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
 import org.first5924.frc2024.constants.ShooterConstants.ShooterState;
 import org.first5924.frc2024.commands.intake.RunIntakeStateMachine;
 import org.first5924.frc2024.commands.intake.SetIntakeState;
+import org.first5924.frc2024.commands.intake.SetIntakeRollerPercent;
 import org.first5924.frc2024.subsystems.intake.Intake;
 import org.first5924.frc2024.subsystems.intake.IntakeIO;
 import org.first5924.frc2024.subsystems.intake.IntakeIOTalonFX;
@@ -208,12 +209,13 @@ public class RobotContainer {
 
     vision.setDefaultCommand(new RunVisionPoseEstimation(drive, vision));
 
-    intake.setDefaultCommand(new RunIntakeStateMachine(intake));
-    operatorController.a().onTrue(
-      new SetIntakeState(intake, elevator, feeder, IntakeState.EJECT)
-    ).onFalse(
-      new SetIntakeState(intake, elevator, feeder, intake.getStateBeforeEject())
-    );
+    // intake.setDefaultCommand(new RunIntakeStateMachine(intake));
+    // operatorController.a().onTrue(
+    //   new SetIntakeState(intake, elevator, feeder, IntakeState.EJECT)
+    // ).onFalse(
+    //   new SetIntakeState(intake, elevator, feeder, intake.getStateBeforeEject())
+    // );
+    operatorController.a().onTrue(new SetIntakeRollerPercent(intake, 0.8)).onFalse(new SetIntakeRollerPercent(intake, 0));
     // operatorController.povUp().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.START));
 
     feeder.setDefaultCommand(new RunFeederStateMachine(feeder, intake, operatorController::getLeftY));
