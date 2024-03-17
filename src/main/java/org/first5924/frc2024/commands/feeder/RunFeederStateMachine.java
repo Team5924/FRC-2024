@@ -7,14 +7,17 @@ package org.first5924.frc2024.commands.feeder;
 import java.util.function.DoubleSupplier;
 
 import org.first5924.frc2024.subsystems.drive.Drive;
+import org.first5924.frc2024.subsystems.elevator.Elevator;
 import org.first5924.frc2024.constants.FeederConstants;
 import org.first5924.frc2024.constants.IntakeConstants;
+import org.first5924.frc2024.constants.WristAndElevatorState;
 import org.first5924.frc2024.constants.DriveConstants.DriveState;
 import org.first5924.frc2024.constants.FeederConstants.FeederState;
 import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
 import org.first5924.frc2024.subsystems.feeder.Feeder;
 import org.first5924.frc2024.subsystems.intake.Intake;
 import org.first5924.frc2024.subsystems.shooter.Shooter;
+import org.first5924.frc2024.subsystems.wrist.Wrist;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
@@ -25,16 +28,20 @@ public class RunFeederStateMachine extends Command {
   private final Intake intake;
   private final Drive drive;
   private final Shooter shooter;
+  private final Elevator elevator;
+  private final Wrist wrist;
   private final DoubleSupplier leftJoystickY;
 
   private final Timer timer = new Timer();
 
   /** Creates a new FeederShoot. */
-  public RunFeederStateMachine(Feeder feeder, Intake intake, Drive drive, Shooter shooter, DoubleSupplier leftJoystickY) {
+  public RunFeederStateMachine(Feeder feeder, Intake intake, Drive drive, Shooter shooter, Elevator elevator, Wrist wrist, DoubleSupplier leftJoystickY) {
     this.feeder = feeder;
     this.intake = intake;
     this.drive = drive;
     this.shooter = shooter;
+    this.elevator = elevator;
+    this.wrist = wrist;
     this.leftJoystickY = leftJoystickY;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(feeder);
@@ -52,7 +59,9 @@ public class RunFeederStateMachine extends Command {
         if (drive.isFacingSpeaker() &&
             drive.isStoppedToShoot() &&
             (drive.getState() == DriveState.FACE_SPEAKER || drive.getState() == DriveState.FACE_SPEAKER_AND_SLOW) &&
-            shooter.isUpToSpeed()) {
+            shooter.isUpToSpeed() &&
+            (elevator.getWristAndElevatorState() == WristAndElevatorState.AIM_LOW || elevator.getWristAndElevatorState() == WristAndElevatorState.AIM_HIGH) &&
+            wrist.isAtSetpoint()) {
           feeder.setState(FeederState.FEED_SHOOTER);
         } else {
           feeder.setPercent(-MathUtil.applyDeadband(leftJoystickY.getAsDouble(), 0.2));

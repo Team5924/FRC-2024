@@ -220,7 +220,7 @@ public class RobotContainer {
     operatorController.a().onTrue(new SetIntakeRollerPercent(intake, 0.8)).onFalse(new SetIntakeRollerPercent(intake, 0));
     // operatorController.povUp().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.START));
 
-    feeder.setDefaultCommand(new RunFeederStateMachine(feeder, intake, drive, shooter, operatorController::getLeftY));
+    feeder.setDefaultCommand(new RunFeederStateMachine(feeder, intake, drive, shooter, elevator, wrist, operatorController::getLeftY));
     operatorController.rightTrigger(0.75)
       .onTrue(new SetFeederState(feeder, FeederState.FEED_SHOOTER))
       .onFalse(new SetFeederState(feeder, FeederState.MANUAL));

@@ -26,7 +26,9 @@ public class Wrist extends SubsystemBase {
   private final InterpolatingDoubleTreeMap minWristAngleFromElevatorInterpolatingDoubleTreeMap = new InterpolatingDoubleTreeMap();
   private final InterpolatingDoubleTreeMap maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap = new InterpolatingDoubleTreeMap();
 
-  public GenericEntry wristTargetAngle;
+  private double targetAngle;
+
+  public GenericEntry shuffleboardTargetAngle;
 
   public Wrist(WristIO io) {
     this.io = io;
@@ -51,7 +53,7 @@ public class Wrist extends SubsystemBase {
     maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.put(3.23, 0.0);
     maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.put(0.0, 0.0);
 
-    wristTargetAngle = Shuffleboard.getTab("Manual Wrist PID")
+    shuffleboardTargetAngle = Shuffleboard.getTab("Manual Wrist PID")
       .add("Target Angle", 40)
       .withWidget(BuiltInWidgets.kTextView)
       .getEntry();
@@ -70,29 +72,34 @@ public class Wrist extends SubsystemBase {
   }
 
   public void setAngle(double degrees, double currentHeight) {
-    io.setAngle(MathUtil.clamp(degrees, getWristMinAngle(currentHeight), WristConstants.kMaxAngle));
+    targetAngle = MathUtil.clamp(degrees, getMinAngle(currentHeight), WristConstants.kMaxAngle);
+    io.setAngle(targetAngle);
   }
 
-  public double getWristMinAngle(double currentHeight) {
+  public double getMinAngle(double currentHeight) {
     return minWristAngleFromElevatorInterpolatingDoubleTreeMap.get(currentHeight);
   }
 
-  public void setMaxAngleClimb(double currentHeight) {
-    setAngle(maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.get(currentHeight), currentHeight);
+  public double getMaxAngleClimb(double currentHeight) {
+    return maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.get(currentHeight);
   }
 
   public double getShuffleboardAngle() {
-    return wristTargetAngle.getDouble(inputs.wristAngleDegrees);
+    return shuffleboardTargetAngle.getDouble(inputs.wristAngleDegrees);
   }
 
   public void setVoltage(double volts) {
     io.setVoltage(volts);
   }
 
-  public double calculateWristAngle(WristAndElevatorState wristAndElevatorState, double distance) {
+  public double calculateShootingAngle(WristAndElevatorState wristAndElevatorState, double distance) {
     if (wristAndElevatorState == WristAndElevatorState.AIM_LOW) {
       return lowAimInterpolatingDoubleTreeMap.get(distance);
     }
     return 30;
+  }
+
+  public boolean isAtSetpoint() {
+    return Math.abs(getAngleDegrees() - targetAngle) < 1;
   }
 }

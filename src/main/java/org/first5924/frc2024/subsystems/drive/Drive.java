@@ -43,7 +43,6 @@ public class Drive extends SubsystemBase {
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
   private final Module[] modules = new Module[4]; // FL, FR, BL, BR
   private DriveState state = DriveState.NORMAL;
-  private boolean slowMode = false;
 
   private SwerveDriveKinematics kinematics =
     new SwerveDriveKinematics(
@@ -59,7 +58,6 @@ public class Drive extends SubsystemBase {
   private final MutableMeasure<Voltage> appliedVoltageMutableMeasure = MutableMeasure.mutable(Units.Volts.of(0));
   private final MutableMeasure<Distance> distanceMutableMeasure = MutableMeasure.mutable(Units.Meters.of(0));
   private final MutableMeasure<Velocity<Distance>> velocityMutableMeasure = MutableMeasure.mutable(Units.MetersPerSecond.of(0));
-  
 
   private SysIdRoutine routine = new SysIdRoutine(
     new SysIdRoutine.Config(),
@@ -134,6 +132,14 @@ public class Drive extends SubsystemBase {
         modules[3].getPosition(),
       }
     );
+  }
+
+  public void setState(DriveState state){
+    this.state = state;
+  }
+
+  public DriveState getState(){
+    return state;
   }
 
   public void drive(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean fieldCentric, boolean slowMode) {
@@ -212,29 +218,6 @@ public class Drive extends SubsystemBase {
     return new Rotation2d(gyroInputs.yawPositionRad);
   }
 
-  public Rotation2d getPitch() {
-    return new Rotation2d(gyroInputs.pitchPositionRad);
-  }
-
-  public Rotation2d getRoll() {
-    return new Rotation2d(gyroInputs.rollPositionRad);
-  }
-
-  /** Returns the current yaw velocity (Z rotation) in radians per second. */
-  public double getYawVelocity() {
-    return gyroInputs.yawVelocityRadPerSec;
-  }
-
-  /** Returns the current pitch velocity (Y rotation) in radians per second. */
-  public double getPitchVelocity() {
-    return gyroInputs.pitchVelocityRadPerSec;
-  }
-
-  /** Returns the current roll velocity (X rotation) in radians per second. */
-  public double getRollVelocity() {
-    return gyroInputs.rollVelocityRadPerSec;
-  }
-
   public Pose2d getEstimatedPose() {
     return poseEstimator.getEstimatedPosition();
   }
@@ -268,14 +251,6 @@ public class Drive extends SubsystemBase {
       },
       pose
     );
-  }
-
-  public void setState(DriveState state){
-    this.state = state;
-  }
-
-  public DriveState getState(){
-    return state;
   }
 
   public boolean isFacingSpeaker() {
