@@ -26,6 +26,8 @@ public class Wrist extends SubsystemBase {
   private final InterpolatingDoubleTreeMap minWristAngleFromElevatorInterpolatingDoubleTreeMap = new InterpolatingDoubleTreeMap();
   private final InterpolatingDoubleTreeMap maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap = new InterpolatingDoubleTreeMap();
 
+  public GenericEntry degrees;
+
   public Wrist(WristIO io) {
     this.io = io;
 
@@ -48,6 +50,12 @@ public class Wrist extends SubsystemBase {
     maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.put(-90.0, 0.59);
     maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.put(3.23, 0.0);
     maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.put(0.0, 0.0);
+
+    degrees = Shuffleboard.getTab("SmartDashboard")
+      .add("ideal angle", 90)
+      .withWidget(BuiltInWidgets.kNumberSlider)
+      .withProperties(Map.of("min", -90, "max", 90)) // specify widget properties here
+      .getEntry();
   }
 
   @Override
@@ -75,14 +83,9 @@ public class Wrist extends SubsystemBase {
   }
 
   public double getShuffleboardAngle() {
-    GenericEntry degrees = Shuffleboard.getTab("SmartDashboard")
-      .add("ideal angle", 90)
-      .withWidget(BuiltInWidgets.kNumberSlider)
-      .withProperties(Map.of("min", -90, "max", 90)) // specify widget properties here
-      .getEntry();
-
-    return degrees.getDouble(inputs.wristAngleDegrees) ;
+    return degrees.getDouble(inputs.wristAngleDegrees);
   }
+
   public void setVoltage(double volts) {
     io.setVoltage(volts);
   }
