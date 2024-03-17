@@ -167,7 +167,6 @@ public class Drive extends SubsystemBase {
       .voltage(appliedVoltageMutableMeasure.mut_replace(modules[1].getLastVoltage(), Units.Volts))
       .linearPosition(distanceMutableMeasure.mut_replace(modules[1].getPositionMeters(), Units.Meters))
       .linearVelocity(velocityMutableMeasure.mut_replace(modules[1].getVelocityMetersPerSec(), Units.MetersPerSecond));
-    
   }
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
