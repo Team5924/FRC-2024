@@ -4,16 +4,19 @@
 
 package org.first5924.frc2024.commands.wrist;
 
+import org.first5924.frc2024.subsystems.elevator.Elevator;
 import org.first5924.frc2024.subsystems.wrist.Wrist;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class SetWristPositionShuffleboard extends Command {
   private final Wrist wrist;
+  private final Elevator elevator;
 
   /** Creates a new PIDTest. */
-  public SetWristPositionShuffleboard(Wrist wrist) {
+  public SetWristPositionShuffleboard(Wrist wrist, Elevator elevator) {
     this.wrist = wrist;
+    this.elevator = elevator;
     addRequirements(wrist);
   }
 
@@ -24,8 +27,7 @@ public class SetWristPositionShuffleboard extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // High height for currentHeight allows big range of motion
-    wrist.setAngle(wrist.getShuffleboardAngle(), 100);
+    wrist.setAngle(wrist.getShuffleboardAngle(), elevator.getHeightMeters());
   }
 
   // Called once the command ends or is interrupted.
