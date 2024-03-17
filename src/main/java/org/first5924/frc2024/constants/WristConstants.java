@@ -10,6 +10,7 @@ public class WristConstants {
   public static final int kCanCoderId = 49;
 
   public static final double kP = 450;
+  public static final double kG = 0.5;
 
   public static final double kCanCoderOffset = -0.275;
 

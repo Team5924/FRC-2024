@@ -32,6 +32,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import org.first5924.frc2024.constants.DriveConstants;
 import org.first5924.frc2024.constants.FieldConstants;
+import org.first5924.frc2024.constants.DriveConstants.DriveState;
+import org.first5924.frc2024.robot.RobotContainer;
 import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -40,6 +42,8 @@ public class Drive extends SubsystemBase {
   private final GyroIO gyroIO;
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
   private final Module[] modules = new Module[4]; // FL, FR, BL, BR
+  private DriveState state = DriveState.NORMAL;
+  private boolean slowMode = false;
 
   private SwerveDriveKinematics kinematics =
     new SwerveDriveKinematics(
@@ -105,7 +109,7 @@ public class Drive extends SubsystemBase {
   }
 
   public void periodic() {
-    SmartDashboard.putBoolean("Facing Alliance Speaker?", Math.abs(getYaw().getRadians() - getFieldRotationRadiansToPointShooterAtSpeakerCenter(DriverStation.getAlliance().get())) < 0.08);
+    SmartDashboard.putBoolean("Facing Alliance Speaker?", Math.abs(getYaw().getRadians() - getFieldRotationRadiansToPointShooterAtSpeakerCenter(RobotContainer.getAlliance())) < 0.08);
 
     Logger.recordOutput("Estimated Pose", getEstimatedPose());
     Logger.recordOutput("Distance to Center of Blue Speaker", getDistanceToSpeakerCenter(Alliance.Blue));
@@ -265,5 +269,22 @@ public class Drive extends SubsystemBase {
       },
       pose
     );
+  }
+
+  public void setState(DriveState state){
+    this.state = state;
+  }
+
+  public DriveState getState(){
+    return state;
+  }
+
+  public boolean isFacingSpeaker() {
+    return Math.abs(getYaw().minus(new Rotation2d(getFieldRotationRadiansToPointShooterAtSpeakerCenter(RobotContainer.getAlliance()))).getDegrees()) < 3;
+  }
+
+  public boolean isStoppedToShoot() {
+    double velocity = Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2));
+    return velocity < 0.2;
   }
 }
