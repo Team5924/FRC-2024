@@ -41,7 +41,7 @@ public class Drive extends SubsystemBase {
   private final GyroIO gyroIO;
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
   private final Module[] modules = new Module[4]; // FL, FR, BL, BR
-  private DriveState driveState = DriveState.DRIVE;
+  private DriveState state = DriveState.NORMAL;
   private boolean slowMode = false;
 
   private SwerveDriveKinematics kinematics =
@@ -262,22 +262,21 @@ public class Drive extends SubsystemBase {
       pose
     );
   }
-  
-  public void setDriveState(DriveState state){
-    driveState = state;
+
+  public void setState(DriveState state){
+    this.state = state;
   }
 
-  public DriveState getDriveState(){
-    return driveState;
+  public DriveState getState(){
+    return state;
   }
 
-  public void setSlowMode(boolean slowMode){
-    this.slowMode = slowMode;
+  public boolean isFacingSpeaker() {
+    return Math.abs(getYaw().minus(new Rotation2d(getFieldRotationRadiansToPointShooterAtSpeakerCenter(RobotContainer.getAlliance()))).getDegrees()) < 3;
   }
 
-  public boolean getSlowMode(){
-    return slowMode;
+  public boolean isStoppedToShoot() {
+    double velocity = Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2));
+    return velocity < 0.2;
   }
-
-
 }

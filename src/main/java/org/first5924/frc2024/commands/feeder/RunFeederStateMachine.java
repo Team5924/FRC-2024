@@ -6,12 +6,15 @@ package org.first5924.frc2024.commands.feeder;
 
 import java.util.function.DoubleSupplier;
 
+import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.constants.FeederConstants;
 import org.first5924.frc2024.constants.IntakeConstants;
+import org.first5924.frc2024.constants.DriveConstants.DriveState;
 import org.first5924.frc2024.constants.FeederConstants.FeederState;
 import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
 import org.first5924.frc2024.subsystems.feeder.Feeder;
 import org.first5924.frc2024.subsystems.intake.Intake;
+import org.first5924.frc2024.subsystems.shooter.Shooter;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
@@ -20,14 +23,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RunFeederStateMachine extends Command {
   private final Feeder feeder;
   private final Intake intake;
+  private final Drive drive;
+  private final Shooter shooter;
   private final DoubleSupplier leftJoystickY;
 
   private final Timer timer = new Timer();
 
   /** Creates a new FeederShoot. */
-  public RunFeederStateMachine(Feeder feeder, Intake intake, DoubleSupplier leftJoystickY) {
+  public RunFeederStateMachine(Feeder feeder, Intake intake, Drive drive, Shooter shooter, DoubleSupplier leftJoystickY) {
     this.feeder = feeder;
     this.intake = intake;
+    this.drive = drive;
+    this.shooter = shooter;
     this.leftJoystickY = leftJoystickY;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(feeder);
@@ -42,7 +49,14 @@ public class RunFeederStateMachine extends Command {
   public void execute() {
     switch (feeder.getState()) {
       case MANUAL:
-        feeder.setPercent(-MathUtil.applyDeadband(leftJoystickY.getAsDouble(), 0.2));
+        if (drive.isFacingSpeaker() &&
+            drive.isStoppedToShoot() &&
+            (drive.getState() == DriveState.FACE_SPEAKER || drive.getState() == DriveState.FACE_SPEAKER_AND_SLOW) &&
+            shooter.isUpToSpeed()) {
+          feeder.setState(FeederState.FEED_SHOOTER);
+        } else {
+          feeder.setPercent(-MathUtil.applyDeadband(leftJoystickY.getAsDouble(), 0.2));
+        }
         break;
       // Stop x seconds after note detected or y seconds after exiting intake mode. y > x
       case INTAKE:

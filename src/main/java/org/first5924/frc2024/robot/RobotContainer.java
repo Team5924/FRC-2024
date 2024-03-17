@@ -187,39 +187,39 @@ public class RobotContainer {
       driverController::getRightX,
       swerveModeChooser::get,
       DriverStation::getAlliance,
-      drive::getSlowMode,
       dCam::getNoteAngleX,
       dCam::getNoteAngleY
     ));
 
     driverController.rightBumper()
-    .onTrue(new SetDriveState(drive, drive.getDriveState(), true))
-    .onFalse(new SetDriveState(drive, drive.getDriveState(), false));
-
+      .onTrue(new SetDriveState(drive, DriveState.SLOW))
+      .onFalse(new SetDriveState(drive, DriveState.NORMAL));
     driverController.a()
-    .onTrue(new SetDriveState(drive, DriveState.LOOKATSPEAKER, drive.getSlowMode()))
-    .onFalse(new SetDriveState(drive, DriveState.DRIVE, drive.getSlowMode()));
-
+      .onTrue(new SetDriveState(drive, DriveState.FACE_SPEAKER))
+      .onFalse(new ParallelCommandGroup(
+        new SetDriveState(drive, DriveState.NORMAL),
+        new SetFeederState(feeder, FeederState.MANUAL)
+      ));
     driverController.x()
-    .onTrue(new SetDriveState(drive, DriveState.DRIVETONOTE, drive.getSlowMode()))
-    .onFalse(new SetDriveState(drive, DriveState.DRIVE, drive.getSlowMode()));
+      .onTrue(new SetDriveState(drive, DriveState.FACE_SPEAKER_AND_SLOW))
+      .onFalse(new ParallelCommandGroup(
+        new SetDriveState(drive, DriveState.NORMAL),
+        new SetFeederState(feeder, FeederState.MANUAL)
+      ));
     driverController.b().onTrue(new SetGyroYaw(drive, 0, DriverStation::getAlliance, true));
-    // Uncomment and bind to auto drive to amp
-    // driverController.leftBumper();
-
 
     vision.setDefaultCommand(new RunVisionPoseEstimation(drive, vision));
 
-    // intake.setDefaultCommand(new RunIntakeStateMachine(intake));
-    // operatorController.a().onTrue(
-    //   new SetIntakeState(intake, elevator, feeder, IntakeState.EJECT)
-    // ).onFalse(
-    //   new SetIntakeState(intake, elevator, feeder, intake.getStateBeforeEject())
-    // );
+    intake.setDefaultCommand(new RunIntakeStateMachine(intake));
+    operatorController.a().onTrue(
+      new SetIntakeState(intake, elevator, feeder, IntakeState.EJECT)
+    ).onFalse(
+      new SetIntakeState(intake, elevator, feeder, intake.getStateBeforeEject())
+    );
     operatorController.a().onTrue(new SetIntakeRollerPercent(intake, 0.8)).onFalse(new SetIntakeRollerPercent(intake, 0));
     // operatorController.povUp().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.START));
 
-    feeder.setDefaultCommand(new RunFeederStateMachine(feeder, intake, operatorController::getLeftY));
+    feeder.setDefaultCommand(new RunFeederStateMachine(feeder, intake, drive, shooter, operatorController::getLeftY));
     operatorController.rightTrigger(0.75)
       .onTrue(new SetFeederState(feeder, FeederState.FEED_SHOOTER))
       .onFalse(new SetFeederState(feeder, FeederState.MANUAL));
