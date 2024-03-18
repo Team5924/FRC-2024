@@ -28,9 +28,10 @@ public class DetectorCam extends SubsystemBase {
     LimelightResults llresults;
 
 
-    private double x;
-    private double y;
-    private double v;
+    private double noteAngleX;
+    private double noteAngleY;
+    private double noteIsInSight;
+    
     public DetectorCam() {
         
     }
@@ -38,25 +39,25 @@ public class DetectorCam extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        x = tx.getDouble(0.0);
-        y = ty.getDouble(0.0);
-        v = tv.getDouble(v);
+        noteAngleX = tx.getDouble(0.0);
+        noteAngleY = ty.getDouble(0.0);
+        noteIsInSight = tv.getDouble(noteIsInSight);
         // SmartDashboard.putString("table", table.toString());
         // SmartDashboard.putNumber("distance", getDistanceToTargetInches());
         // SmartDashboard.putNumber("Number of targets in view", GetNumberOfTargets());
         // System.out.println("BANANA - table: " + table.containsKey("tx") + " / pos: (" + x + ", " + y + ")");
     }
 
-    public double getNoteX(){
-        return x;
+    public double getNoteAngleX(){
+        return noteAngleX;
     }
 
-    public double getNoteY(){
-        return y;
+    public double getNoteAngleY(){
+        return noteAngleY;
     }
 
     public boolean hasTarget(){
-        if (v==1) {
+        if (noteIsInSight==1) {
             return true;
         }
         else {

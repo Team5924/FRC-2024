@@ -66,4 +66,14 @@ public class DriveConstants {
     Math.sqrt(Math.pow(kTrackWidthX / 2, 2) + Math.pow(kTrackWidthY / 2, 2)), // Drive base radius in meters. Distance from robot center to furthest module.
     new ReplanningConfig() // Default path replanning config. See the API for the options here
   );
+
+  public static final double kBlueBottomAutoStartingYawDegrees = -56.49;
+
+  public static enum DriveState{
+    NORMAL,
+    SLOW,
+    FACE_SPEAKER,
+    FACE_SPEAKER_AND_SLOW,
+    DRIVETONOTE
+  }
 }

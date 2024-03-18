@@ -24,6 +24,11 @@ public class Wrist extends SubsystemBase {
 
   private final InterpolatingDoubleTreeMap lowAimInterpolatingDoubleTreeMap = new InterpolatingDoubleTreeMap();
   private final InterpolatingDoubleTreeMap minWristAngleFromElevatorInterpolatingDoubleTreeMap = new InterpolatingDoubleTreeMap();
+  private final InterpolatingDoubleTreeMap maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap = new InterpolatingDoubleTreeMap();
+
+  private double targetAngle;
+
+  public GenericEntry shuffleboardTargetAngle;
 
   public Wrist(WristIO io) {
     this.io = io;
@@ -43,6 +48,15 @@ public class Wrist extends SubsystemBase {
     minWristAngleFromElevatorInterpolatingDoubleTreeMap.put(0.0965, -7.4);
     minWristAngleFromElevatorInterpolatingDoubleTreeMap.put(0.1596, -51.81);
     minWristAngleFromElevatorInterpolatingDoubleTreeMap.put(0.212, -74.004);
+
+    maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.put(-90.0, 0.59);
+    maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.put(3.23, 0.0);
+    maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.put(0.0, 0.0);
+
+    shuffleboardTargetAngle = Shuffleboard.getTab("Manual Wrist PID")
+      .add("Target Angle", 40)
+      .withWidget(BuiltInWidgets.kTextView)
+      .getEntry();
   }
 
   @Override
@@ -58,32 +72,34 @@ public class Wrist extends SubsystemBase {
   }
 
   public void setAngle(double degrees, double currentHeight) {
-    io.setAngle(MathUtil.clamp(degrees, getWristMinAngle(currentHeight), WristConstants.kMaxAngle));
+    targetAngle = MathUtil.clamp(degrees, getMinAngle(currentHeight), WristConstants.kMaxAngle);
+    io.setAngle(targetAngle);
   }
 
-  public double getWristMinAngle(double currentHeight) {
+  public double getMinAngle(double currentHeight) {
     return minWristAngleFromElevatorInterpolatingDoubleTreeMap.get(currentHeight);
   }
 
-  public double getShuffleboardAngle() {
-    GenericEntry degrees = Shuffleboard.getTab("SmartDashboard")
-      .add("ideal angle", 90)
-      .withWidget(BuiltInWidgets.kNumberSlider)
-      .withProperties(Map.of("min", -90, "max", 90)) // specify widget properties here
-      .getEntry();
-
-    return degrees.getDouble(inputs.wristAngleDegrees) ;
+  public double getMaxAngleClimb(double currentHeight) {
+    return maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.get(currentHeight);
   }
+
+  public double getShuffleboardAngle() {
+    return shuffleboardTargetAngle.getDouble(inputs.wristAngleDegrees);
+  }
+
   public void setVoltage(double volts) {
     io.setVoltage(volts);
   }
 
-  public double calculateWristAngle(WristAndElevatorState wristAndElevatorState, double distance) {
+  public double calculateShootingAngle(WristAndElevatorState wristAndElevatorState, double distance) {
     if (wristAndElevatorState == WristAndElevatorState.AIM_LOW) {
-      SmartDashboard.putNumber("Desired Angle", lowAimInterpolatingDoubleTreeMap.get(distance));
-      SmartDashboard.putNumber("Time", System.currentTimeMillis());
       return lowAimInterpolatingDoubleTreeMap.get(distance);
     }
     return 30;
+  }
+
+  public boolean isAtSetpoint() {
+    return Math.abs(getAngleDegrees() - targetAngle) < 1;
   }
 }

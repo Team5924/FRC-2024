@@ -50,19 +50,13 @@
         {
           "type": "named",
           "data": {
-            "name": "setFeederStateManual"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "setShooterStateOff"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Close Shot to Close B"
+            "pathName": "Start to Close B"
           }
         },
         {
@@ -111,12 +105,6 @@
           "type": "named",
           "data": {
             "name": "setIntakeStateFloor"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setFeederStateManual"
           }
         },
         {
@@ -182,12 +170,6 @@
         {
           "type": "named",
           "data": {
-            "name": "setFeederStateManual"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "setShooterStateOff"
           }
         },
@@ -224,7 +206,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.4
           }
         },
         {

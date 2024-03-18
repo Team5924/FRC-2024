@@ -17,8 +17,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import org.first5924.frc2024.constants.IntakeConstants;
 import org.first5924.frc2024.constants.RobotConstants;
 
@@ -33,7 +31,7 @@ public class IntakeIOTalonFX implements IntakeIO {
 
   public IntakeIOTalonFX() {
     MotorOutputConfigs rollerMotorOutputConfigs = new MotorOutputConfigs();
-    rollerMotorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    rollerMotorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
     rollerMotorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
 
     CurrentLimitsConfigs rollerCurrentLimitsConfigs = new CurrentLimitsConfigs();
@@ -105,8 +103,6 @@ public class IntakeIOTalonFX implements IntakeIO {
   public void setPivotPosition(double degrees) {
     double rotations = degrees / 360;
     pivotTalon.setControl(positionVoltage.withPosition(rotations));
-    SmartDashboard.putNumber("Rotations Goal", rotations);
-    SmartDashboard.putNumber("Volts", pivotTalon.getMotorVoltage().getValueAsDouble());
   }
 
   @Override

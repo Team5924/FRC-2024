@@ -7,6 +7,7 @@
 
 package org.first5924.frc2024.subsystems.drive;
 
+import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -31,17 +32,17 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import org.first5924.frc2024.constants.DriveConstants;
 import org.first5924.frc2024.constants.FieldConstants;
+import org.first5924.frc2024.constants.DriveConstants.DriveState;
+import org.first5924.frc2024.robot.RobotContainer;
 import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
 
 public class Drive extends SubsystemBase {
   private final GyroIO gyroIO;
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
   private final Module[] modules = new Module[4]; // FL, FR, BL, BR
+  private DriveState state = DriveState.NORMAL;
 
   private SwerveDriveKinematics kinematics =
     new SwerveDriveKinematics(
@@ -57,6 +58,7 @@ public class Drive extends SubsystemBase {
   private final MutableMeasure<Voltage> appliedVoltageMutableMeasure = MutableMeasure.mutable(Units.Volts.of(0));
   private final MutableMeasure<Distance> distanceMutableMeasure = MutableMeasure.mutable(Units.Meters.of(0));
   private final MutableMeasure<Velocity<Distance>> velocityMutableMeasure = MutableMeasure.mutable(Units.MetersPerSecond.of(0));
+
   private SysIdRoutine routine = new SysIdRoutine(
     new SysIdRoutine.Config(),
     new SysIdRoutine.Mechanism(this::driveVoltageForCharacterization, this::logDriveForCharacterization, this)
@@ -84,33 +86,39 @@ public class Drive extends SubsystemBase {
     );
 
     AutoBuilder.configureHolonomic(
-            this::getEstimatedPose, // Robot pose supplier
-            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-            this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            this::driveRobotRelativeFromChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-            DriveConstants.kHolonomicPathFollowerConfig,
-            () -> {
-              // Boolean supplier that controls when the path will be mirrored for the red alliance
-              // This will flip the path being followed to the red side of the field.
-              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+      this::getEstimatedPose, // Robot pose supplier
+      this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+      this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+      this::driveRobotRelativeFromChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+      DriveConstants.kHolonomicPathFollowerConfig,
+      () -> {
+        // Boolean supplier that controls when the path will be mirrored for the red alliance
+        // This will flip the path being followed to the red side of the field.
+        // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-              var alliance = DriverStation.getAlliance();
-              if (alliance.isPresent()) {
-                return alliance.get() == DriverStation.Alliance.Red;
-              }
-              return false;
-            },
-            this // Reference to this subsystem to set requirements
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+          return alliance.get() == DriverStation.Alliance.Red;
+        }
+        return false;
+      },
+      this // Reference to this subsystem to set requirements
     );
   }
 
   public void periodic() {
+    SmartDashboard.putBoolean("Facing Alliance Speaker?", Math.abs(getYaw().getRadians() - getFieldRotationRadiansToPointShooterAtSpeakerCenter(RobotContainer.getAlliance())) < 0.08);
+
     Logger.recordOutput("Estimated Pose", getEstimatedPose());
     Logger.recordOutput("Distance to Center of Blue Speaker", getDistanceToSpeakerCenter(Alliance.Blue));
-    Logger.recordOutput("Field Angle to Face Speaker", getFieldRotationRadiansToPointShooterAtSpeakerCenter(Alliance.Red));
+    Logger.recordOutput("Distance to Center of Red Speaker", getDistanceToSpeakerCenter(Alliance.Red));
+    Logger.recordOutput("Field Angle to Face Blue Speaker", getFieldRotationRadiansToPointShooterAtSpeakerCenter(Alliance.Blue));
+    Logger.recordOutput("Field Angle to Face Red Speaker", getFieldRotationRadiansToPointShooterAtSpeakerCenter(Alliance.Red));
     Logger.recordOutput("Estimated Rotation", getEstimatedPose().getRotation().getRadians());
+
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Drive/Gyro", gyroInputs);
+
     for (var module : modules) {
       module.periodic();
     }
@@ -126,9 +134,15 @@ public class Drive extends SubsystemBase {
     );
   }
 
-  public void drive(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean fieldCentric, boolean slowMode) {
-    SmartDashboard.putBoolean("Slow Mode", slowMode);
+  public void setState(DriveState state){
+    this.state = state;
+  }
 
+  public DriveState getState(){
+    return state;
+  }
+
+  public void drive(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean fieldCentric, boolean slowMode) {
     ChassisSpeeds speeds = fieldCentric ?
       ChassisSpeeds.fromFieldRelativeSpeeds(
         vxMetersPerSecond,
@@ -162,10 +176,12 @@ public class Drive extends SubsystemBase {
   }
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    SignalLogger.start();
     return routine.quasistatic(direction);
   }
 
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    SignalLogger.start();
     return routine.dynamic(direction);
   }
 
@@ -202,29 +218,6 @@ public class Drive extends SubsystemBase {
     return new Rotation2d(gyroInputs.yawPositionRad);
   }
 
-  public Rotation2d getPitch() {
-    return new Rotation2d(gyroInputs.pitchPositionRad);
-  }
-
-  public Rotation2d getRoll() {
-    return new Rotation2d(gyroInputs.rollPositionRad);
-  }
-
-  /** Returns the current yaw velocity (Z rotation) in radians per second. */
-  public double getYawVelocity() {
-    return gyroInputs.yawVelocityRadPerSec;
-  }
-
-  /** Returns the current pitch velocity (Y rotation) in radians per second. */
-  public double getPitchVelocity() {
-    return gyroInputs.pitchVelocityRadPerSec;
-  }
-
-  /** Returns the current roll velocity (X rotation) in radians per second. */
-  public double getRollVelocity() {
-    return gyroInputs.rollVelocityRadPerSec;
-  }
-
   public Pose2d getEstimatedPose() {
     return poseEstimator.getEstimatedPosition();
   }
@@ -234,9 +227,11 @@ public class Drive extends SubsystemBase {
   }
 
   public double getDistanceToSpeakerCenter(Alliance alliance) {
-    return alliance == Alliance.Blue ?
+    double distance = alliance == Alliance.Blue ?
       FieldConstants.kBlueSpeakerCenterFieldTranslation.getDistance(getEstimatedPose().getTranslation()) :
       FieldConstants.kRedSpeakerCenterFieldTranslation.getDistance(getEstimatedPose().getTranslation());
+    SmartDashboard.putNumber("Distance to Center of Speaker", distance);
+    return distance;
   }
 
   public double getFieldRotationRadiansToPointShooterAtSpeakerCenter(Alliance alliance) {
@@ -256,5 +251,14 @@ public class Drive extends SubsystemBase {
       },
       pose
     );
+  }
+
+  public boolean isFacingSpeaker() {
+    return Math.abs(getYaw().minus(new Rotation2d(getFieldRotationRadiansToPointShooterAtSpeakerCenter(RobotContainer.getAlliance()))).getDegrees()) < 3;
+  }
+
+  public boolean isStoppedToShoot() {
+    double velocity = Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2));
+    return velocity < 0.2;
   }
 }

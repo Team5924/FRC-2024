@@ -38,4 +38,8 @@ public class Shooter extends SubsystemBase {
   public void setPercent(double percent) {
     io.setPercent(percent);
   }
+
+  public boolean isUpToSpeed() {
+    return inputs.upperMotorVelocityRotationsPerSecond > 2500;
+  }
 }
