@@ -43,6 +43,7 @@ public class Wrist extends SubsystemBase {
     lowAimInterpolatingDoubleTreeMap.put(2.74, 29.36);
     lowAimInterpolatingDoubleTreeMap.put(3.04, 27.246);
     lowAimInterpolatingDoubleTreeMap.put(3.23, 25.45);
+    lowAimInterpolatingDoubleTreeMap.put(4.245, 21.62);
 
     minWristAngleFromElevatorInterpolatingDoubleTreeMap.put(0.0, 3.5);
     minWristAngleFromElevatorInterpolatingDoubleTreeMap.put(0.0965, -7.4);

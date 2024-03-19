@@ -43,7 +43,7 @@ public class RunWristStateMachine extends Command {
         wrist.setAngle(WristConstants.kAmpAngle, elevator.getHeightMeters());
         break;
       case AIM_LOW:
-        wrist.setAngle(wrist.calculateShootingAngle(WristAndElevatorState.AIM_LOW, drive.getDistanceToSpeakerCenter(RobotContainer.getAlliance())), elevator.getHeightMeters());
+        wrist.setAngle(wrist.calculateShootingAngle(WristAndElevatorState.AIM_LOW, drive.getDistanceToSpeakerCenter(drive.getEstimatedPose())), elevator.getHeightMeters());
         break;
       case AIM_HIGH:
         wrist.setAngle(50.8, 0);

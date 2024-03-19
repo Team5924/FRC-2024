@@ -40,6 +40,6 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean isUpToSpeed() {
-    return inputs.upperMotorVelocityRotationsPerSecond > 2500;
+    return inputs.upperMotorVelocityRotationsPerSecond > 60;
   }
 }

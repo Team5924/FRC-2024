@@ -82,7 +82,7 @@ public class Drive extends SubsystemBase {
         modules[2].getPosition(),
         modules[3].getPosition(),
       },
-      new Pose2d()
+      new Pose2d(15.01, 5.55, new Rotation2d())
     );
 
     AutoBuilder.configureHolonomic(
@@ -107,13 +107,13 @@ public class Drive extends SubsystemBase {
   }
 
   public void periodic() {
-    SmartDashboard.putBoolean("Facing Alliance Speaker?", Math.abs(getYaw().getRadians() - getFieldRotationRadiansToPointShooterAtSpeakerCenter(RobotContainer.getAlliance())) < 0.08);
+    SmartDashboard.putBoolean("Facing Alliance Speaker?", isFacingSpeaker());
 
     Logger.recordOutput("Estimated Pose", getEstimatedPose());
-    Logger.recordOutput("Distance to Center of Blue Speaker", getDistanceToSpeakerCenter(Alliance.Blue));
-    Logger.recordOutput("Distance to Center of Red Speaker", getDistanceToSpeakerCenter(Alliance.Red));
-    Logger.recordOutput("Field Angle to Face Blue Speaker", getFieldRotationRadiansToPointShooterAtSpeakerCenter(Alliance.Blue));
-    Logger.recordOutput("Field Angle to Face Red Speaker", getFieldRotationRadiansToPointShooterAtSpeakerCenter(Alliance.Red));
+    Logger.recordOutput("Distance to Center of Blue Speaker", getDistanceToSpeakerCenter(getEstimatedPose()));
+    Logger.recordOutput("Distance to Center of Red Speaker", getDistanceToSpeakerCenter(getEstimatedPose()));
+    Logger.recordOutput("Field Angle to Face Blue Speaker", getFieldRotationRadiansToPointShooterAtSpeakerCenter(getEstimatedPose()));
+    Logger.recordOutput("Field Angle to Face Red Speaker", getFieldRotationRadiansToPointShooterAtSpeakerCenter(getEstimatedPose()));
     Logger.recordOutput("Estimated Rotation", getEstimatedPose().getRotation().getRadians());
 
     gyroIO.updateInputs(gyroInputs);
@@ -194,6 +194,10 @@ public class Drive extends SubsystemBase {
     );
   }
 
+  public ChassisSpeeds getFieldRelativeSpeeds() {
+    return ChassisSpeeds.fromRobotRelativeSpeeds(getChassisSpeeds(), getYaw());
+  }
+
   public void driveRobotRelativeFromChassisSpeeds(ChassisSpeeds chassisSpeeds) {
     drive(
       chassisSpeeds.vxMetersPerSecond,
@@ -226,18 +230,30 @@ public class Drive extends SubsystemBase {
     poseEstimator.addVisionMeasurement(visionPoseEstimate, timestampSeconds);
   }
 
-  public double getDistanceToSpeakerCenter(Alliance alliance) {
-    double distance = alliance == Alliance.Blue ?
-      FieldConstants.kBlueSpeakerCenterFieldTranslation.getDistance(getEstimatedPose().getTranslation()) :
-      FieldConstants.kRedSpeakerCenterFieldTranslation.getDistance(getEstimatedPose().getTranslation());
+  public double getDistanceToSpeakerCenter(Pose2d pose) {
+    double distance = RobotContainer.getAlliance() == Alliance.Blue ?
+      FieldConstants.kBlueSpeakerCenterFieldTranslation.getDistance(pose.getTranslation()) :
+      FieldConstants.kRedSpeakerCenterFieldTranslation.getDistance(pose.getTranslation());
     SmartDashboard.putNumber("Distance to Center of Speaker", distance);
     return distance;
   }
 
-  public double getFieldRotationRadiansToPointShooterAtSpeakerCenter(Alliance alliance) {
-    return alliance == Alliance.Blue ?
-      FieldConstants.kBlueSpeakerCenterFieldTranslation.minus(getEstimatedPose().getTranslation()).getAngle().plus(new Rotation2d(Math.PI)).getRadians() :
-      FieldConstants.kRedSpeakerCenterFieldTranslation.minus(getEstimatedPose().getTranslation()).getAngle().plus(new Rotation2d(Math.PI)).getRadians();
+  public double getFieldRotationRadiansToPointShooterAtSpeakerCenter(Pose2d pose) {
+    return RobotContainer.getAlliance() == Alliance.Blue ?
+      FieldConstants.kBlueSpeakerCenterFieldTranslation.minus(pose.getTranslation()).getAngle().plus(new Rotation2d(Math.PI)).getRadians() :
+      FieldConstants.kRedSpeakerCenterFieldTranslation.minus(pose.getTranslation()).getAngle().plus(new Rotation2d(Math.PI)).getRadians();
+  }
+
+  public double getRadiansPerSecondToAimWhileMoving() {
+    return new Rotation2d(getFieldRotationRadiansToPointShooterAtSpeakerCenter(
+      new Pose2d(
+        getEstimatedPose().getX() + getFieldRelativeSpeeds().vxMetersPerSecond,
+        getEstimatedPose().getY() + getFieldRelativeSpeeds().vyMetersPerSecond,
+        new Rotation2d()
+      )
+    )).minus(
+      new Rotation2d(getFieldRotationRadiansToPointShooterAtSpeakerCenter(getEstimatedPose())))
+    .getRadians();
   }
 
   public void resetPose(Pose2d pose) {
@@ -254,7 +270,7 @@ public class Drive extends SubsystemBase {
   }
 
   public boolean isFacingSpeaker() {
-    return Math.abs(getYaw().minus(new Rotation2d(getFieldRotationRadiansToPointShooterAtSpeakerCenter(RobotContainer.getAlliance()))).getDegrees()) < 3;
+    return Math.abs(getYaw().minus(new Rotation2d(getFieldRotationRadiansToPointShooterAtSpeakerCenter(getEstimatedPose()))).getDegrees()) < 5;
   }
 
   public boolean isStoppedToShoot() {

@@ -42,17 +42,15 @@ public class DriveConstants {
 
   public static final double kWheelRadius = Units.inchesToMeters(2.0);
 
-  public static final double kDriveKp = 0.9;
-  public static final double kDriveKd = 0.0;
   public static final double kDriveKs = 0.17957;
   public static final double kDriveKv = 2.1474;
   public static final double kTurnKp = 3.5;
   public static final double kTurnKd = 0;
 
-  public static final double kRobotRotationKp = 0.8;
+  public static final double kRobotRotationKp = 3.5;
 
-  public static final double kEncoderToDriveRatio = 5.14;
-  public static final double kEncoderToTurnRatio = 396/35;
+  public static final double kEncoderToDriveRatio = 4.59;
+  public static final double kEncoderToTurnRatio = 468/35;
 
   public static final double kSlowModeMovementMultiplier = 0.19;
   public static final double kSlowModeRotationMultiplier = 0.2;

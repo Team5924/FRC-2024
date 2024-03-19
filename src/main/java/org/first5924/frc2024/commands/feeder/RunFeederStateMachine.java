@@ -67,6 +67,23 @@ public class RunFeederStateMachine extends Command {
           feeder.setPercent(-MathUtil.applyDeadband(leftJoystickY.getAsDouble(), 0.2));
         }
         break;
+      case WAITING_TO_SHOOT:
+        if (!(drive.isFacingSpeaker() &&
+            drive.isStoppedToShoot() &&
+            (drive.getState() == DriveState.FACE_SPEAKER || drive.getState() == DriveState.FACE_SPEAKER_AND_SLOW) &&
+            shooter.isUpToSpeed() &&
+            (elevator.getWristAndElevatorState() == WristAndElevatorState.AIM_LOW || elevator.getWristAndElevatorState() == WristAndElevatorState.AIM_HIGH) &&
+            wrist.isAtSetpoint())) {
+          timer.stop();
+          timer.reset();
+          feeder.setState(FeederState.MANUAL);
+        } else if (timer.get() == 0) {
+          timer.start();
+        } else if (timer.get() >= 0.3) {
+          timer.stop();
+          timer.reset();
+          feeder.setState(FeederState.FEED_SHOOTER);
+        }
       // Stop x seconds after note detected or y seconds after exiting intake mode. y > x
       case INTAKE:
         if (feeder.isNoteFullyIn()) {

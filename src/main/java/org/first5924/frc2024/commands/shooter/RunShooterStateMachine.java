@@ -34,7 +34,7 @@ public class RunShooterStateMachine extends Command {
         if (elevator.getWristAndElevatorState() == WristAndElevatorState.AMP) {
           shooter.setPercent(0.3);
         } else {
-          shooter.setPercent(0.3);
+          shooter.setPercent(1);
         }
         break;
       case OFF:

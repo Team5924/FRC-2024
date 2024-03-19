@@ -187,7 +187,6 @@ public class RobotContainer {
       driverController::getLeftY,
       driverController::getRightX,
       swerveModeChooser::get,
-      DriverStation::getAlliance,
       dCam::getNoteAngleX,
       dCam::getNoteAngleY
     ));
@@ -239,16 +238,17 @@ public class RobotContainer {
     // Triggers elevator and wrist state change to INTAKE
     operatorController.rightBumper().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.FLOOR));
 
-    // wrist.setDefaultCommand(new RunWristStateMachine(wrist, elevator, drive));
+    wrist.setDefaultCommand(new RunWristStateMachine(wrist, elevator, drive));
     // operatorController.leftStick().toggleOnTrue(new WristManualControl(wrist, operatorController::getRightY));
     // operatorController.povDown().toggleOnTrue(new SetWristPositionShuffleboard(wrist));
-    wrist.setDefaultCommand(new SetWristPositionShuffleboard(wrist, elevator));
+    // wrist.setDefaultCommand(new SetWristPositionShuffleboard(wrist, elevator));
 
     elevator.setDefaultCommand(new RunElevatorStateMachine(elevator, operatorController::getRightY));
     operatorController.rightStick().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_HIGH));
     operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));
     operatorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
     operatorController.start().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.CLIMB));
+    // operatorController.leftStick().onTrue(new ElevatorManualControl(elevator, operatorController::getRightY));
   }
 
   /**

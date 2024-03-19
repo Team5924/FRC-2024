@@ -29,7 +29,6 @@ public class RunDriveStateMachine extends Command {
   private final DoubleSupplier leftJoystickYSupplier;
   private final DoubleSupplier rightJoystickXSupplier;
   private final BooleanSupplier fieldCentricSupplier;
-  private final Supplier<Optional<Alliance>> allianceSupplier;
 
   private final DoubleSupplier noteAngleXSupplier;
   private final DoubleSupplier noteAngleYSupplier;
@@ -41,13 +40,12 @@ public class RunDriveStateMachine extends Command {
 
   /** Creates a new DriveWithJoysticks. */
 
-  public RunDriveStateMachine(Drive drive, DoubleSupplier leftXSupplier, DoubleSupplier leftYSupplier, DoubleSupplier rightXSupplier, BooleanSupplier fieldCentricSupplier, Supplier<Optional<Alliance>> allianceSupplier, DoubleSupplier noteAngleXSupplier, DoubleSupplier noteAngleYSupplier) {
+  public RunDriveStateMachine(Drive drive, DoubleSupplier leftXSupplier, DoubleSupplier leftYSupplier, DoubleSupplier rightXSupplier, BooleanSupplier fieldCentricSupplier, DoubleSupplier noteAngleXSupplier, DoubleSupplier noteAngleYSupplier) {
     this.drive = drive;
     this.leftJoystickXSupplier = leftXSupplier;
     this.leftJoystickYSupplier = leftYSupplier;
     this.rightJoystickXSupplier = rightXSupplier;
     this.fieldCentricSupplier = fieldCentricSupplier;
-    this.allianceSupplier = allianceSupplier;
     this.noteAngleXSupplier = noteAngleXSupplier;
     this.noteAngleYSupplier = noteAngleYSupplier;
     autoRotationPidController.enableContinuousInput(-Math.PI, Math.PI);
@@ -79,51 +77,53 @@ public class RunDriveStateMachine extends Command {
     double xPercent = -Math.copySign(deadbandedLeftYJoystick * deadbandedLeftYJoystick, deadbandedLeftYJoystick);
     double yPercent = -Math.copySign(deadbandedLeftXJoystick * deadbandedLeftXJoystick, deadbandedLeftXJoystick);
 
-    double rotationPercent;
+    double omegaRadiansPerSecond;
     boolean slowMode;
 
     int allianceDirectionMultiplier = RobotContainer.getAlliance() == Alliance.Blue ? 1 : -1;
 
     switch(drive.getState()) {
       case NORMAL:
-        rotationPercent = -Math.copySign(deadbandedRightXJoystick * deadbandedRightXJoystick, deadbandedRightXJoystick);
+        omegaRadiansPerSecond = -Math.copySign(deadbandedRightXJoystick * deadbandedRightXJoystick, deadbandedRightXJoystick) * DriveConstants.kMaxAngularSpeedRad * DriveConstants.kNormalModeRotationMultiplier;
         slowMode = false;
         break;
       case SLOW:
-        rotationPercent = -Math.copySign(deadbandedRightXJoystick * deadbandedRightXJoystick, deadbandedRightXJoystick);
+        omegaRadiansPerSecond = -Math.copySign(deadbandedRightXJoystick * deadbandedRightXJoystick, deadbandedRightXJoystick) * DriveConstants.kMaxAngularSpeedRad * DriveConstants.kSlowModeRotationMultiplier;
         slowMode = true;
         break;
       case FACE_SPEAKER:
-        rotationPercent = MathUtil.clamp(
+        omegaRadiansPerSecond = MathUtil.clamp(
           autoRotationPidController.calculate(
             drive.getYaw().getRadians(),
-            drive.getFieldRotationRadiansToPointShooterAtSpeakerCenter(allianceSupplier.get().get())
-          ),
-          -DriveConstants.kNormalModeRotationMultiplier,
-          DriveConstants.kNormalModeRotationMultiplier
+            drive.getFieldRotationRadiansToPointShooterAtSpeakerCenter(drive.getEstimatedPose())
+          ) +
+          drive.getRadiansPerSecondToAimWhileMoving(),
+          -DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad,
+          DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad
         );
         slowMode = false;
         break;
       case FACE_SPEAKER_AND_SLOW:
-        rotationPercent = MathUtil.clamp(
+        omegaRadiansPerSecond = MathUtil.clamp(
           autoRotationPidController.calculate(
             drive.getYaw().getRadians(),
-            drive.getFieldRotationRadiansToPointShooterAtSpeakerCenter(allianceSupplier.get().get())
-          ),
-          -DriveConstants.kNormalModeRotationMultiplier,
-          DriveConstants.kNormalModeRotationMultiplier
+            drive.getFieldRotationRadiansToPointShooterAtSpeakerCenter(drive.getEstimatedPose())
+          ) +
+          drive.getRadiansPerSecondToAimWhileMoving(),
+          -DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad,
+          DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad
         );
         slowMode = true;
         break;
       case DRIVETONOTE:
         //the values inside this drive command are temporary
         slowMode = false;
-        rotationPercent = 0;
+        omegaRadiansPerSecond = 0;
         if(deadbandedLeftXJoystick == 0 && deadbandedLeftYJoystick == 0 && deadbandedRightXJoystick == 0){
           drive.drive(
-            driveToNotePidController.calculate(noteAngleX, -1), 
-            0, 
-            rotateToNotePidController.calculate(noteAngleY, 0), 
+            driveToNotePidController.calculate(noteAngleX, -1),
+            0,
+            rotateToNotePidController.calculate(noteAngleY, 0),
             fieldCentricSupplier.getAsBoolean(),
             false
             );
@@ -135,18 +135,17 @@ public class RunDriveStateMachine extends Command {
       default:
         drive.setState(DriveState.NORMAL);
         slowMode = false;
-        rotationPercent = 0;
+        omegaRadiansPerSecond = 0;
         break;
     }
 
     double speedMultiplier = slowMode ? DriveConstants.kSlowModeMovementMultiplier : 1;
-    double rotationMultiplier = slowMode ? DriveConstants.kSlowModeRotationMultiplier : DriveConstants.kNormalModeRotationMultiplier;
 
     if (drive.getState() != DriveState.DRIVETONOTE) {
       drive.drive(
         xPercent * DriveConstants.kMaxLinearSpeed * speedMultiplier * allianceDirectionMultiplier,
         yPercent * DriveConstants.kMaxLinearSpeed * speedMultiplier * allianceDirectionMultiplier,
-        rotationPercent * DriveConstants.kMaxAngularSpeedRad * rotationMultiplier,
+        omegaRadiansPerSecond,
         fieldCentricSupplier.getAsBoolean(),
         slowMode
       );

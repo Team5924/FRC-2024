@@ -23,7 +23,6 @@ public class Module {
   private final int index;
 
   private final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(DriveConstants.kDriveKs, DriveConstants.kDriveKv);
-  private final PIDController driveFeedback = new PIDController(DriveConstants.kDriveKp, 0.0, DriveConstants.kDriveKd);
   private final PIDController turnFeedback = new PIDController(DriveConstants.kTurnKp, 0.0, DriveConstants.kTurnKd);
 
   public Module(ModuleIO io, int index) {
@@ -37,6 +36,7 @@ public class Module {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Drive/Module" + Integer.toString(index), inputs);
+    Logger.recordOutput("Velo " + Integer.toString(index), Math.abs(inputs.driveVelocityRadPerSec));
   }
 
   public void driveVoltage(double volts) {
@@ -63,10 +63,7 @@ public class Module {
 
     // Run drive controller
     double speedMetersPerSec = optimizedState.speedMetersPerSecond;
-    io.setDriveVoltage(
-      driveFeedforward.calculate(speedMetersPerSec)
-      + driveFeedback.calculate(inputs.driveVelocityRadPerSec * DriveConstants.kWheelRadius, speedMetersPerSec)
-    );
+    io.setDriveVoltage(driveFeedforward.calculate(speedMetersPerSec));
 
     return optimizedState;
   }

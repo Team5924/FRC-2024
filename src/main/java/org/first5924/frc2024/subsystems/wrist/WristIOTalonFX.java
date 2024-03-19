@@ -19,7 +19,6 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -63,8 +62,6 @@ public class WristIOTalonFX implements WristIO {
 
     Slot0Configs slot0Configs = new Slot0Configs();
     slot0Configs.kP = WristConstants.kP;
-    slot0Configs.GravityType = GravityTypeValue.Arm_Cosine;
-    slot0Configs.kG = WristConstants.kG;
 
     talon.getConfigurator().apply(
       new TalonFXConfiguration()

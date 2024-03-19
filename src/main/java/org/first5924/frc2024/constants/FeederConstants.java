@@ -22,6 +22,7 @@ public class FeederConstants {
 
   public static enum FeederState {
     MANUAL,
+    WAITING_TO_SHOOT,
     INTAKE,
     ALIGN,
     FEED_SHOOTER,
