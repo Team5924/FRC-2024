@@ -36,4 +36,10 @@ public final class VisionConstants {
 
     public static String aprilTagLimelightName = "limelight-tagaprl";
     public static String detectorLimelightName = "limelight-deteccam";
+
+    public static enum BestNote{
+        NONOTE,
+        LEFTNOTE,
+        RIGHTNOTE;
+    }
 }
