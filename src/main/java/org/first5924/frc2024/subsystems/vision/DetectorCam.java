@@ -5,6 +5,7 @@
 package org.first5924.frc2024.subsystems.vision;
 
 import org.first5924.frc2024.constants.VisionConstants;
+import org.first5924.frc2024.constants.VisionConstants.BestNote;
 import org.first5924.lib.LimelightHelpers;
 import org.first5924.lib.LimelightHelpers.LimelightResults;
 import org.first5924.lib.LimelightHelpers.LimelightTarget_Detector;
@@ -74,6 +75,43 @@ public class DetectorCam extends SubsystemBase {
         return targets.length;
     }
 
+    public BestNote getBestNote(){
+        llresults = LimelightHelpers.getLatestResults("");
+        LimelightTarget_Detector[] results = llresults.targetingResults.targets_Detector;
+
+        if(results.length == 0){
+            return BestNote.NONOTE;
+        }
+
+        if(results.length == 1){
+            if(results[0].tx > 0){
+                return BestNote.RIGHTNOTE;
+            }
+            else{
+                return BestNote.LEFTNOTE;
+            }
+        }
+
+        if(results.length > 1){
+            if(Math.abs(results[0].tx) > Math.abs(results[1].tx)){
+                if(results[1].tx > 0){
+                    return BestNote.RIGHTNOTE;
+                }
+                else{
+                    return BestNote.LEFTNOTE;
+                }
+            }
+            else{
+                if(results[1].tx > 0){
+                    return BestNote.RIGHTNOTE;
+                }
+                else{
+                    return BestNote.LEFTNOTE;
+                }
+            }
+        }
+        return BestNote.NONOTE;
+    }
     /**
      * Distance from the point the limelight is looking at to the target (🍩)
      * @return the distance ^
