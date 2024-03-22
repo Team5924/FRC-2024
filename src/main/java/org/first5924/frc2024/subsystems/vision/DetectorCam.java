@@ -47,6 +47,7 @@ public class DetectorCam extends SubsystemBase {
         // SmartDashboard.putNumber("distance", getDistanceToTargetInches());
         // SmartDashboard.putNumber("Number of targets in view", GetNumberOfTargets());
         // System.out.println("BANANA - table: " + table.containsKey("tx") + " / pos: (" + x + ", " + y + ")");
+
     }
 
     public double getNoteAngleX(){
@@ -75,42 +76,67 @@ public class DetectorCam extends SubsystemBase {
         return targets.length;
     }
 
-    public BestNote getBestNote(){
+    /*  returns a bool[] with length of 2
+        bool[0] refers to the left note
+        bool[1] refers to the right note
+        false means that the note is not present or not recommended
+        true means that the note is present and recommended
+    */
+    public boolean[] getBestNote(){
+
+        boolean[] bestNote = new boolean[2];
         llresults = LimelightHelpers.getLatestResults("");
         LimelightTarget_Detector[] results = llresults.targetingResults.targets_Detector;
 
         if(results.length == 0){
-            return BestNote.NONOTE;
+            bestNote[0] = false;
+            bestNote[1] = false;
+            return bestNote;
         }
 
         if(results.length == 1){
             if(results[0].ty > 0){
-                return BestNote.RIGHTNOTE;
+                bestNote[0] = false;
+                bestNote[1] = true;
+                return bestNote;
             }
             else{
-                return BestNote.LEFTNOTE;
+                bestNote[0] = true;
+                bestNote[1] = false;
+                return bestNote;
             }
         }
 
         if(results.length > 1){
             if(Math.abs(results[0].ty) > Math.abs(results[1].ty)){
                 if(results[1].ty > 0){
-                    return BestNote.RIGHTNOTE;
+                    bestNote[0] = false;
+                    bestNote[1] = true;
+                    return bestNote;
                 }
                 else{
-                    return BestNote.LEFTNOTE;
+                    bestNote[0] = true;
+                    bestNote[1] = false;
+                    return bestNote;
                 }
             }
             else{
                 if(results[1].ty > 0){
-                    return BestNote.RIGHTNOTE;
+                    bestNote[0] = false;
+                    bestNote[1] = true;
+                    return bestNote;
                 }
                 else{
-                    return BestNote.LEFTNOTE;
+                    bestNote[0] = true;
+                    bestNote[1] = false;
+                    return bestNote;
                 }
             }
         }
-        return BestNote.NONOTE;
+        
+        bestNote[0] = false;
+        bestNote[1] = false;
+        return bestNote;
     }
     /**
      * Distance from the point the limelight is looking at to the target (🍩)
