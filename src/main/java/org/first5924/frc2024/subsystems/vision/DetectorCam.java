@@ -84,7 +84,7 @@ public class DetectorCam extends SubsystemBase {
         }
 
         if(results.length == 1){
-            if(results[0].tx > 0){
+            if(results[0].ty > 0){
                 return BestNote.RIGHTNOTE;
             }
             else{
@@ -93,8 +93,8 @@ public class DetectorCam extends SubsystemBase {
         }
 
         if(results.length > 1){
-            if(Math.abs(results[0].tx) > Math.abs(results[1].tx)){
-                if(results[1].tx > 0){
+            if(Math.abs(results[0].ty) > Math.abs(results[1].ty)){
+                if(results[1].ty > 0){
                     return BestNote.RIGHTNOTE;
                 }
                 else{
@@ -102,7 +102,7 @@ public class DetectorCam extends SubsystemBase {
                 }
             }
             else{
-                if(results[1].tx > 0){
+                if(results[1].ty > 0){
                     return BestNote.RIGHTNOTE;
                 }
                 else{
