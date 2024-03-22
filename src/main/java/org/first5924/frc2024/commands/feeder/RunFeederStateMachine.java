@@ -21,6 +21,7 @@ import org.first5924.frc2024.subsystems.wrist.Wrist;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class RunFeederStateMachine extends Command {
@@ -54,23 +55,29 @@ public class RunFeederStateMachine extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putNumber("Timer", timer.get());
+    SmartDashboard.putString("Feeder State", feeder.getState().toString());
+    SmartDashboard.putBoolean("Is Stopped to Shoot", drive.isStoppedToShoot());
+    SmartDashboard.putBoolean("Is Shooter Up To Speed", shooter.isUpToSpeed());
+    SmartDashboard.putBoolean("Is Wrist At Setpoint", wrist.isAtSetpoint());
     switch (feeder.getState()) {
       case MANUAL:
         if (drive.isFacingSpeaker() &&
             drive.isStoppedToShoot() &&
-            (drive.getState() == DriveState.FACE_SPEAKER || drive.getState() == DriveState.FACE_SPEAKER_AND_SLOW) &&
             shooter.isUpToSpeed() &&
             (elevator.getWristAndElevatorState() == WristAndElevatorState.AIM_LOW || elevator.getWristAndElevatorState() == WristAndElevatorState.AIM_HIGH) &&
             wrist.isAtSetpoint()) {
-          feeder.setState(FeederState.FEED_SHOOTER);
+          System.out.println("Waiting");
+          feeder.setState(FeederState.WAITING_TO_SHOOT);
         } else {
           feeder.setPercent(-MathUtil.applyDeadband(leftJoystickY.getAsDouble(), 0.2));
         }
         break;
       case WAITING_TO_SHOOT:
+        System.out.println("Waiting to shoot");
+        feeder.setPercent(0);
         if (!(drive.isFacingSpeaker() &&
             drive.isStoppedToShoot() &&
-            (drive.getState() == DriveState.FACE_SPEAKER || drive.getState() == DriveState.FACE_SPEAKER_AND_SLOW) &&
             shooter.isUpToSpeed() &&
             (elevator.getWristAndElevatorState() == WristAndElevatorState.AIM_LOW || elevator.getWristAndElevatorState() == WristAndElevatorState.AIM_HIGH) &&
             wrist.isAtSetpoint())) {
@@ -79,11 +86,12 @@ public class RunFeederStateMachine extends Command {
           feeder.setState(FeederState.MANUAL);
         } else if (timer.get() == 0) {
           timer.start();
-        } else if (timer.get() >= 0.3) {
+        } else if (timer.get() >= 3 && (drive.getState() == DriveState.FACE_SPEAKER || drive.getState() == DriveState.FACE_SPEAKER_AND_SLOW)) {
           timer.stop();
           timer.reset();
           feeder.setState(FeederState.FEED_SHOOTER);
         }
+        break;
       // Stop x seconds after note detected or y seconds after exiting intake mode. y > x
       case INTAKE:
         if (feeder.isNoteFullyIn()) {

@@ -9,6 +9,7 @@ package org.first5924.frc2024.commands.drive;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -18,6 +19,7 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import org.first5924.frc2024.constants.DriveConstants;
+import org.first5924.frc2024.constants.FieldConstants;
 import org.first5924.frc2024.constants.InputConstants;
 import org.first5924.frc2024.constants.DriveConstants.DriveState;
 import org.first5924.frc2024.robot.RobotContainer;
@@ -95,9 +97,9 @@ public class RunDriveStateMachine extends Command {
         omegaRadiansPerSecond = MathUtil.clamp(
           autoRotationPidController.calculate(
             drive.getYaw().getRadians(),
-            drive.getFieldRotationRadiansToPointShooterAtSpeakerCenter(drive.getEstimatedPose())
+            Drive.getFieldAngleToFaceShooterAtTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterFieldTranslation()).getRadians()
           ) +
-          drive.getRadiansPerSecondToAimWhileMoving(),
+          drive.getRadiansPerSecondFeedforwardToAimAtSpeaker(),
           -DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad,
           DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad
         );
@@ -107,9 +109,9 @@ public class RunDriveStateMachine extends Command {
         omegaRadiansPerSecond = MathUtil.clamp(
           autoRotationPidController.calculate(
             drive.getYaw().getRadians(),
-            drive.getFieldRotationRadiansToPointShooterAtSpeakerCenter(drive.getEstimatedPose())
+            Drive.getFieldAngleToFaceShooterAtTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterFieldTranslation()).getRadians()
           ) +
-          drive.getRadiansPerSecondToAimWhileMoving(),
+          drive.getRadiansPerSecondFeedforwardToAimAtSpeaker(),
           -DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad,
           DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad
         );

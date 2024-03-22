@@ -4,14 +4,13 @@
 
 package org.first5924.frc2024.commands.wrist;
 
+import org.first5924.frc2024.constants.FieldConstants;
 import org.first5924.frc2024.constants.WristAndElevatorState;
 import org.first5924.frc2024.constants.WristConstants;
-import org.first5924.frc2024.robot.RobotContainer;
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.elevator.Elevator;
 import org.first5924.frc2024.subsystems.wrist.Wrist;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class RunWristStateMachine extends Command {
@@ -43,7 +42,7 @@ public class RunWristStateMachine extends Command {
         wrist.setAngle(WristConstants.kAmpAngle, elevator.getHeightMeters());
         break;
       case AIM_LOW:
-        wrist.setAngle(wrist.calculateShootingAngle(WristAndElevatorState.AIM_LOW, drive.getDistanceToSpeakerCenter(drive.getEstimatedPose())), elevator.getHeightMeters());
+        wrist.setAngle(wrist.calculateShootingAngle(WristAndElevatorState.AIM_LOW, Drive.getDistanceToTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterFieldTranslation())), elevator.getHeightMeters());
         break;
       case AIM_HIGH:
         wrist.setAngle(50.8, 0);

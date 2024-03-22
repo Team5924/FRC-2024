@@ -23,7 +23,6 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,7 +32,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.first5924.frc2024.constants.DriveConstants;
 import org.first5924.frc2024.constants.FieldConstants;
 import org.first5924.frc2024.constants.DriveConstants.DriveState;
-import org.first5924.frc2024.robot.RobotContainer;
 import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -110,10 +108,8 @@ public class Drive extends SubsystemBase {
     SmartDashboard.putBoolean("Facing Alliance Speaker?", isFacingSpeaker());
 
     Logger.recordOutput("Estimated Pose", getEstimatedPose());
-    Logger.recordOutput("Distance to Center of Blue Speaker", getDistanceToSpeakerCenter(getEstimatedPose()));
-    Logger.recordOutput("Distance to Center of Red Speaker", getDistanceToSpeakerCenter(getEstimatedPose()));
-    Logger.recordOutput("Field Angle to Face Blue Speaker", getFieldRotationRadiansToPointShooterAtSpeakerCenter(getEstimatedPose()));
-    Logger.recordOutput("Field Angle to Face Red Speaker", getFieldRotationRadiansToPointShooterAtSpeakerCenter(getEstimatedPose()));
+    Logger.recordOutput("Distance to Center of Speaker", getDistanceToTarget(getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterFieldTranslation()));
+    Logger.recordOutput("Field Angle to Face Speaker", getFieldAngleToFaceShooterAtTarget(getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterFieldTranslation()));
     Logger.recordOutput("Estimated Rotation", getEstimatedPose().getRotation().getRadians());
 
     gyroIO.updateInputs(gyroInputs);
@@ -230,30 +226,19 @@ public class Drive extends SubsystemBase {
     poseEstimator.addVisionMeasurement(visionPoseEstimate, timestampSeconds);
   }
 
-  public double getDistanceToSpeakerCenter(Pose2d pose) {
-    double distance = RobotContainer.getAlliance() == Alliance.Blue ?
-      FieldConstants.kBlueSpeakerCenterFieldTranslation.getDistance(pose.getTranslation()) :
-      FieldConstants.kRedSpeakerCenterFieldTranslation.getDistance(pose.getTranslation());
-    SmartDashboard.putNumber("Distance to Center of Speaker", distance);
-    return distance;
-  }
-
-  public double getFieldRotationRadiansToPointShooterAtSpeakerCenter(Pose2d pose) {
-    return RobotContainer.getAlliance() == Alliance.Blue ?
-      FieldConstants.kBlueSpeakerCenterFieldTranslation.minus(pose.getTranslation()).getAngle().plus(new Rotation2d(Math.PI)).getRadians() :
-      FieldConstants.kRedSpeakerCenterFieldTranslation.minus(pose.getTranslation()).getAngle().plus(new Rotation2d(Math.PI)).getRadians();
-  }
-
-  public double getRadiansPerSecondToAimWhileMoving() {
-    return new Rotation2d(getFieldRotationRadiansToPointShooterAtSpeakerCenter(
-      new Pose2d(
+  public double getRadiansPerSecondFeedforwardToAimAtSpeaker() {
+    return getFieldAngleToFaceShooterAtTarget(
+      new Translation2d(
         getEstimatedPose().getX() + getFieldRelativeSpeeds().vxMetersPerSecond,
-        getEstimatedPose().getY() + getFieldRelativeSpeeds().vyMetersPerSecond,
-        new Rotation2d()
+        getEstimatedPose().getY() + getFieldRelativeSpeeds().vyMetersPerSecond
+      ),
+      FieldConstants.getAllianceSpeakerCenterFieldTranslation()
+    ).minus(
+      getFieldAngleToFaceShooterAtTarget(
+        getEstimatedPose().getTranslation(),
+        FieldConstants.getAllianceSpeakerCenterFieldTranslation()
       )
-    )).minus(
-      new Rotation2d(getFieldRotationRadiansToPointShooterAtSpeakerCenter(getEstimatedPose())))
-    .getRadians();
+    ).getRadians();
   }
 
   public void resetPose(Pose2d pose) {
@@ -270,11 +255,18 @@ public class Drive extends SubsystemBase {
   }
 
   public boolean isFacingSpeaker() {
-    return Math.abs(getYaw().minus(new Rotation2d(getFieldRotationRadiansToPointShooterAtSpeakerCenter(getEstimatedPose()))).getDegrees()) < 5;
+    return Math.abs(getYaw().minus(getFieldAngleToFaceShooterAtTarget(getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterFieldTranslation())).getDegrees()) < 5;
   }
 
   public boolean isStoppedToShoot() {
-    double velocity = Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2));
-    return velocity < 0.2;
+    return Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2)) < 0.1;
+  }
+
+  public static double getDistanceToTarget(Translation2d start, Translation2d target) {
+    return target.getDistance(start);
+  }
+
+  public static Rotation2d getFieldAngleToFaceShooterAtTarget(Translation2d start, Translation2d target) {
+    return target.minus(start).getAngle().plus(new Rotation2d(Math.PI));
   }
 }
