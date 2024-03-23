@@ -116,6 +116,7 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("Distance to Center of Speaker", getDistanceToTarget(getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterFieldTranslation()));
     Logger.recordOutput("Field Angle to Face Speaker", getFieldAngleToFaceShooterAtTarget(getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterFieldTranslation()));
     Logger.recordOutput("Estimated Rotation", getEstimatedPose().getRotation().getRadians());
+    Logger.recordOutput("Current Velocity", Math.sqrt(Math.pow(this.getChassisSpeeds().vxMetersPerSecond, 2)+Math.pow(this.getChassisSpeeds().vyMetersPerSecond, 2)));
 
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Drive/Gyro", gyroInputs);
@@ -144,7 +145,9 @@ public class Drive extends SubsystemBase {
   }
 
   public void drive(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean fieldCentric, boolean slowMode) {
-    ChassisSpeeds speeds = fieldCentric ?
+    double commandedVelocity = Math.sqrt(Math.pow(vxMetersPerSecond, 2)+Math.pow(vyMetersPerSecond, 2));
+    Logger.recordOutput("Commanded Velocity", commandedVelocity);
+      ChassisSpeeds speeds = fieldCentric ?
       ChassisSpeeds.fromFieldRelativeSpeeds(
         vxMetersPerSecond,
         vyMetersPerSecond,

@@ -35,6 +35,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotInit() {
     // Record metadata
+    SignalLogger.setPath("/media/sda1/logs");
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
     Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
@@ -100,7 +101,7 @@ public class Robot extends LoggedRobot {
   /** This function is called once when the robot is disabled. */
   @Override
   public void disabledInit() {
-    SignalLogger.stop();
+    
   }
 
   /** This function is called periodically when disabled. */

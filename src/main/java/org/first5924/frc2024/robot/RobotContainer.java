@@ -261,13 +261,13 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     switch (autoModeChooser.get()) {
       case "SysId Quasistatic Forward":
-        return drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward);
+        return drive.runDriveQuasiTest(SysIdRoutine.Direction.kForward);
       case "SysId Quasistatic Reverse":
-        return drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse);
+        return drive.runDriveQuasiTest(SysIdRoutine.Direction.kReverse);
       case "SysId Dynamic Forward":
-        return drive.sysIdDynamic(SysIdRoutine.Direction.kForward);
+        return drive.runDriveDynamTest(SysIdRoutine.Direction.kForward);
       case "SysId Dynamic Reverse":
-        return drive.sysIdDynamic(SysIdRoutine.Direction.kReverse);
+        return drive.runDriveDynamTest(SysIdRoutine.Direction.kReverse);
       case "Nothing":
         return new InstantCommand();
       default:
