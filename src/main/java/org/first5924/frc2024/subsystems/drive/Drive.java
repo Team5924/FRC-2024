@@ -28,9 +28,11 @@ import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import org.first5924.frc2024.constants.DriveConstants;
 import org.first5924.frc2024.constants.FieldConstants;
+import org.first5924.lib.ModifiedSignalLogger;
 import org.first5924.frc2024.constants.DriveConstants.DriveState;
 import org.littletonrobotics.junction.Logger;
 
@@ -51,16 +53,19 @@ public class Drive extends SubsystemBase {
     );
 
   private SwerveDrivePoseEstimator poseEstimator;
-
-  // For SysId
-  private final MutableMeasure<Voltage> appliedVoltageMutableMeasure = MutableMeasure.mutable(Units.Volts.of(0));
-  private final MutableMeasure<Distance> distanceMutableMeasure = MutableMeasure.mutable(Units.Meters.of(0));
-  private final MutableMeasure<Velocity<Distance>> velocityMutableMeasure = MutableMeasure.mutable(Units.MetersPerSecond.of(0));
-
   private SysIdRoutine routine = new SysIdRoutine(
     new SysIdRoutine.Config(),
     new SysIdRoutine.Mechanism(this::driveVoltageForCharacterization, this::logDriveForCharacterization, this)
   );
+
+  private final MutableMeasure<Voltage> appliedVoltageMutableMeasure = MutableMeasure.mutable(Units.Volts.of(0));
+  private final MutableMeasure<Distance> distanceMutableMeasure = MutableMeasure.mutable(Units.Meters.of(0));
+  private final MutableMeasure<Velocity<Distance>> velocityMutableMeasure = MutableMeasure.mutable(Units.MetersPerSecond.of(0));
+
+    
+    
+
+  
 
   public Drive(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO) {
     this.gyroIO = gyroIO;
@@ -160,27 +165,7 @@ public class Drive extends SubsystemBase {
     }
   }
 
-  public void logDriveForCharacterization(SysIdRoutineLog routineLog) {
-    routineLog.motor("drive-left")
-      .voltage(appliedVoltageMutableMeasure.mut_replace(modules[0].getLastVoltage(), Units.Volts))
-      .linearPosition(distanceMutableMeasure.mut_replace(modules[0].getPositionMeters(), Units.Meters))
-      .linearVelocity(velocityMutableMeasure.mut_replace(modules[0].getVelocityMetersPerSec(), Units.MetersPerSecond));
-    routineLog.motor("drive-right")
-      .voltage(appliedVoltageMutableMeasure.mut_replace(modules[1].getLastVoltage(), Units.Volts))
-      .linearPosition(distanceMutableMeasure.mut_replace(modules[1].getPositionMeters(), Units.Meters))
-      .linearVelocity(velocityMutableMeasure.mut_replace(modules[1].getVelocityMetersPerSec(), Units.MetersPerSecond));
-  }
-
-  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    SignalLogger.start();
-    return routine.quasistatic(direction);
-  }
-
-  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    SignalLogger.start();
-    return routine.dynamic(direction);
-  }
-
+  
   public ChassisSpeeds getChassisSpeeds() {
     return kinematics.toChassisSpeeds(
       modules[0].getState(),
@@ -269,4 +254,28 @@ public class Drive extends SubsystemBase {
   public static Rotation2d getFieldAngleToFaceShooterAtTarget(Translation2d start, Translation2d target) {
     return target.minus(start).getAngle().plus(new Rotation2d(Math.PI));
   }
+
+  public Command runDriveQuasiTest(Direction direction)
+    {
+        return routine.quasistatic(direction);
+    }
+
+    public Command runDriveDynamTest(SysIdRoutine.Direction direction) {
+        return routine.dynamic(direction);
+    }
+
+    
+   
+
+    public void logDriveForCharacterization(SysIdRoutineLog routineLog) {
+      routineLog.motor("drive-left")
+        .voltage(appliedVoltageMutableMeasure.mut_replace(modules[0].getLastVoltage(), Units.Volts))
+        .linearPosition(distanceMutableMeasure.mut_replace(modules[0].getPositionMeters(), Units.Meters))
+        .linearVelocity(velocityMutableMeasure.mut_replace(modules[0].getVelocityMetersPerSec(), Units.MetersPerSecond));
+      routineLog.motor("drive-right")
+        .voltage(appliedVoltageMutableMeasure.mut_replace(modules[1].getLastVoltage(), Units.Volts))
+        .linearPosition(distanceMutableMeasure.mut_replace(modules[1].getPositionMeters(), Units.Meters))
+        .linearVelocity(velocityMutableMeasure.mut_replace(modules[1].getVelocityMetersPerSec(), Units.MetersPerSecond));
+    }
+  
 }

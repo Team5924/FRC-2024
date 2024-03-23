@@ -241,7 +241,7 @@ public class RobotContainer {
     wrist.setDefaultCommand(new RunWristStateMachine(wrist, elevator, drive));
     // operatorController.leftStick().toggleOnTrue(new WristManualControl(wrist, operatorController::getRightY));
     // operatorController.povDown().toggleOnTrue(new SetWristPositionShuffleboard(wrist));
-    // wrist.setDefaultCommand(new SetWristPositionShuffleboard(wrist, elevator));
+    //wrist.setDefaultCommand(new SetWristPositionShuffleboard(wrist, elevator));
 
     elevator.setDefaultCommand(new RunElevatorStateMachine(elevator, operatorController::getRightY));
     operatorController.rightStick().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_HIGH));
