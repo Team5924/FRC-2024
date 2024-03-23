@@ -54,7 +54,7 @@ public class Drive extends SubsystemBase {
 
   private SwerveDrivePoseEstimator poseEstimator;
   private SysIdRoutine routine = new SysIdRoutine(
-    new SysIdRoutine.Config(),
+    new SysIdRoutine.Config(null, null, null, ModifiedSignalLogger.logState()),
     new SysIdRoutine.Mechanism(this::driveVoltageForCharacterization, this::logDriveForCharacterization, this)
   );
 
