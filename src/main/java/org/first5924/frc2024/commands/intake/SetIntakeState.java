@@ -10,6 +10,7 @@ import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
 import org.first5924.frc2024.subsystems.elevator.Elevator;
 import org.first5924.frc2024.subsystems.feeder.Feeder;
 import org.first5924.frc2024.subsystems.intake.Intake;
+import org.first5924.frc2024.subsystems.leds.Leds;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
@@ -21,11 +22,13 @@ public class SetIntakeState extends InstantCommand {
   private final Elevator elevator;
   private final Feeder feeder;
   private final IntakeState state;
+  //private final Leds leds;
 
   public SetIntakeState(Intake intake, Elevator elevator, Feeder feeder, IntakeState state) {
     this.intake = intake;
     this.elevator = elevator;
     this.feeder = feeder;
+    //this.leds = leds;
     this.state = state;
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -39,6 +42,7 @@ public class SetIntakeState extends InstantCommand {
     } else if (state == IntakeState.FLOOR) {
       elevator.setWristAndElevatorState(WristAndElevatorState.INTAKE);
       feeder.setState(FeederState.INTAKE);
+      //leds.setColors();
     } else if (state == IntakeState.EJECT) {
       feeder.setState(FeederState.EJECT);
     }

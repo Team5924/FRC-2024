@@ -18,6 +18,7 @@ import org.first5924.frc2024.subsystems.feeder.Feeder;
 import org.first5924.frc2024.subsystems.intake.Intake;
 import org.first5924.frc2024.subsystems.shooter.Shooter;
 import org.first5924.frc2024.subsystems.wrist.Wrist;
+import org.first5924.frc2024.subsystems.leds.Leds;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
@@ -30,6 +31,7 @@ public class RunFeederStateMachine extends Command {
   private final Shooter shooter;
   private final Elevator elevator;
   private final Wrist wrist;
+  //private final Leds leds;
   private final DoubleSupplier leftJoystickY;
 
   private final Timer timer = new Timer();
@@ -42,6 +44,7 @@ public class RunFeederStateMachine extends Command {
     this.shooter = shooter;
     this.elevator = elevator;
     this.wrist = wrist;
+    //this.leds = leds;
     this.leftJoystickY = leftJoystickY;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(feeder);
@@ -87,6 +90,7 @@ public class RunFeederStateMachine extends Command {
       // Stop x seconds after note detected or y seconds after exiting intake mode. y > x
       case INTAKE:
         if (feeder.isNoteFullyIn()) {
+          //leds.RunGreenLEDs();
           timer.stop();
           timer.reset();
           feeder.setState(FeederState.ALIGN);

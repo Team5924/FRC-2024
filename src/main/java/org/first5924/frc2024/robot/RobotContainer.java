@@ -37,11 +37,12 @@ import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
 import org.first5924.frc2024.constants.ShooterConstants.ShooterState;
 import org.first5924.frc2024.commands.intake.RunIntakeStateMachine;
 import org.first5924.frc2024.commands.intake.SetIntakeState;
+import org.first5924.frc2024.commands.leds.SetLeds;
 import org.first5924.frc2024.commands.intake.SetIntakeRollerPercent;
 import org.first5924.frc2024.subsystems.intake.Intake;
 import org.first5924.frc2024.subsystems.intake.IntakeIO;
 import org.first5924.frc2024.subsystems.intake.IntakeIOTalonFX;
-
+import org.first5924.frc2024.subsystems.leds.Leds;
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.drive.GyroIO;
 import org.first5924.frc2024.subsystems.drive.GyroIOPigeon2;
@@ -63,6 +64,7 @@ import org.first5924.frc2024.subsystems.drive.ModuleIOTalonFX;
 import org.first5924.frc2024.subsystems.elevator.Elevator;
 import org.first5924.frc2024.subsystems.elevator.ElevatorIO;
 import org.first5924.frc2024.subsystems.elevator.ElevatorIOTalonFX;
+import org.first5924.frc2024.subsystems.leds.Leds; 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.NamedCommands;
@@ -84,6 +86,7 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Elevator elevator;
   private final Wrist wrist;
+  private final Leds leds;
 
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
@@ -110,6 +113,8 @@ public class RobotContainer {
         shooter = new Shooter(new ShooterIOTalonFX());
         elevator = new Elevator(new ElevatorIOTalonFX());
         wrist = new Wrist(new WristIOTalonFX() {});
+        leds = new Leds(); 
+
         break;
       // Sim robot, instantiate physics sim IO implementations
       case SIM:
@@ -127,6 +132,7 @@ public class RobotContainer {
         shooter = new Shooter(new ShooterIO() {});
         elevator = new Elevator(new ElevatorIO() {});
         wrist = new Wrist(new WristIO() {});
+        leds = new Leds();
         break;
       // Replayed robot, disable IO implementations
       default:
@@ -144,6 +150,7 @@ public class RobotContainer {
         shooter = new Shooter(new ShooterIO() {});
         elevator = new Elevator(new ElevatorIO() {});
         wrist = new Wrist(new WristIO() {});
+        leds = new Leds();
         break;
     }
 
@@ -246,7 +253,8 @@ public class RobotContainer {
     elevator.setDefaultCommand(new RunElevatorStateMachine(elevator, operatorController::getRightY));
     operatorController.rightStick().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_HIGH));
     operatorController.b().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AMP));
-    operatorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
+    //operatorController.x().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
+    operatorController.x().onTrue(new SetLeds(leds));
     operatorController.start().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.CLIMB));
     // operatorController.leftStick().onTrue(new ElevatorManualControl(elevator, operatorController::getRightY));
   }
