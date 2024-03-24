@@ -48,12 +48,12 @@ public class DetectorCam extends SubsystemBase {
         noteIsInSight = tv.getDouble(noteIsInSight);
         // SmartDashboard.putString("table", table.toString());
         // SmartDashboard.putNumber("distance", getDistanceToTargetInches());
-        System.out.println(GetNumberOfTargets());
-        System.out.println(noteAngleX);
+        //System.out.println(GetNumberOfTargets());
+        //System.out.println(noteAngleX);
         // System.out.println("BANANA - table: " + table.containsKey("tx") + " / pos: (" + x + ", " + y + ")");
         //SmartDashboard.putString("best note", getBestNote().toString());
-        System.out.println(Arrays.toString(getBestNote()));
-        System.out.println("test");
+        //System.out.println(Arrays.toString(getBestNote()));
+        //System.out.println("test");
         
 
     }
