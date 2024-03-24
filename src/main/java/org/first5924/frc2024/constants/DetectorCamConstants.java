@@ -34,5 +34,11 @@ public final class DetectorCamConstants {
         */
     public static final double limelightCrosshairFromBase = limelightHeight * Math.tan(limelightMountAngleRadians);
 
+    public static enum BestNote{
+        NONOTE,
+        LEFTNOTE,
+        RIGHTNOTE;
+    }
+
     public static String detectorLimelightName = "limelight-deteccam";
 }

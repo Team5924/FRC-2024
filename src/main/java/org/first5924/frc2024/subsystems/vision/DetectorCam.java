@@ -6,8 +6,6 @@ package org.first5924.frc2024.subsystems.vision;
 
 import java.util.Arrays;
 
-import org.first5924.frc2024.constants.VisionConstants;
-import org.first5924.frc2024.constants.VisionConstants.BestNote;
 import org.first5924.frc2024.constants.DetectorCamConstants;
 import org.first5924.lib.LimelightHelpers;
 import org.first5924.lib.LimelightHelpers.LimelightResults;
@@ -79,7 +77,7 @@ public class DetectorCam extends SubsystemBase {
 
     public int GetNumberOfTargets()
     {
-        llresults = LimelightHelpers.getLatestResults(VisionConstants.detectorLimelightName);
+        llresults = LimelightHelpers.getLatestResults(DetectorCamConstants.detectorLimelightName);
 
         LimelightTarget_Detector[] targets = llresults.targetingResults.targets_Detector;
         return targets.length;
@@ -90,12 +88,12 @@ public class DetectorCam extends SubsystemBase {
         bool[0] refers to the left note
         bool[1] refers to the right note
         false means that the note is not present or not recommended
-        true means that the note is present and recommended
+        true means that the note is present ands recommended
     */
     public Boolean[] getBestNote(){
 
         Boolean[] bestNote = new Boolean[2];
-        llresults = LimelightHelpers.getLatestResults(VisionConstants.detectorLimelightName);
+        llresults = LimelightHelpers.getLatestResults(DetectorCamConstants.detectorLimelightName);
         LimelightTarget_Detector[] jsonDump = llresults.targetingResults.targets_Detector;
 
         if(jsonDump.length == 0){
