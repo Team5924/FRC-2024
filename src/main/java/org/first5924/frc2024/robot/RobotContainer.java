@@ -79,7 +79,7 @@ public class RobotContainer {
   private final Drive drive;
   private final Intake intake;
   private final Vision vision;
-  private final DetectorCam dCam;
+  // private final DetectorCam dCam;
   private final Feeder feeder;
   private final Shooter shooter;
   private final Elevator elevator;
@@ -105,7 +105,7 @@ public class RobotContainer {
         );
         intake = new Intake(new IntakeIOTalonFX());
         vision = new Vision(new VisionIOReal());
-        dCam = new DetectorCam();
+        // dCam = new DetectorCam();
         feeder = new Feeder(new FeederIOTalonFX());
         shooter = new Shooter(new ShooterIOTalonFX());
         elevator = new Elevator(new ElevatorIOTalonFX());
@@ -122,7 +122,7 @@ public class RobotContainer {
         );
         intake = new Intake(new IntakeIO() {});
         vision = new Vision(new VisionIO() {});
-        dCam = new DetectorCam();
+        // dCam = new DetectorCam();
         feeder = new Feeder(new FeederIO() {});
         shooter = new Shooter(new ShooterIO() {});
         elevator = new Elevator(new ElevatorIO() {});
@@ -139,7 +139,7 @@ public class RobotContainer {
         );
         intake = new Intake(new IntakeIO() {});
         vision = new Vision(new VisionIO() {});
-        dCam = new DetectorCam();
+        // dCam = new DetectorCam();
         feeder = new Feeder(new FeederIO() {});
         shooter = new Shooter(new ShooterIO() {});
         elevator = new Elevator(new ElevatorIO() {});
@@ -160,7 +160,8 @@ public class RobotContainer {
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
 
-    autoModeChooser.addDefaultOption("4 Note Auto", "4 Note Auto");
+    autoModeChooser.addDefaultOption("5 Note Auto", "5 Note Auto");
+    autoModeChooser.addOption("4 Note Auto", "4 Note Auto");
     autoModeChooser.addOption("3 Note Bottom Auto", "3 Note Bottom Auto");
     autoModeChooser.addOption("1 Note Bottom Auto", "1 Note Bottom Auto");
     autoModeChooser.addOption("1 Note Out the Way Auto", "1 Note Out the Way Auto");
@@ -181,15 +182,24 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Driver
+    // drive.setDefaultCommand(new RunDriveStateMachine(
+    //   drive,
+    //   driverController::getLeftX,
+    //   driverController::getLeftY,
+    //   driverController::getRightX,
+    //   swerveModeChooser::get,
+    //   dCam::getNoteAngleX,
+    //   dCam::getNoteAngleY
+    // ));
     drive.setDefaultCommand(new RunDriveStateMachine(
       drive,
       driverController::getLeftX,
       driverController::getLeftY,
       driverController::getRightX,
       swerveModeChooser::get,
-      dCam::getNoteAngleX,
-      dCam::getNoteAngleY
-    ));
+      () -> 0,
+      () -> 0)
+    );
 
     driverController.rightBumper()
       .onTrue(new SetDriveState(drive, DriveState.SLOW))
@@ -231,7 +241,7 @@ public class RobotContainer {
       new SetFeederState(feeder, FeederState.MANUAL)
     ));
 
-    shooter.setDefaultCommand(new RunShooterStateMachine(shooter, elevator));
+    shooter.setDefaultCommand(new RunShooterStateMachine(shooter, elevator, drive));
     operatorController.y().onTrue(new SetShooterState(shooter, ShooterState.ON)).onFalse(new SetShooterState(shooter, ShooterState.OFF));
     // Triggers elevator and wrist state change to AIM_LOW
     operatorController.leftBumper().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.RETRACT));
@@ -241,7 +251,7 @@ public class RobotContainer {
     wrist.setDefaultCommand(new RunWristStateMachine(wrist, elevator, drive));
     // operatorController.leftStick().toggleOnTrue(new WristManualControl(wrist, operatorController::getRightY));
     // operatorController.povDown().toggleOnTrue(new SetWristPositionShuffleboard(wrist));
-    //wrist.setDefaultCommand(new SetWristPositionShuffleboard(wrist, elevator));
+    // wrist.setDefaultCommand(new SetWristPositionShuffleboard(wrist, elevator));
 
     elevator.setDefaultCommand(new RunElevatorStateMachine(elevator, operatorController::getRightY));
     operatorController.rightStick().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_HIGH));

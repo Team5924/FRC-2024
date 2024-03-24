@@ -6,6 +6,7 @@ package org.first5924.frc2024.commands.vision;
 
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.vision.Vision;
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
@@ -31,7 +32,11 @@ public class RunVisionPoseEstimation extends Command {
   @Override
   public void execute() {
     Pose2d estimatedPose = vision.getBotPose2dBlue();
-    if (estimatedPose.getX() != 0 && estimatedPose.getY() != 0 && vision.getNumberFiducialsSpotted() >= 1) {
+    Logger.recordOutput("Vision Pose", estimatedPose);
+    if (estimatedPose.getX() != 0 &&
+        estimatedPose.getY() != 0 &&
+        (vision.getNumberFiducialsSpotted() == 1 && vision.getLowestTagAmbiguity() < 0.15) ||
+        (vision.getNumberFiducialsSpotted() >= 2 && vision.getLowestTagAmbiguity() < 0.4)) {
       drive.addVisionMeasurement(estimatedPose, Timer.getFPGATimestamp() - vision.getLatencySeconds());
     }
   }

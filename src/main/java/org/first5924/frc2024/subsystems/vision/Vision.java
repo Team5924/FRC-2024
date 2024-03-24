@@ -37,4 +37,8 @@ public class Vision extends SubsystemBase {
   public int getNumberFiducialsSpotted() {
     return inputs.numberFiducialsSpotted;
   }
+
+  public double getLowestTagAmbiguity() {
+    return inputs.lowestTagAmbiguity;
+  }
 }

@@ -113,8 +113,8 @@ public class Drive extends SubsystemBase {
     SmartDashboard.putBoolean("Facing Alliance Speaker?", isFacingSpeaker());
 
     Logger.recordOutput("Estimated Pose", getEstimatedPose());
-    Logger.recordOutput("Distance to Center of Speaker", getDistanceToTarget(getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterFieldTranslation()));
-    Logger.recordOutput("Field Angle to Face Speaker", getFieldAngleToFaceShooterAtTarget(getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterFieldTranslation()));
+    Logger.recordOutput("Distance to Center of Speaker", getDistanceToTarget(getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation()));
+    Logger.recordOutput("Field Angle to Face Speaker", getFieldAngleToFaceShooterAtTarget(getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation()));
     Logger.recordOutput("Estimated Rotation", getEstimatedPose().getRotation().getRadians());
     Logger.recordOutput("Current Velocity", Math.sqrt(Math.pow(this.getChassisSpeeds().vxMetersPerSecond, 2)+Math.pow(this.getChassisSpeeds().vyMetersPerSecond, 2)));
 
@@ -168,7 +168,6 @@ public class Drive extends SubsystemBase {
     }
   }
 
-  
   public ChassisSpeeds getChassisSpeeds() {
     return kinematics.toChassisSpeeds(
       modules[0].getState(),
@@ -214,21 +213,6 @@ public class Drive extends SubsystemBase {
     poseEstimator.addVisionMeasurement(visionPoseEstimate, timestampSeconds);
   }
 
-  public double getRadiansPerSecondFeedforwardToAimAtSpeaker() {
-    return getFieldAngleToFaceShooterAtTarget(
-      new Translation2d(
-        getEstimatedPose().getX() + getFieldRelativeSpeeds().vxMetersPerSecond,
-        getEstimatedPose().getY() + getFieldRelativeSpeeds().vyMetersPerSecond
-      ),
-      FieldConstants.getAllianceSpeakerCenterFieldTranslation()
-    ).minus(
-      getFieldAngleToFaceShooterAtTarget(
-        getEstimatedPose().getTranslation(),
-        FieldConstants.getAllianceSpeakerCenterFieldTranslation()
-      )
-    ).getRadians();
-  }
-
   public void resetPose(Pose2d pose) {
     poseEstimator.resetPosition(
       pose.getRotation(),
@@ -243,11 +227,11 @@ public class Drive extends SubsystemBase {
   }
 
   public boolean isFacingSpeaker() {
-    return Math.abs(getYaw().minus(getFieldAngleToFaceShooterAtTarget(getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterFieldTranslation())).getDegrees()) < 5;
+    return Math.abs(getYaw().minus(getFieldAngleToFaceShooterAtTarget(getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation())).getDegrees()) < 5;
   }
 
   public boolean isStoppedToShoot() {
-    return Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2)) < 0.1;
+    return Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2)) < DriveConstants.kMovingSpeedThreshold;
   }
 
   public static double getDistanceToTarget(Translation2d start, Translation2d target) {
@@ -256,6 +240,19 @@ public class Drive extends SubsystemBase {
 
   public static Rotation2d getFieldAngleToFaceShooterAtTarget(Translation2d start, Translation2d target) {
     return target.minus(start).getAngle().plus(new Rotation2d(Math.PI));
+  }
+
+  public static double getRadiansPerSecondFeedforwardToAimAtSpeaker(Translation2d start, Translation2d target, ChassisSpeeds fieldRelativeSpeeds) {
+    return getFieldAngleToFaceShooterAtTarget(
+      start,
+      target
+    ).minus(getFieldAngleToFaceShooterAtTarget(
+      new Translation2d(
+        start.getX() + fieldRelativeSpeeds.vxMetersPerSecond,
+        start.getY() + fieldRelativeSpeeds.vyMetersPerSecond
+      ),
+      target
+    )).getRadians();
   }
 
   public Command runDriveQuasiTest(Direction direction)
@@ -267,9 +264,6 @@ public class Drive extends SubsystemBase {
         return routine.dynamic(direction);
     }
 
-    
-   
-
     public void logDriveForCharacterization(SysIdRoutineLog routineLog) {
       routineLog.motor("drive-left")
         .voltage(appliedVoltageMutableMeasure.mut_replace(modules[0].getLastVoltage(), Units.Volts))
@@ -280,5 +274,4 @@ public class Drive extends SubsystemBase {
         .linearPosition(distanceMutableMeasure.mut_replace(modules[1].getPositionMeters(), Units.Meters))
         .linearVelocity(velocityMutableMeasure.mut_replace(modules[1].getVelocityMetersPerSec(), Units.MetersPerSecond));
     }
-  
 }

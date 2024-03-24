@@ -67,14 +67,12 @@ public class RunFeederStateMachine extends Command {
             shooter.isUpToSpeed() &&
             (elevator.getWristAndElevatorState() == WristAndElevatorState.AIM_LOW || elevator.getWristAndElevatorState() == WristAndElevatorState.AIM_HIGH) &&
             wrist.isAtSetpoint()) {
-          System.out.println("Waiting");
           feeder.setState(FeederState.WAITING_TO_SHOOT);
         } else {
           feeder.setPercent(-MathUtil.applyDeadband(leftJoystickY.getAsDouble(), 0.2));
         }
         break;
       case WAITING_TO_SHOOT:
-        System.out.println("Waiting to shoot");
         feeder.setPercent(0);
         if (!(drive.isFacingSpeaker() &&
             drive.isStoppedToShoot() &&
@@ -86,7 +84,7 @@ public class RunFeederStateMachine extends Command {
           feeder.setState(FeederState.MANUAL);
         } else if (timer.get() == 0) {
           timer.start();
-        } else if (timer.get() >= 3 && (drive.getState() == DriveState.FACE_SPEAKER || drive.getState() == DriveState.FACE_SPEAKER_AND_SLOW)) {
+        } else if (timer.get() >= 0.25 && (drive.getState() == DriveState.FACE_SPEAKER || drive.getState() == DriveState.FACE_SPEAKER_AND_SLOW)) {
           timer.stop();
           timer.reset();
           feeder.setState(FeederState.FEED_SHOOTER);

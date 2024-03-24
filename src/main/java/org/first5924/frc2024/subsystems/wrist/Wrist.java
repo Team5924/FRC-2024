@@ -28,7 +28,7 @@ public class Wrist extends SubsystemBase {
 
   private double targetAngle;
 
-  public GenericEntry shuffleboardTargetAngle;
+  private GenericEntry shuffleboardTargetAngle;
 
   public Wrist(WristIO io) {
     this.io = io;
@@ -58,8 +58,8 @@ public class Wrist extends SubsystemBase {
     maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.put(3.23, 0.0);
     maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.put(0.0, 0.0);
 
-    shuffleboardTargetAngle = Shuffleboard.getTab("Manual Wrist PID")
-      .add("Target Angle", 40)
+    shuffleboardTargetAngle = Shuffleboard.getTab("Manual PID")
+      .add("Target Wrist Angle", 40)
       .withWidget(BuiltInWidgets.kTextView)
       .getEntry();
   }
@@ -97,7 +97,7 @@ public class Wrist extends SubsystemBase {
     io.setVoltage(volts);
   }
 
-  public double calculateShootingAngle(WristAndElevatorState wristAndElevatorState, double distance) {
+  public double getShootAngle(WristAndElevatorState wristAndElevatorState, double distance) {
     if (wristAndElevatorState == WristAndElevatorState.AIM_LOW) {
       return lowAimInterpolatingDoubleTreeMap.get(distance);
     }

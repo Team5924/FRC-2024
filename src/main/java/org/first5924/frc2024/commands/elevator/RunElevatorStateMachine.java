@@ -43,6 +43,9 @@ public class RunElevatorStateMachine extends Command {
         elevator.setHeight(ElevatorConstants.kAimLowHeight);
         break;
       case AIM_HIGH:
+        elevator.setHeight(ElevatorConstants.kAimHighHeight);
+        break;
+      case LAUNCH:
         elevator.setHeight(ElevatorConstants.kAimLowHeight);
         break;
       case CLIMB:

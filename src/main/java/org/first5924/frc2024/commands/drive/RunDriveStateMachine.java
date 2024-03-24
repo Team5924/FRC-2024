@@ -11,6 +11,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import java.util.Optional;
@@ -94,12 +95,13 @@ public class RunDriveStateMachine extends Command {
         slowMode = true;
         break;
       case FACE_SPEAKER:
+        SmartDashboard.putNumber("Feedforward Rotations", Drive.getRadiansPerSecondFeedforwardToAimAtSpeaker(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation(), drive.getChassisSpeeds()));
         omegaRadiansPerSecond = MathUtil.clamp(
           autoRotationPidController.calculate(
             drive.getYaw().getRadians(),
-            Drive.getFieldAngleToFaceShooterAtTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterFieldTranslation()).getRadians()
+            Drive.getFieldAngleToFaceShooterAtTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation()).getRadians()
           ) +
-          drive.getRadiansPerSecondFeedforwardToAimAtSpeaker(),
+          Drive.getRadiansPerSecondFeedforwardToAimAtSpeaker(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation(), drive.getChassisSpeeds()),
           -DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad,
           DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad
         );
@@ -109,14 +111,25 @@ public class RunDriveStateMachine extends Command {
         omegaRadiansPerSecond = MathUtil.clamp(
           autoRotationPidController.calculate(
             drive.getYaw().getRadians(),
-            Drive.getFieldAngleToFaceShooterAtTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterFieldTranslation()).getRadians()
+            Drive.getFieldAngleToFaceShooterAtTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation()).getRadians()
           ) +
-          drive.getRadiansPerSecondFeedforwardToAimAtSpeaker(),
+          Drive.getRadiansPerSecondFeedforwardToAimAtSpeaker(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation(), drive.getChassisSpeeds()),
           -DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad,
           DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad
         );
         slowMode = true;
         break;
+      case FACE_AMP_AREA:
+        omegaRadiansPerSecond = MathUtil.clamp(
+          autoRotationPidController.calculate(
+            drive.getYaw().getRadians(),
+            Drive.getFieldAngleToFaceShooterAtTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceAmpAreaTargetTranslation()).getRadians()
+          ) +
+          Drive.getRadiansPerSecondFeedforwardToAimAtSpeaker(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceAmpAreaTargetTranslation(), drive.getChassisSpeeds()),
+          -DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad,
+          DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad
+        );
+        slowMode = false;
       case DRIVETONOTE:
         //the values inside this drive command are temporary
         slowMode = false;

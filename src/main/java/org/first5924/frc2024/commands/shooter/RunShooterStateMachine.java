@@ -6,7 +6,9 @@ package org.first5924.frc2024.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
+import org.first5924.frc2024.constants.FieldConstants;
 import org.first5924.frc2024.constants.WristAndElevatorState;
+import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.elevator.Elevator;
 import org.first5924.frc2024.subsystems.shooter.Shooter;
 
@@ -14,10 +16,12 @@ public class RunShooterStateMachine extends Command {
   /** Creates a new ShooterOn. */
   private final Shooter shooter;
   private final Elevator elevator;
+  private final Drive drive;
 
-  public RunShooterStateMachine(Shooter shooter, Elevator elevator) {
+  public RunShooterStateMachine(Shooter shooter, Elevator elevator, Drive drive) {
     this.shooter = shooter;
     this.elevator = elevator;
+    this.drive = drive;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
   }
@@ -33,6 +37,8 @@ public class RunShooterStateMachine extends Command {
       case ON:
         if (elevator.getWristAndElevatorState() == WristAndElevatorState.AMP) {
           shooter.setPercent(0.3);
+        } else if (elevator.getWristAndElevatorState() == WristAndElevatorState.LAUNCH) {
+          shooter.setPercent(shooter.getLaunchPercent(Drive.getDistanceToTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceAmpAreaTargetTranslation())));
         } else {
           shooter.setPercent(1);
         }

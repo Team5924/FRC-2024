@@ -17,6 +17,7 @@ public class WristConstants {
 
   public static final double kIntakeAngle = 44;
   public static final double kAmpAngle = -28;
+  public static final double kLaunchAngle = 38;
   // Essentially just max it out, the max angle checker will prevent it from going past
   public static final double kClimbAngle = -90;
 

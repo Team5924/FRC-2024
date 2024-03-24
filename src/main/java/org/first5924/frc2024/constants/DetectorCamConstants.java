@@ -1,6 +1,6 @@
 package org.first5924.frc2024.constants;
 
-public final class VisionConstants {
+public final class DetectorCamConstants {
     // TODO set measurements to actual values
 
 
@@ -34,14 +34,5 @@ public final class VisionConstants {
         */
     public static final double limelightCrosshairFromBase = limelightHeight * Math.tan(limelightMountAngleRadians);
 
-    public static String aprilTagLimelightName = "limelight-tagaprl";
-    public static String detectorLimelightName = "limelight-dteccam";
-
-    public static enum BestNote{
-        NONOTE,
-        LEFTNOTE,
-        RIGHTNOTE;
-    }
-}
-    public static String kAprilTagLimelightName = "limelight-tagaprl";
+    public static String detectorLimelightName = "limelight-deteccam";
 }

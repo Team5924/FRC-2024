@@ -6,7 +6,7 @@ package org.first5924.frc2024.commands.vision.newton;
 
 import java.util.function.DoubleSupplier;
 
-import org.first5924.frc2024.constants.VisionConstants;
+import org.first5924.frc2024.constants.DetectorCamConstants;
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.vision.DetectorCam;
 

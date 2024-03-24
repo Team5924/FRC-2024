@@ -13,9 +13,10 @@ public interface VisionIO {
     public double botPoseRotationRadians = 0.0;
     public double botPoseX = 0.0;
     public double botPoseY = 0.0;
+    public int numberFiducialsSpotted = 0;
+    public double lowestTagAmbiguity = 1;
     public double aprilTagPipelineLatencySeconds = 0.0;
     public double aprilTagCaptureLatencySeconds = 0.0;
-    public int numberFiducialsSpotted = 0;
   }
 
   /** Updates the set of loggable inputs. */

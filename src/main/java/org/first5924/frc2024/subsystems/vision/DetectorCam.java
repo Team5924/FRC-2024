@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import org.first5924.frc2024.constants.VisionConstants;
 import org.first5924.frc2024.constants.VisionConstants.BestNote;
+import org.first5924.frc2024.constants.DetectorCamConstants;
 import org.first5924.lib.LimelightHelpers;
 import org.first5924.lib.LimelightHelpers.LimelightResults;
 import org.first5924.lib.LimelightHelpers.LimelightTarget_Detector;
@@ -21,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 public class DetectorCam extends SubsystemBase {
-    NetworkTable table = NetworkTableInstance.getDefault().getTable(VisionConstants.detectorLimelightName);
+    NetworkTable table = NetworkTableInstance.getDefault().getTable(DetectorCamConstants.detectorLimelightName);
     // Vertical offset from crosshair to target
     NetworkTableEntry tx = table.getEntry("tx");
     NetworkTableEntry ty = table.getEntry("ty");
@@ -153,23 +154,23 @@ public class DetectorCam extends SubsystemBase {
     public double getVerticalDistanceToTargetInches()
     {
         // angle from crosshair to 🍩 (vertical)
-        double targetOffsetAngleVerticalRadians = ty.getDouble(0) * VisionConstants.degreesToRadiansMultiplier;
+        double targetOffsetAngleVerticalRadians = ty.getDouble(0) * DetectorCamConstants.degreesToRadiansMultiplier;
 
         // angle from limelight to 🍩 (vertical)
-        double angleToGoal = VisionConstants.limelightMountAngleRadians + targetOffsetAngleVerticalRadians;
+        double angleToGoal = DetectorCamConstants.limelightMountAngleRadians + targetOffsetAngleVerticalRadians;
 
-        return VisionConstants.limelightHeight * Math.tan(angleToGoal);
+        return DetectorCamConstants.limelightHeight * Math.tan(angleToGoal);
     }
 
     public double getDistanceToTargetInches()
     {
         // angle from crosshair to 🍩 (vertical)
-        double targetOffsetAngleVerticalRadians = ty.getDouble(0) * VisionConstants.degreesToRadiansMultiplier;
+        double targetOffsetAngleVerticalRadians = ty.getDouble(0) * DetectorCamConstants.degreesToRadiansMultiplier;
 
         // angle from limelight to 🍩 (vertical)
-        double angleToGoal = VisionConstants.limelightMountAngleRadians + targetOffsetAngleVerticalRadians;
+        double angleToGoal = DetectorCamConstants.limelightMountAngleRadians + targetOffsetAngleVerticalRadians;
 
-        return VisionConstants.limelightHeight / Math.tan(angleToGoal);
+        return DetectorCamConstants.limelightHeight / Math.tan(angleToGoal);
     }
 }
 

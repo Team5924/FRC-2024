@@ -40,6 +40,8 @@ public class DriveConstants {
   public static final double kMaxLinearSpeed = Units.feetToMeters(16.0);
   public static final double kMaxAngularSpeedRad = kMaxLinearSpeed / Math.hypot(kTrackWidthX / 2, kTrackWidthY / 2);
 
+  public static final double kMovingSpeedThreshold = 0.02;
+
   public static final double kWheelRadius = Units.inchesToMeters(2.0);
 
   public static final double kDriveKs = 0.15215;
@@ -72,6 +74,7 @@ public class DriveConstants {
     SLOW,
     FACE_SPEAKER,
     FACE_SPEAKER_AND_SLOW,
+    FACE_AMP_AREA,
     DRIVETONOTE
   }
 }

@@ -7,8 +7,6 @@ package org.first5924.frc2024.subsystems.vision;
 import org.first5924.frc2024.constants.VisionConstants;
 import org.first5924.lib.LimelightHelpers;
 
-import edu.wpi.first.math.geometry.Pose2d;
-
 /** Add your docs here. */
 public class VisionIOReal implements VisionIO {
   public VisionIOReal() {
@@ -16,11 +14,20 @@ public class VisionIOReal implements VisionIO {
 
   @Override
   public void updateInputs(VisionIOInputs inputs) {
-    Pose2d botPose = LimelightHelpers.getBotPose2d_wpiBlue(VisionConstants.aprilTagLimelightName);
-    inputs.botPoseRotationRadians = botPose.getRotation().getRadians();
-    inputs.botPoseX = botPose.getX();
-    inputs.botPoseY = botPose.getY();
-    inputs.aprilTagPipelineLatencySeconds = LimelightHelpers.getLatency_Pipeline(VisionConstants.aprilTagLimelightName) / 1000;
-    inputs.numberFiducialsSpotted = LimelightHelpers.getLatestResults(VisionConstants.aprilTagLimelightName).targetingResults.targets_Fiducials.length;
+    LimelightHelpers.PoseEstimate botPose = LimelightHelpers.getBotPoseEstimate_wpiBlue(VisionConstants.kAprilTagLimelightName);
+    inputs.botPoseRotationRadians = botPose.pose.getRotation().getRadians();
+    inputs.botPoseX = botPose.pose.getX();
+    inputs.botPoseY = botPose.pose.getY();
+    inputs.numberFiducialsSpotted = botPose.tagCount;
+    double lowestTagAmbiguity = 1;
+    for (LimelightHelpers.RawFiducial rawFiducial : botPose.rawFiducials) {
+      double tagAmbiguity = rawFiducial.ambiguity;
+      if (tagAmbiguity < lowestTagAmbiguity) {
+        lowestTagAmbiguity = tagAmbiguity;
+      }
+    }
+    inputs.lowestTagAmbiguity = lowestTagAmbiguity;
+    inputs.aprilTagPipelineLatencySeconds = LimelightHelpers.getLatency_Pipeline(VisionConstants.kAprilTagLimelightName) / 1000;
+    inputs.aprilTagCaptureLatencySeconds = LimelightHelpers.getLatency_Capture(VisionConstants.kAprilTagLimelightName) / 1000;
   }
 }
