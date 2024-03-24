@@ -4,7 +4,10 @@
 
 package org.first5924.frc2024.subsystems.vision;
 
+import java.util.Arrays;
+
 import org.first5924.frc2024.constants.VisionConstants;
+import org.first5924.frc2024.constants.VisionConstants.BestNote;
 import org.first5924.lib.LimelightHelpers;
 import org.first5924.lib.LimelightHelpers.LimelightResults;
 import org.first5924.lib.LimelightHelpers.LimelightTarget_Detector;
@@ -23,9 +26,10 @@ public class DetectorCam extends SubsystemBase {
     NetworkTableEntry tx = table.getEntry("tx");
     NetworkTableEntry ty = table.getEntry("ty");
     NetworkTableEntry tv = table.getEntry("tv");
+    NetworkTableEntry json = table.getEntry("json");
 
 
-    LimelightResults llresults;
+    LimelightHelpers.LimelightResults llresults;
 
 
     private double noteAngleX;
@@ -44,8 +48,14 @@ public class DetectorCam extends SubsystemBase {
         noteIsInSight = tv.getDouble(noteIsInSight);
         // SmartDashboard.putString("table", table.toString());
         // SmartDashboard.putNumber("distance", getDistanceToTargetInches());
-        // SmartDashboard.putNumber("Number of targets in view", GetNumberOfTargets());
+        //System.out.println(GetNumberOfTargets());
+        //System.out.println(noteAngleX);
         // System.out.println("BANANA - table: " + table.containsKey("tx") + " / pos: (" + x + ", " + y + ")");
+        //SmartDashboard.putString("best note", getBestNote().toString());
+        //System.out.println(Arrays.toString(getBestNote()));
+        //System.out.println("test");
+        
+
     }
 
     public double getNoteAngleX(){
@@ -68,12 +78,74 @@ public class DetectorCam extends SubsystemBase {
 
     public int GetNumberOfTargets()
     {
-        llresults = LimelightHelpers.getLatestResults("");
+        llresults = LimelightHelpers.getLatestResults(VisionConstants.detectorLimelightName);
 
         LimelightTarget_Detector[] targets = llresults.targetingResults.targets_Detector;
         return targets.length;
     }
 
+    /*  
+        returns a bool[] with length of 2
+        bool[0] refers to the left note
+        bool[1] refers to the right note
+        false means that the note is not present or not recommended
+        true means that the note is present and recommended
+    */
+    public Boolean[] getBestNote(){
+
+        Boolean[] bestNote = new Boolean[2];
+        llresults = LimelightHelpers.getLatestResults(VisionConstants.detectorLimelightName);
+        LimelightTarget_Detector[] jsonDump = llresults.targetingResults.targets_Detector;
+
+        if(jsonDump.length == 0){
+            bestNote[0] = false;
+            bestNote[1] = false;
+         
+        }
+
+        if(jsonDump.length == 1){
+            if(jsonDump[0].ty < 0){
+                bestNote[0] = false;
+                bestNote[1] = true;
+                
+            }
+            else{
+                bestNote[0] = true;
+                bestNote[1] = false;
+                
+            }
+        }
+
+        if(jsonDump.length > 1){
+            if(Math.abs(jsonDump[0].ty) > Math.abs(jsonDump[1].ty)){
+                if(jsonDump[1].ty > 0){
+                    bestNote[0] = false;
+                    bestNote[1] = true;
+                 
+                }
+                else{
+                    bestNote[0] = true;
+                    bestNote[1] = false;
+                    
+                }
+            }
+            else{
+                if(jsonDump[1].ty > 0){
+                    bestNote[0] = false;
+                    bestNote[1] = true;
+                    
+                }
+                else{
+                    bestNote[0] = true;
+                    bestNote[1] = false;
+                    
+                }
+            }
+        }
+        
+    
+        return bestNote;
+    }
     /**
      * Distance from the point the limelight is looking at to the target (🍩)
      * @return the distance ^

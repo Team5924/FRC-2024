@@ -35,5 +35,11 @@ public final class VisionConstants {
     public static final double limelightCrosshairFromBase = limelightHeight * Math.tan(limelightMountAngleRadians);
 
     public static String aprilTagLimelightName = "limelight-tagaprl";
-    public static String detectorLimelightName = "limelight-deteccam";
+    public static String detectorLimelightName = "limelight-dteccam";
+
+    public static enum BestNote{
+        NONOTE,
+        LEFTNOTE,
+        RIGHTNOTE;
+    }
 }
