@@ -156,6 +156,16 @@ public class RobotContainer {
     NamedCommands.registerCommand("setFeederStateManual", new SetFeederState(feeder, FeederState.MANUAL));
     NamedCommands.registerCommand("setGyroBottomStart", new SetGyroYaw(drive, DriveConstants.kBlueBottomAutoStartingYawDegrees, DriverStation::getAlliance, true));
 
+   NamedCommands.registerCommand("aimAndRev", new ParallelCommandGroup(
+    new SetShooterState(shooter, ShooterState.ON),
+    new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW)
+   ));
+   NamedCommands.registerCommand("prepareForIntake", new ParallelCommandGroup(
+    new SetShooterState(shooter, ShooterState.OFF),
+    new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE),
+    new SetFeederState(feeder, FeederState.MANUAL)
+   ));
+
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
 

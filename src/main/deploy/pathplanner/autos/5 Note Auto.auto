@@ -12,6 +12,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "aimAndRev"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Start to Close B with Shoot"
@@ -24,6 +30,30 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateFeedShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "prepareForIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setIntakeStateFloor"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Shoot before Close C to Close C"
@@ -33,6 +63,36 @@
           "type": "path",
           "data": {
             "pathName": "Close C to Close A"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.75
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "aimAndRev"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateFeedShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
           }
         },
         {
