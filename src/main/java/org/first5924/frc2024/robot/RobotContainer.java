@@ -150,8 +150,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("setIntakeStateFloorOff", new SetIntakeState(intake, elevator, feeder, IntakeState.FLOOR_OFF));
     NamedCommands.registerCommand("setIntakeStateRetract", new SetIntakeState(intake, elevator, feeder, IntakeState.RETRACT));
     NamedCommands.registerCommand("setWristAndElevatorStateAimLow", new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
-    NamedCommands.registerCommand("setShooterStateOn", new SetShooterState(shooter, feeder, ShooterState.ON));
-    NamedCommands.registerCommand("setShooterStateOff", new SetShooterState(shooter, feeder, ShooterState.OFF));
+    NamedCommands.registerCommand("setShooterStateOn", new SetShooterState(shooter, ShooterState.ON));
+    NamedCommands.registerCommand("setShooterStateOff", new SetShooterState(shooter, ShooterState.OFF));
     NamedCommands.registerCommand("setFeederStateFeedShooter", new SetFeederState(feeder, FeederState.FEED_SHOOTER));
     NamedCommands.registerCommand("setFeederStateManual", new SetFeederState(feeder, FeederState.MANUAL));
     NamedCommands.registerCommand("setGyroBottomStart", new SetGyroYaw(drive, DriveConstants.kBlueBottomAutoStartingYawDegrees, DriverStation::getAlliance, true));
@@ -257,8 +257,8 @@ public class RobotContainer {
 
     shooter.setDefaultCommand(new RunShooterStateMachine(shooter, elevator, drive));
     operatorController.y()
-      .onTrue(new SetShooterState(shooter, feeder, ShooterState.ON))
-      .onFalse(new SetShooterState(shooter, feeder, ShooterState.OFF)
+      .onTrue(new SetShooterState(shooter, ShooterState.ON))
+      .onFalse(new SetShooterState(shooter, ShooterState.OFF)
     );
     // Triggers elevator and wrist state change to AIM_LOW
     operatorController.leftBumper().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.RETRACT));

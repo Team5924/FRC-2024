@@ -5,7 +5,6 @@
 package org.first5924.frc2024.commands.shooter;
 
 import org.first5924.frc2024.constants.ShooterConstants.ShooterState;
-import org.first5924.frc2024.subsystems.feeder.Feeder;
 import org.first5924.frc2024.subsystems.shooter.Shooter;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -15,12 +14,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class SetShooterState extends InstantCommand {
   private final Shooter shooter;
-  private final Feeder feeder;
   private final ShooterState state;
 
-  public SetShooterState(Shooter shooter, Feeder feeder, ShooterState state) {
+  public SetShooterState(Shooter shooter, ShooterState state) {
     this.shooter = shooter;
-    this.feeder = feeder;
     this.state = state;
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -28,9 +25,6 @@ public class SetShooterState extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (state == ShooterState.ON) {
-      feeder.setIsNoteInRobotSystem(false);
-    }
     shooter.setState(state);
   }
 }

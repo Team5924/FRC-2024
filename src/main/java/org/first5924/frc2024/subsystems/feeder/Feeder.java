@@ -28,7 +28,7 @@ public class Feeder extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Feeder", inputs);
 
-    SmartDashboard.putBoolean("Note In?", isNoteInFeeder());
+    SmartDashboard.putBoolean("Is note in robot system?", isNoteInRobotSystem);
   }
 
   public FeederState getState() {
