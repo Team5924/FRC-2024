@@ -56,4 +56,12 @@ public class Elevator extends SubsystemBase {
   public void setHeight(double height){
     io.setElevatorHeight(height);
   }
+
+  public void setSoftStopOff() {
+    io.setSoftStopOff();
+  }
+  
+  public void setSoftStopOn() {
+    io.setSoftStopOn();
+  }
 }

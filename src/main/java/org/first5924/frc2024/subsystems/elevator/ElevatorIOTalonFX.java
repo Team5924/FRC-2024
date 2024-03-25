@@ -49,12 +49,13 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     bothVoltageConfigs.PeakForwardVoltage = ElevatorConstants.kPeakForwardVoltage;
     bothVoltageConfigs.PeakReverseVoltage = ElevatorConstants.kPeakReverseVoltage ;
 
-    SoftwareLimitSwitchConfigs bothSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs();
-    bothSoftwareLimitSwitchConfigs.ForwardSoftLimitEnable = true;
-    bothSoftwareLimitSwitchConfigs.ForwardSoftLimitThreshold = ElevatorConstants.kForwardSoftLimitThreshold;
-    bothSoftwareLimitSwitchConfigs.ReverseSoftLimitEnable = true;
-    bothSoftwareLimitSwitchConfigs.ReverseSoftLimitThreshold = ElevatorConstants.kReverseSoftLimitThreshold;
+    SoftwareLimitSwitchConfigs defaultSoft = new SoftwareLimitSwitchConfigs();
+    defaultSoft.ForwardSoftLimitEnable = true;
+    defaultSoft.ForwardSoftLimitThreshold = ElevatorConstants.kForwardSoftLimitThreshold;
+    defaultSoft.ReverseSoftLimitEnable = true;
+    defaultSoft.ReverseSoftLimitThreshold = ElevatorConstants.kReverseSoftLimitThreshold;
 
+    
     Slot0Configs leftSlot0Configs = new Slot0Configs();
     leftSlot0Configs.kP = ElevatorConstants.kP;
     leftSlot0Configs.GravityType = GravityTypeValue.Elevator_Static;
@@ -66,7 +67,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         .withCurrentLimits(bothCurrentLimitsConfigs)
         .withFeedback(bothFeedbackConfigs)
         .withVoltage(bothVoltageConfigs)
-        .withSoftwareLimitSwitch(bothSoftwareLimitSwitchConfigs)
+        .withSoftwareLimitSwitch(defaultSoft)
         .withSlot0(leftSlot0Configs)
         .withClosedLoopRamps(RobotConstants.kClosedLoopRampsConfigs)
         .withOpenLoopRamps(RobotConstants.kOpenLoopRampsConfigs)
@@ -78,7 +79,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         .withCurrentLimits(bothCurrentLimitsConfigs)
         .withFeedback(bothFeedbackConfigs)
         .withVoltage(bothVoltageConfigs)
-        .withSoftwareLimitSwitch(bothSoftwareLimitSwitchConfigs)
+        .withSoftwareLimitSwitch(defaultSoft)
         .withClosedLoopRamps(RobotConstants.kClosedLoopRampsConfigs)
         .withOpenLoopRamps(RobotConstants.kOpenLoopRampsConfigs)
     );
@@ -110,6 +111,26 @@ public class ElevatorIOTalonFX implements ElevatorIO {
   public void setVoltage(double volts) {
     leftTalon.setControl(voltageOut.withOutput(volts));
     rightTalon.setControl(new StrictFollower(leftTalon.getDeviceID()));
+  }
+
+  @Override
+  public void setSoftStopOff() {
+    SoftwareLimitSwitchConfigs bothSoftwareLimitSwitchConfigsOff = new SoftwareLimitSwitchConfigs();
+    bothSoftwareLimitSwitchConfigsOff.ForwardSoftLimitEnable = false;
+    bothSoftwareLimitSwitchConfigsOff.ReverseSoftLimitEnable = false;
+    leftTalon.getConfigurator().apply(new TalonFXConfiguration().withSoftwareLimitSwitch(bothSoftwareLimitSwitchConfigsOff));
+    rightTalon.getConfigurator().apply(new TalonFXConfiguration().withSoftwareLimitSwitch(bothSoftwareLimitSwitchConfigsOff));
+  }
+
+  @Override
+  public void setSoftStopOn() {
+    SoftwareLimitSwitchConfigs bothSoftwareLimitSwitchConfigsOn = new SoftwareLimitSwitchConfigs();
+    bothSoftwareLimitSwitchConfigsOn.ForwardSoftLimitEnable = true;
+    bothSoftwareLimitSwitchConfigsOn.ForwardSoftLimitThreshold = ElevatorConstants.kForwardSoftLimitThreshold;
+    bothSoftwareLimitSwitchConfigsOn.ReverseSoftLimitEnable = true;
+    bothSoftwareLimitSwitchConfigsOn.ReverseSoftLimitThreshold = ElevatorConstants.kReverseSoftLimitThreshold;
+    leftTalon.getConfigurator().apply(new TalonFXConfiguration().withSoftwareLimitSwitch(bothSoftwareLimitSwitchConfigsOn));
+    leftTalon.getConfigurator().apply(new TalonFXConfiguration().withSoftwareLimitSwitch(bothSoftwareLimitSwitchConfigsOn));
   }
 
   @Override

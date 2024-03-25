@@ -33,4 +33,10 @@ public interface ElevatorIO {
 
   public default void setEncoder(double drumRotations) {
   }
+
+  public default void setSoftStopOn() {
+  }
+  
+  public default void setSoftStopOff() {
+  }
 }
