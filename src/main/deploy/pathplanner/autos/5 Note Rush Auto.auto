@@ -20,31 +20,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Close B to Shoot before Close C"
+            "pathName": "Close B to Mid B"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Shoot before Close C to Close C"
+            "pathName": "Mid B to Shoot to Close C"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Close C to Close A"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Close A to Mid B"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Mid B to Shoot"
           }
         }
       ]

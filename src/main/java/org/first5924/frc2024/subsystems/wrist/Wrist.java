@@ -4,8 +4,6 @@
 
 package org.first5924.frc2024.subsystems.wrist;
 
-import java.util.Map;
-
 import org.first5924.frc2024.constants.WristAndElevatorState;
 import org.first5924.frc2024.constants.WristConstants;
 import org.littletonrobotics.junction.Logger;

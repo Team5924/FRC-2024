@@ -15,17 +15,15 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import org.first5924.frc2024.constants.DriveConstants;
+import org.first5924.frc2024.constants.InputConstants;
 import org.first5924.frc2024.commands.SetWristAndElevatorState;
 import org.first5924.frc2024.commands.drive.RunDriveStateMachine;
 import org.first5924.frc2024.commands.drive.SetDriveState;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
-import org.first5924.frc2024.commands.elevator.ElevatorManualControl;
 import org.first5924.frc2024.commands.elevator.RunElevatorStateMachine;
 import org.first5924.frc2024.commands.feeder.RunFeederStateMachine;
 import org.first5924.frc2024.commands.feeder.SetFeederState;
 import org.first5924.frc2024.commands.wrist.RunWristStateMachine;
-import org.first5924.frc2024.commands.wrist.SetWristPositionShuffleboard;
-import org.first5924.frc2024.commands.wrist.WristManualControl;
 import org.first5924.frc2024.commands.shooter.RunShooterStateMachine;
 import org.first5924.frc2024.commands.shooter.SetShooterState;
 import org.first5924.frc2024.commands.vision.RunVisionPoseEstimation;
@@ -37,11 +35,10 @@ import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
 import org.first5924.frc2024.constants.ShooterConstants.ShooterState;
 import org.first5924.frc2024.commands.intake.RunIntakeStateMachine;
 import org.first5924.frc2024.commands.intake.SetIntakeState;
-import org.first5924.frc2024.commands.intake.SetIntakeRollerPercent;
 import org.first5924.frc2024.subsystems.intake.Intake;
 import org.first5924.frc2024.subsystems.intake.IntakeIO;
 import org.first5924.frc2024.subsystems.intake.IntakeIOTalonFX;
-
+import org.first5924.frc2024.subsystems.DriverController;
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.drive.GyroIO;
 import org.first5924.frc2024.subsystems.drive.GyroIOPigeon2;
@@ -52,7 +49,6 @@ import org.first5924.frc2024.subsystems.feeder.FeederIOTalonFX;
 import org.first5924.frc2024.subsystems.shooter.Shooter;
 import org.first5924.frc2024.subsystems.shooter.ShooterIO;
 import org.first5924.frc2024.subsystems.shooter.ShooterIOTalonFX;
-import org.first5924.frc2024.subsystems.vision.DetectorCam;
 import org.first5924.frc2024.subsystems.vision.Vision;
 import org.first5924.frc2024.subsystems.vision.VisionIO;
 import org.first5924.frc2024.subsystems.vision.VisionIOReal;
@@ -85,8 +81,11 @@ public class RobotContainer {
   private final Elevator elevator;
   private final Wrist wrist;
 
-  private final CommandXboxController driverController = new CommandXboxController(0);
-  private final CommandXboxController operatorController = new CommandXboxController(1);
+  // Adds new method to rumble controller for a certain amount of time
+  private final DriverController driverControllerWrapperForRumble = new DriverController(InputConstants.kDriverControllerPort);
+
+  private final CommandXboxController driverController = driverControllerWrapperForRumble.getController();
+  private final CommandXboxController operatorController = new CommandXboxController(InputConstants.kOperatorControllerPort);
 
   private final LoggedDashboardChooser<Boolean> swerveModeChooser = new LoggedDashboardChooser<>("Swerve Mode Chooser");
   private final LoggedDashboardChooser<String> autoModeChooser = new LoggedDashboardChooser<>("Auto Mode Chooser");
@@ -151,8 +150,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("setIntakeStateFloorOff", new SetIntakeState(intake, elevator, feeder, IntakeState.FLOOR_OFF));
     NamedCommands.registerCommand("setIntakeStateRetract", new SetIntakeState(intake, elevator, feeder, IntakeState.RETRACT));
     NamedCommands.registerCommand("setWristAndElevatorStateAimLow", new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
-    NamedCommands.registerCommand("setShooterStateOn", new SetShooterState(shooter, ShooterState.ON));
-    NamedCommands.registerCommand("setShooterStateOff", new SetShooterState(shooter, ShooterState.OFF));
+    NamedCommands.registerCommand("setShooterStateOn", new SetShooterState(shooter, feeder, ShooterState.ON));
+    NamedCommands.registerCommand("setShooterStateOff", new SetShooterState(shooter, feeder, ShooterState.OFF));
     NamedCommands.registerCommand("setFeederStateFeedShooter", new SetFeederState(feeder, FeederState.FEED_SHOOTER));
     NamedCommands.registerCommand("setFeederStateManual", new SetFeederState(feeder, FeederState.MANUAL));
     NamedCommands.registerCommand("setGyroBottomStart", new SetGyroYaw(drive, DriveConstants.kBlueBottomAutoStartingYawDegrees, DriverStation::getAlliance, true));
@@ -161,6 +160,7 @@ public class RobotContainer {
     swerveModeChooser.addOption("Robot Centric", false);
 
     autoModeChooser.addDefaultOption("5 Note Auto", "5 Note Auto");
+    autoModeChooser.addOption("5 Note Rush Auto", "5 Note Rush Auto");
     autoModeChooser.addOption("4 Note Auto", "4 Note Auto");
     autoModeChooser.addOption("3 Note Bottom Auto", "3 Note Bottom Auto");
     autoModeChooser.addOption("1 Note Bottom Auto", "1 Note Bottom Auto");
@@ -203,20 +203,39 @@ public class RobotContainer {
 
     driverController.rightBumper()
       .onTrue(new SetDriveState(drive, DriveState.SLOW))
-      .onFalse(new SetDriveState(drive, DriveState.NORMAL));
+      .onFalse(new SetDriveState(drive, DriveState.NORMAL)
+    );
     driverController.a()
       .onTrue(new SetDriveState(drive, DriveState.FACE_SPEAKER))
       .onFalse(new ParallelCommandGroup(
         new SetDriveState(drive, DriveState.NORMAL),
         new SetFeederState(feeder, FeederState.MANUAL)
-      ));
-    driverController.x()
+      )
+    );
+    driverController.y()
       .onTrue(new SetDriveState(drive, DriveState.FACE_SPEAKER_AND_SLOW))
       .onFalse(new ParallelCommandGroup(
         new SetDriveState(drive, DriveState.NORMAL),
         new SetFeederState(feeder, FeederState.MANUAL)
-      ));
+      )
+    );
+    driverController.x()
+      .onTrue(new ParallelCommandGroup(
+        new SetDriveState(drive, DriveState.FACE_AMP_AREA),
+        new SetWristAndElevatorState(elevator, WristAndElevatorState.LAUNCH)
+      ))
+      .onFalse(new ParallelCommandGroup(
+        new SetDriveState(drive, DriveState.NORMAL),
+        new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW)
+      )
+    );
+
     driverController.b().onTrue(new SetGyroYaw(drive, 0, DriverStation::getAlliance, true));
+
+    driverController.rightTrigger(0.75)
+      .onTrue(new SetFeederState(feeder, FeederState.FEED_SHOOTER))
+      .onFalse(new SetFeederState(feeder, FeederState.MANUAL)
+    );
 
     vision.setDefaultCommand(new RunVisionPoseEstimation(drive, vision));
 
@@ -226,13 +245,8 @@ public class RobotContainer {
     ).onFalse(
       new SetIntakeState(intake, elevator, feeder, intake.getStateBeforeEject())
     );
-    operatorController.a().onTrue(new SetIntakeRollerPercent(intake, 0.8)).onFalse(new SetIntakeRollerPercent(intake, 0));
-    // operatorController.povUp().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.START));
 
-    feeder.setDefaultCommand(new RunFeederStateMachine(feeder, intake, drive, shooter, elevator, wrist, operatorController::getLeftY));
-    operatorController.rightTrigger(0.75)
-      .onTrue(new SetFeederState(feeder, FeederState.FEED_SHOOTER))
-      .onFalse(new SetFeederState(feeder, FeederState.MANUAL));
+    feeder.setDefaultCommand(new RunFeederStateMachine(feeder, intake, drive, shooter, elevator, wrist, operatorController::getLeftY, driverControllerWrapperForRumble));
 
     operatorController.leftTrigger().whileTrue(new ParallelCommandGroup(
       new SetIntakeState(intake, elevator, feeder, IntakeState.EJECT)
@@ -242,7 +256,10 @@ public class RobotContainer {
     ));
 
     shooter.setDefaultCommand(new RunShooterStateMachine(shooter, elevator, drive));
-    operatorController.y().onTrue(new SetShooterState(shooter, ShooterState.ON)).onFalse(new SetShooterState(shooter, ShooterState.OFF));
+    operatorController.y()
+      .onTrue(new SetShooterState(shooter, feeder, ShooterState.ON))
+      .onFalse(new SetShooterState(shooter, feeder, ShooterState.OFF)
+    );
     // Triggers elevator and wrist state change to AIM_LOW
     operatorController.leftBumper().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.RETRACT));
     // Triggers elevator and wrist state change to INTAKE

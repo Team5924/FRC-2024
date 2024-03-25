@@ -6,6 +6,7 @@ package org.first5924.frc2024.commands.feeder;
 
 import java.util.function.DoubleSupplier;
 
+import org.first5924.frc2024.subsystems.DriverController;
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.elevator.Elevator;
 import org.first5924.frc2024.constants.FeederConstants;
@@ -21,7 +22,6 @@ import org.first5924.frc2024.subsystems.wrist.Wrist;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class RunFeederStateMachine extends Command {
@@ -32,11 +32,12 @@ public class RunFeederStateMachine extends Command {
   private final Elevator elevator;
   private final Wrist wrist;
   private final DoubleSupplier leftJoystickY;
+  private final DriverController rumbleDriverController;
 
   private final Timer timer = new Timer();
 
   /** Creates a new FeederShoot. */
-  public RunFeederStateMachine(Feeder feeder, Intake intake, Drive drive, Shooter shooter, Elevator elevator, Wrist wrist, DoubleSupplier leftJoystickY) {
+  public RunFeederStateMachine(Feeder feeder, Intake intake, Drive drive, Shooter shooter, Elevator elevator, Wrist wrist, DoubleSupplier leftJoystickY, DriverController rumbleDriverController) {
     this.feeder = feeder;
     this.intake = intake;
     this.drive = drive;
@@ -44,6 +45,7 @@ public class RunFeederStateMachine extends Command {
     this.elevator = elevator;
     this.wrist = wrist;
     this.leftJoystickY = leftJoystickY;
+    this.rumbleDriverController = rumbleDriverController;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(feeder);
   }
@@ -55,11 +57,11 @@ public class RunFeederStateMachine extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Timer", timer.get());
-    SmartDashboard.putString("Feeder State", feeder.getState().toString());
-    SmartDashboard.putBoolean("Is Stopped to Shoot", drive.isStoppedToShoot());
-    SmartDashboard.putBoolean("Is Shooter Up To Speed", shooter.isUpToSpeed());
-    SmartDashboard.putBoolean("Is Wrist At Setpoint", wrist.isAtSetpoint());
+    if (intake.isNoteIn() && !feeder.getIsNoteInRobotSystem()) {
+      rumbleDriverController.rumbleForTime(0.6);
+      feeder.setIsNoteInRobotSystem(true);
+    }
+
     switch (feeder.getState()) {
       case MANUAL:
         if (drive.isFacingSpeaker() &&

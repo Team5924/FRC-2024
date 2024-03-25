@@ -58,4 +58,8 @@ public class Intake extends SubsystemBase {
   public boolean isReadyToEject() {
     return Math.abs(inputs.pivotAngleDegrees - IntakeState.EJECT.getPivotAngle()) < 5;
   }
+
+  public boolean isNoteIn() {
+    return inputs.laserCanMeasurementMillimeters < 200;
+  }
 }
