@@ -32,7 +32,7 @@ public class FeederIOTalonFX implements FeederIO {
     try {
       laserCan = new LaserCan(FeederConstants.kLaserCanId);
       laserCan.setRangingMode(RangingMode.SHORT);
-      laserCan.setRegionOfInterest(new RegionOfInterest(8, 8, 6, 6));
+      laserCan.setRegionOfInterest(new RegionOfInterest(8, 8, 4, 4));
       laserCan.setTimingBudget(TimingBudget.TIMING_BUDGET_20MS);
     } catch (ConfigurationFailedException e) {
       System.out.println("Configuration failed! " + e);

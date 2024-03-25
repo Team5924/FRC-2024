@@ -10,7 +10,6 @@ import edu.wpi.first.math.util.Units;
 public class ElevatorConstants {
   public static final int kLeftTalonId = 52;
   public static final int kRightTalonId = 51;
-  public static final int kLaserCanId = 15;
 
   public static final double kEncoderToSpoolRatio = 24.31;
   public static final double kSpoolDiameterMeters = Units.inchesToMeters(1.75);

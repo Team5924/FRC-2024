@@ -39,8 +39,8 @@ public class IntakeIOTalonFX implements IntakeIO {
   public IntakeIOTalonFX() {
     try {
       laserCan = new LaserCan(IntakeConstants.kLaserCanId);
-      laserCan.setRangingMode(RangingMode.SHORT);
-      laserCan.setRegionOfInterest(new RegionOfInterest(8, 8, 6, 6));
+      laserCan.setRangingMode(RangingMode.LONG);
+      laserCan.setRegionOfInterest(new RegionOfInterest(8, 8, 4, 4));
       laserCan.setTimingBudget(TimingBudget.TIMING_BUDGET_20MS);
     } catch (ConfigurationFailedException e) {
       System.out.println("Configuration failed! " + e);
@@ -108,6 +108,12 @@ public class IntakeIOTalonFX implements IntakeIO {
     inputs.pivotMotorCurrentAmps = pivotTalon.getSupplyCurrent().getValueAsDouble();
     inputs.pivotAngleDegrees = pivotTalon.getPosition().getValueAsDouble() * 360;
     inputs.pivotMotorAppliedVolts = pivotTalon.getMotorVoltage().getValueAsDouble();
+    LaserCan.Measurement measurement = laserCan.getMeasurement();
+    if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
+      inputs.laserCanMeasurementMillimeters = measurement.distance_mm;
+    } else {
+      inputs.laserCanMeasurementMillimeters = 10000;
+    }
   }
 
   @Override

@@ -60,6 +60,6 @@ public class Intake extends SubsystemBase {
   }
 
   public boolean isNoteIn() {
-    return inputs.laserCanMeasurementMillimeters < 200;
+    return inputs.laserCanMeasurementMillimeters < 350;
   }
 }

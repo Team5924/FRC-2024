@@ -22,19 +22,12 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import au.grapplerobotics.ConfigurationFailedException;
-import au.grapplerobotics.LaserCan;
-import au.grapplerobotics.LaserCan.RangingMode;
-import au.grapplerobotics.LaserCan.RegionOfInterest;
-import au.grapplerobotics.LaserCan.TimingBudget;
-
 /** Add your docs here. */
 public class ElevatorIOTalonFX implements ElevatorIO {
   // Leader
   private final TalonFX leftTalon = new TalonFX(ElevatorConstants.kLeftTalonId);
   // Follower
   private final TalonFX rightTalon = new TalonFX(ElevatorConstants.kRightTalonId);
-  private LaserCan laserCan;
 
   private final VoltageOut voltageOut = new VoltageOut(0).withEnableFOC(true);
   private final PositionVoltage positionVoltage = new PositionVoltage(0).withEnableFOC(true).withSlot(0);
@@ -92,15 +85,6 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
     leftTalon.setPosition(0);
     rightTalon.setPosition(0);
-
-    try {
-      laserCan = new LaserCan(ElevatorConstants.kLaserCanId);
-      laserCan.setRangingMode(RangingMode.SHORT);
-      laserCan.setRegionOfInterest(new RegionOfInterest(8, 8, 4, 4));
-      laserCan.setTimingBudget(TimingBudget.TIMING_BUDGET_100MS);
-    } catch (ConfigurationFailedException e) {
-      System.out.println("Configuration failed! " + e);
-    }
   }
 
   @Override
@@ -113,12 +97,6 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     inputs.rightMotorAppliedVoltage = rightTalon.getMotorVoltage().getValueAsDouble();
     inputs.drumPosition = leftTalon.getPosition().getValueAsDouble();
     inputs.elevatorHeightMeters = leftTalon.getPosition().getValueAsDouble() * ElevatorConstants.kSpoolCircumferenceMeters;
-    LaserCan.Measurement measurement = laserCan.getMeasurement();
-    if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-      inputs.laserCanMillimetersAboveAtLowest = measurement.distance_mm - ElevatorConstants.kLaserCanReadingAtLowestMillimeters;
-    } else {
-      inputs.laserCanMillimetersAboveAtLowest = -99;
-    }
   }
 
   @Override
