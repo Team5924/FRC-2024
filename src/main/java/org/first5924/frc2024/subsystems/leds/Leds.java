@@ -72,9 +72,10 @@ public class Leds extends SubsystemBase {
     public void GreenLEDs() {
         m_toAnimate = null;
         m_candle.setLEDs(0, 255, 0);
-        }
+    }
 
     public void incrementAnimation() {
+        //fades into rainbow
         switch(m_currentAnimation) {
             case Rainbow: 
                 changeAnimation(AnimationTypes.RgbFade);
@@ -82,6 +83,7 @@ public class Leds extends SubsystemBase {
         }
     }
     public void decrementAnimation() {
+        //fades out of rainbow
         switch(m_currentAnimation) {
             case Rainbow:
                 changeAnimation(AnimationTypes.Rainbow);

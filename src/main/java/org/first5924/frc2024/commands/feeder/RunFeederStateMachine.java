@@ -137,6 +137,7 @@ public class RunFeederStateMachine extends Command {
         }
         break;
       case FEED_SHOOTER:
+        //leds.EndLEDs();
         feeder.setPercent(IntakeConstants.kFeederRollerPercent);
         break;
     }
