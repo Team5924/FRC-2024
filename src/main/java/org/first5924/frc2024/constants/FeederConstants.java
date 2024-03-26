@@ -13,7 +13,7 @@ public class FeederConstants {
   public static final double kDistanceWhenNoteFullyIn = 45;
 
   public static final double kPushPercent = 0.8;
-  public static final double kPushTime = 0.7;
+  public static final double kPushTime = 0.6;
 
   public static final double kAlignPercent = -0.17;
   public static final double kAlignTime = 0.08;

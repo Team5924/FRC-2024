@@ -4,48 +4,72 @@
     {
       "anchor": {
         "x": 1.7,
-        "y": 5.55
+        "y": 5.56
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8486080536975893,
-        "y": 6.686087122174245
+        "x": 1.7,
+        "y": 7.059044231397305
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.5666245684343223,
-        "y": 6.8968422797956705
+        "x": 2.530518866593289,
+        "y": 6.995954806724429
       },
       "prevControl": {
-        "x": 2.0206922591883933,
-        "y": 6.70779626797648
+        "x": 1.6060020996493036,
+        "y": 6.995954806724429
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
+  "rotationTargets": [],
+  "constraintZones": [
     {
-      "waypointRelativePos": 0.45,
-      "rotationDegrees": 17.45,
-      "rotateFast": false
+      "name": "Intake",
+      "minWaypointRelativePos": 0.5,
+      "maxWaypointRelativePos": 0.85,
+      "constraints": {
+        "maxVelocity": 0.5,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
     }
   ],
-  "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.65,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "deployIntake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 1.75,
+    "maxVelocity": 4.3,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 17.448292835077055,
+    "rotation": 0.0,
     "rotateFast": false
   },
   "reversed": false,
@@ -54,5 +78,5 @@
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

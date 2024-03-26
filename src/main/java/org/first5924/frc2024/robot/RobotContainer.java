@@ -147,23 +147,32 @@ public class RobotContainer {
     }
 
     NamedCommands.registerCommand("setIntakeStateFloor", new SetIntakeState(intake, elevator, feeder, IntakeState.FLOOR));
-    NamedCommands.registerCommand("setIntakeStateFloorOff", new SetIntakeState(intake, elevator, feeder, IntakeState.FLOOR_OFF));
+    NamedCommands.registerCommand("setIntakeStateHover", new SetIntakeState(intake, elevator, feeder, IntakeState.HOVER));
     NamedCommands.registerCommand("setIntakeStateRetract", new SetIntakeState(intake, elevator, feeder, IntakeState.RETRACT));
     NamedCommands.registerCommand("setWristAndElevatorStateAimLow", new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
     NamedCommands.registerCommand("setShooterStateOn", new SetShooterState(shooter, ShooterState.ON));
     NamedCommands.registerCommand("setShooterStateOff", new SetShooterState(shooter, ShooterState.OFF));
     NamedCommands.registerCommand("setFeederStateFeedShooter", new SetFeederState(feeder, FeederState.FEED_SHOOTER));
     NamedCommands.registerCommand("setFeederStateManual", new SetFeederState(feeder, FeederState.MANUAL));
+    NamedCommands.registerCommand("setFeederStatePositionNoteReverse", new SetFeederState(feeder, FeederState.POSITION_NOTE_REVERSE));
     NamedCommands.registerCommand("setGyroBottomStart", new SetGyroYaw(drive, DriveConstants.kBlueBottomAutoStartingYawDegrees, DriverStation::getAlliance, true));
 
    NamedCommands.registerCommand("aimAndRev", new ParallelCommandGroup(
     new SetShooterState(shooter, ShooterState.ON),
     new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW)
    ));
+   NamedCommands.registerCommand("intakeAndRev", new ParallelCommandGroup(
+    new SetShooterState(shooter, ShooterState.ON),
+    new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE)
+   ));
    NamedCommands.registerCommand("prepareForIntake", new ParallelCommandGroup(
     new SetShooterState(shooter, ShooterState.OFF),
     new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE),
     new SetFeederState(feeder, FeederState.MANUAL)
+   ));
+   NamedCommands.registerCommand("deployIntake", new ParallelCommandGroup(
+    new SetIntakeState(intake, elevator, feeder, IntakeState.FLOOR),
+    new SetFeederState(feeder, FeederState.INTAKE)
    ));
 
     swerveModeChooser.addDefaultOption("Field Centric", true);
@@ -191,6 +200,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    driverController.leftTrigger().onTrue(new InstantCommand(() -> intake.setState(IntakeState.HOVER)));
     // Driver
     // drive.setDefaultCommand(new RunDriveStateMachine(
     //   drive,

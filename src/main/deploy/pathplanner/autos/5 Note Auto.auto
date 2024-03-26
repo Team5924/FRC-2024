@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "aimAndRev"
+            "name": "intakeAndRev"
           }
         },
         {
@@ -27,6 +27,12 @@
           "type": "path",
           "data": {
             "pathName": "Close B to Shoot before Close C"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.15
           }
         },
         {
@@ -60,27 +66,27 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Close C to Close A"
+            "name": "prepareForIntake"
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 0.75
+            "pathName": "Close C to Shoot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "aimAndRev"
+            "name": "prepareForIntake"
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 0.5
+            "pathName": "Shoot to Close A"
           }
         },
         {
@@ -96,9 +102,39 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "prepareForIntake"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Close A to Mid B"
+            "pathName": "Close A to Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateFeedShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "prepareForIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Shoot to Mid B"
           }
         },
         {
