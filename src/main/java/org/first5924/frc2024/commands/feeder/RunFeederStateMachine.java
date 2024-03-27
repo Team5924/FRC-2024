@@ -19,6 +19,7 @@ import org.first5924.frc2024.subsystems.feeder.Feeder;
 import org.first5924.frc2024.subsystems.intake.Intake;
 import org.first5924.frc2024.subsystems.shooter.Shooter;
 import org.first5924.frc2024.subsystems.wrist.Wrist;
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
@@ -57,6 +58,8 @@ public class RunFeederStateMachine extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    Logger.recordOutput("Feeder State", feeder.getState().toString());
+
     if (intake.isNoteIn() && !feeder.getIsNoteInRobotSystem()) {
       rumbleDriverController.rumbleForTime(0.6);
       feeder.setIsNoteInRobotSystem(true);

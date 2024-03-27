@@ -150,6 +150,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("setIntakeStateHover", new SetIntakeState(intake, elevator, feeder, IntakeState.HOVER));
     NamedCommands.registerCommand("setIntakeStateRetract", new SetIntakeState(intake, elevator, feeder, IntakeState.RETRACT));
     NamedCommands.registerCommand("setWristAndElevatorStateAimLow", new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW));
+    NamedCommands.registerCommand("setWristAndElevatorStateCloseShot", new SetWristAndElevatorState(elevator, WristAndElevatorState.CLOSE_SHOT));
     NamedCommands.registerCommand("setShooterStateOn", new SetShooterState(shooter, ShooterState.ON));
     NamedCommands.registerCommand("setShooterStateOff", new SetShooterState(shooter, ShooterState.OFF));
     NamedCommands.registerCommand("setFeederStateFeedShooter", new SetFeederState(feeder, FeederState.FEED_SHOOTER));
@@ -160,6 +161,10 @@ public class RobotContainer {
    NamedCommands.registerCommand("aimAndRev", new ParallelCommandGroup(
     new SetShooterState(shooter, ShooterState.ON),
     new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW)
+   ));
+   NamedCommands.registerCommand("closeShotAndRev", new ParallelCommandGroup(
+    new SetShooterState(shooter, ShooterState.ON),
+    new SetWristAndElevatorState(elevator, WristAndElevatorState.CLOSE_SHOT)
    ));
    NamedCommands.registerCommand("intakeAndRev", new ParallelCommandGroup(
     new SetShooterState(shooter, ShooterState.ON),

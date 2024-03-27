@@ -47,6 +47,8 @@ public class RunWristStateMachine extends Command {
       case AIM_HIGH:
         wrist.setAngle(50.8, 0);
         break;
+      case CLOSE_SHOT:
+        wrist.setAngle(47.1, 0);
       case LAUNCH:
         wrist.setAngle(WristConstants.kLaunchAngle, 0);
         break;

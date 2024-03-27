@@ -66,6 +66,12 @@
               "data": {
                 "name": "prepareForIntake"
               }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "deployIntake"
+              }
             }
           ]
         }
