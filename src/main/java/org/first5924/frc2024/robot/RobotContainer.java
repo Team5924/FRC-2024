@@ -157,6 +157,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("setFeederStateManual", new SetFeederState(feeder, FeederState.MANUAL));
     NamedCommands.registerCommand("setFeederStatePositionNoteReverse", new SetFeederState(feeder, FeederState.POSITION_NOTE_REVERSE));
     NamedCommands.registerCommand("setGyroBottomStart", new SetGyroYaw(drive, DriveConstants.kBlueBottomAutoStartingYawDegrees, DriverStation::getAlliance, true));
+    NamedCommands.registerCommand("setDriveStateAim", new SetDriveState(drive, DriveState.FACE_SPEAKER));
+    NamedCommands.registerCommand("setDriveStateNormal", new SetDriveState(drive, DriveState.NORMAL));
 
    NamedCommands.registerCommand("aimAndRev", new ParallelCommandGroup(
     new SetShooterState(shooter, ShooterState.ON),
@@ -183,12 +185,11 @@ public class RobotContainer {
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
 
-    autoModeChooser.addDefaultOption("5 Note Auto", "5 Note Auto");
-    autoModeChooser.addOption("5 Note Rush Auto", "5 Note Rush Auto");
     autoModeChooser.addOption("4 Note Auto", "4 Note Auto");
-    autoModeChooser.addOption("3 Note Bottom Auto", "3 Note Bottom Auto");
-    autoModeChooser.addOption("1 Note Bottom Auto", "1 Note Bottom Auto");
+    autoModeChooser.addOption("3 Note Below Auto", "3 Note Below Auto");
+    autoModeChooser.addOption("1 Note Troll Auto", "1 Note Troll Auto");
     autoModeChooser.addOption("1 Note Out the Way Auto", "1 Note Out the Way Auto");
+    autoModeChooser.addOption("1 Note Leave Auto", "1 Note Leave Auto");
     autoModeChooser.addOption("Nothing", "Nothing");
     autoModeChooser.addOption("SysId Quasistatic Forward", "SysId Quasistatic Forward");
     autoModeChooser.addOption("SysId Quasistatic Reverse", "SysId Quasistatic Reverse");

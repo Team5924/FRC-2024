@@ -1,12 +1,6 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 0.98,
-      "y": 4.14
-    },
-    "rotation": -56.49000000000001
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
@@ -14,97 +8,19 @@
         {
           "type": "named",
           "data": {
-            "name": "setGyroBottomStart"
+            "name": "aimAndRev"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "setShooterStateOn"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setWristAndElevatorStateAimLow"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "pathName": "Below Start to Side Shot"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "setFeederStateFeedShooter"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setFeederStateManual"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setShooterStateOff"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Bottom Shot to Far D"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Far D to Bottom Shot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setFeederStateFeedShooter"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setFeederStateManual"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setShooterStateOff"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Bottom Shot to Far E"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Far E to Bottom Shot"
           }
         },
         {
@@ -116,7 +32,67 @@
         {
           "type": "named",
           "data": {
+            "name": "prepareForIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Side Shot to Far D"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Far D to Side Shot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "setFeederStateFeedShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.3
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "prepareForIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Side Shot to Far C"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Far C to Side Shot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateFeedShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.3
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "prepareForIntake"
           }
         }
       ]
