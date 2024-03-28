@@ -86,12 +86,13 @@ public class RobotContainer {
   // Adds new method to rumble controller for a certain amount of time
   private final DriverController driverControllerWrapperForRumble = new DriverController(InputConstants.kDriverControllerPort);
 
-  private final Trigger isTeleopInit = new Trigger(RobotModeTriggers.teleop());
   private final CommandXboxController driverController = driverControllerWrapperForRumble.getController();
   private final CommandXboxController operatorController = new CommandXboxController(InputConstants.kOperatorControllerPort);
 
   private final LoggedDashboardChooser<Boolean> swerveModeChooser = new LoggedDashboardChooser<>("Swerve Mode Chooser");
   private final LoggedDashboardChooser<String> autoModeChooser = new LoggedDashboardChooser<>("Auto Mode Chooser");
+
+  private final Trigger teleopInitTrigger = new Trigger(RobotModeTriggers.teleop());
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -213,7 +214,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    isTeleopInit.onTrue(new TeleopReset(elevator, feeder, intake, shooter));
+    teleopInitTrigger.onTrue(new TeleopReset(elevator, feeder, intake, shooter));
     drive.setDefaultCommand(new RunDriveStateMachine(
       drive,
       driverController::getLeftX,
