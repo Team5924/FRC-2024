@@ -194,7 +194,7 @@ public class RobotContainer {
     swerveModeChooser.addDefaultOption("Field Centric", true);
     swerveModeChooser.addOption("Robot Centric", false);
 
-    autoModeChooser.addOption("4 Note Auto", "4 Note Auto");
+    autoModeChooser.addDefaultOption("4 Note Auto", "4 Note Auto");
     autoModeChooser.addOption("3 Note Below Auto", "3 Note Below Auto");
     autoModeChooser.addOption("1 Note Troll Auto", "1 Note Troll Auto");
     autoModeChooser.addOption("1 Note Out the Way Auto", "1 Note Out the Way Auto");
