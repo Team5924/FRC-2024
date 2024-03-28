@@ -243,7 +243,7 @@ public class RobotContainer {
 
     driverController.b().onTrue(new SetGyroYaw(drive, 0, DriverStation::getAlliance, true));
 
-    driverController.rightTrigger(0.75)
+    driverController.rightTrigger()
       .onTrue(new SetFeederState(feeder, FeederState.FEED_SHOOTER))
       .onFalse(new SetFeederState(feeder, FeederState.MANUAL)
     );
@@ -258,6 +258,10 @@ public class RobotContainer {
     );
 
     feeder.setDefaultCommand(new RunFeederStateMachine(feeder, intake, drive, shooter, elevator, wrist, operatorController::getLeftY, driverControllerWrapperForRumble));
+    operatorController.rightTrigger()
+      .onTrue(new SetFeederState(feeder, FeederState.FEED_SHOOTER))
+      .onFalse(new SetFeederState(feeder, FeederState.MANUAL)
+    );
 
     operatorController.leftTrigger().whileTrue(new ParallelCommandGroup(
       new SetIntakeState(intake, elevator, feeder, IntakeState.EJECT)
