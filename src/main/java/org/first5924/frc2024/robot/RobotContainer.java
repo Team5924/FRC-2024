@@ -12,11 +12,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import org.first5924.frc2024.constants.DriveConstants;
 import org.first5924.frc2024.constants.InputConstants;
 import org.first5924.frc2024.commands.SetWristAndElevatorState;
+import org.first5924.frc2024.commands.TeleopReset;
 import org.first5924.frc2024.commands.drive.RunDriveStateMachine;
 import org.first5924.frc2024.commands.drive.SetDriveState;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
@@ -83,6 +86,7 @@ public class RobotContainer {
   // Adds new method to rumble controller for a certain amount of time
   private final DriverController driverControllerWrapperForRumble = new DriverController(InputConstants.kDriverControllerPort);
 
+  private final Trigger isTeleopInit = new Trigger(RobotModeTriggers.teleop());
   private final CommandXboxController driverController = driverControllerWrapperForRumble.getController();
   private final CommandXboxController operatorController = new CommandXboxController(InputConstants.kOperatorControllerPort);
 
@@ -202,6 +206,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    isTeleopInit.onTrue(new TeleopReset(elevator, feeder, intake, shooter));
     drive.setDefaultCommand(new RunDriveStateMachine(
       drive,
       driverController::getLeftX,
