@@ -22,6 +22,7 @@ import org.first5924.frc2024.subsystems.wrist.Wrist;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -60,7 +61,7 @@ public class RunFeederStateMachine extends Command {
   public void execute() {
     Logger.recordOutput("Feeder State", feeder.getState().toString());
 
-    if (intake.isNoteIn() && !feeder.getIsNoteInRobotSystem()) {
+    if (intake.isNoteIn() && !feeder.getIsNoteInRobotSystem() && !DriverStation.isAutonomous()) {
       rumbleDriverController.rumbleForTime(0.6);
       feeder.setIsNoteInRobotSystem(true);
     }

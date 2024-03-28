@@ -27,6 +27,7 @@ import org.first5924.frc2024.commands.elevator.RunElevatorStateMachine;
 import org.first5924.frc2024.commands.feeder.RunFeederStateMachine;
 import org.first5924.frc2024.commands.feeder.SetFeederState;
 import org.first5924.frc2024.commands.wrist.RunWristStateMachine;
+import org.first5924.frc2024.commands.wrist.SetWristPositionShuffleboard;
 import org.first5924.frc2024.commands.shooter.RunShooterStateMachine;
 import org.first5924.frc2024.commands.shooter.SetShooterState;
 import org.first5924.frc2024.commands.vision.RunVisionPoseEstimation;
@@ -293,10 +294,10 @@ public class RobotContainer {
     // Triggers elevator and wrist state change to INTAKE
     operatorController.rightBumper().onTrue(new SetIntakeState(intake, elevator, feeder, IntakeState.FLOOR));
 
-    wrist.setDefaultCommand(new RunWristStateMachine(wrist, elevator, drive));
+    // wrist.setDefaultCommand(new RunWristStateMachine(wrist, elevator, drive));
     // operatorController.leftStick().toggleOnTrue(new WristManualControl(wrist, operatorController::getRightY));
     // operatorController.povDown().toggleOnTrue(new SetWristPositionShuffleboard(wrist));
-    // wrist.setDefaultCommand(new SetWristPositionShuffleboard(wrist, elevator));
+    wrist.setDefaultCommand(new SetWristPositionShuffleboard(wrist, elevator));
 
     elevator.setDefaultCommand(new RunElevatorStateMachine(elevator, operatorController::getRightY));
     operatorController.rightStick().onTrue(new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_HIGH));
