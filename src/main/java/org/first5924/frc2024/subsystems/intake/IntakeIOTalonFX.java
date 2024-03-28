@@ -96,7 +96,7 @@ public class IntakeIOTalonFX implements IntakeIO {
         .withSlot0(pivotSlot0Configs)
     );
 
-    pivotTalon.setPosition(0.02);
+    pivotTalon.setPosition(0);
   }
 
   @Override

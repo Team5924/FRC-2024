@@ -111,6 +111,10 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("Field Angle to Face Speaker", getFieldAngleToFaceShooterAtTarget(getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation()));
     Logger.recordOutput("Estimated Rotation", getEstimatedPose().getRotation().getRadians());
     Logger.recordOutput("Current Velocity", Math.sqrt(Math.pow(this.getChassisSpeeds().vxMetersPerSecond, 2)+Math.pow(this.getChassisSpeeds().vyMetersPerSecond, 2)));
+    Logger.recordOutput("Blue Speaker", new Pose2d(FieldConstants.kBlueSpeakerCenterTranslation, new Rotation2d()));
+    Logger.recordOutput("Red Speaker", new Pose2d(FieldConstants.kRedSpeakerCenterTranslation, new Rotation2d()));
+    Logger.recordOutput("Blue Speaker", new Pose2d(FieldConstants.kBlueAmpAreaTargetTranslation, new Rotation2d()));
+    Logger.recordOutput("Red Speaker", new Pose2d(FieldConstants.kRedAmpAreaTargetTranslation, new Rotation2d()));
 
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Drive/Gyro", gyroInputs);

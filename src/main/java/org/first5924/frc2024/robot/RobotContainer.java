@@ -168,6 +168,7 @@ public class RobotContainer {
     new SetShooterState(shooter, ShooterState.ON),
     new SetWristAndElevatorState(elevator, WristAndElevatorState.CLOSE_SHOT)
    ));
+   // For shooting on the move in 4 note
    NamedCommands.registerCommand("intakeAndRev", new ParallelCommandGroup(
     new SetShooterState(shooter, ShooterState.ON),
     new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE)
@@ -178,6 +179,12 @@ public class RobotContainer {
     new SetFeederState(feeder, FeederState.MANUAL)
    ));
    NamedCommands.registerCommand("deployIntake", new ParallelCommandGroup(
+    new SetIntakeState(intake, elevator, feeder, IntakeState.FLOOR),
+    new SetFeederState(feeder, FeederState.INTAKE)
+   ));
+   NamedCommands.registerCommand("deployIntakeWithoutPrepare", new ParallelCommandGroup(
+    new SetShooterState(shooter, ShooterState.OFF),
+    new SetWristAndElevatorState(elevator, WristAndElevatorState.INTAKE),
     new SetIntakeState(intake, elevator, feeder, IntakeState.FLOOR),
     new SetFeederState(feeder, FeederState.INTAKE)
    ));
