@@ -55,9 +55,6 @@ public class RunWristStateMachine extends Command {
       case CLIMB:
         wrist.getMaxAngleClimb(elevator.getHeightMeters());
         break;
-      case CLIMB_MAX_HEIGHT:
-        wrist.getMaxAngleClimb(elevator.getHeightMeters());
-        break;
     }
   }
 

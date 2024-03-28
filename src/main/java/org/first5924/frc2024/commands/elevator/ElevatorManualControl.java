@@ -6,7 +6,6 @@ package org.first5924.frc2024.commands.elevator;
 
 import java.util.function.DoubleSupplier;
 
-import org.first5924.frc2024.constants.ElevatorConstants;
 import org.first5924.frc2024.subsystems.elevator.Elevator;
 
 import edu.wpi.first.math.MathUtil;
@@ -27,7 +26,6 @@ public class ElevatorManualControl extends Command {
   @Override
   public void initialize() {
     elevator.setSoftStopOff();
-    
   }
 
   // Called every time the scheduler runs while the command is scheduled.

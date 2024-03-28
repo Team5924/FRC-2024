@@ -7,6 +7,5 @@ public enum WristAndElevatorState {
   LAUNCH,
   AMP,
   INTAKE,
-  CLIMB,
-  CLIMB_MAX_HEIGHT;
+  CLIMB
 }

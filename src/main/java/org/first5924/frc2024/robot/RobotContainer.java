@@ -75,7 +75,6 @@ public class RobotContainer {
   private final Drive drive;
   private final Intake intake;
   private final Vision vision;
-  // private final DetectorCam dCam;
   private final Feeder feeder;
   private final Shooter shooter;
   private final Elevator elevator;
@@ -104,7 +103,6 @@ public class RobotContainer {
         );
         intake = new Intake(new IntakeIOTalonFX());
         vision = new Vision(new VisionIOReal());
-        // dCam = new DetectorCam();
         feeder = new Feeder(new FeederIOTalonFX());
         shooter = new Shooter(new ShooterIOTalonFX());
         elevator = new Elevator(new ElevatorIOTalonFX());
@@ -121,7 +119,6 @@ public class RobotContainer {
         );
         intake = new Intake(new IntakeIO() {});
         vision = new Vision(new VisionIO() {});
-        // dCam = new DetectorCam();
         feeder = new Feeder(new FeederIO() {});
         shooter = new Shooter(new ShooterIO() {});
         elevator = new Elevator(new ElevatorIO() {});
@@ -138,7 +135,6 @@ public class RobotContainer {
         );
         intake = new Intake(new IntakeIO() {});
         vision = new Vision(new VisionIO() {});
-        // dCam = new DetectorCam();
         feeder = new Feeder(new FeederIO() {});
         shooter = new Shooter(new ShooterIO() {});
         elevator = new Elevator(new ElevatorIO() {});
@@ -206,17 +202,6 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    driverController.leftTrigger().onTrue(new InstantCommand(() -> intake.setState(IntakeState.HOVER)));
-    // Driver
-    // drive.setDefaultCommand(new RunDriveStateMachine(
-    //   drive,
-    //   driverController::getLeftX,
-    //   driverController::getLeftY,
-    //   driverController::getRightX,
-    //   swerveModeChooser::get,
-    //   dCam::getNoteAngleX,
-    //   dCam::getNoteAngleY
-    // ));
     drive.setDefaultCommand(new RunDriveStateMachine(
       drive,
       driverController::getLeftX,
