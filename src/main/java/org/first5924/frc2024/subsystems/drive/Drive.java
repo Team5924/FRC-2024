@@ -245,7 +245,7 @@ public class Drive extends SubsystemBase {
     return target.minus(start).getAngle().plus(new Rotation2d(Math.PI));
   }
 
-  public static double getRadiansPerSecondFeedforwardToAimAtSpeaker(Translation2d start, Translation2d target, ChassisSpeeds fieldRelativeSpeeds) {
+  public static double getRadiansPerSecondFeedforwardToAimAtTarget(Translation2d start, Translation2d target, ChassisSpeeds fieldRelativeSpeeds) {
     return getFieldAngleToFaceShooterAtTarget(
       start,
       target
