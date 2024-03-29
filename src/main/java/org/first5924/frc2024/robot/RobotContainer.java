@@ -27,6 +27,7 @@ import org.first5924.frc2024.commands.drive.SetGyroYaw;
 import org.first5924.frc2024.commands.elevator.RunElevatorStateMachine;
 import org.first5924.frc2024.commands.feeder.RunFeederStateMachine;
 import org.first5924.frc2024.commands.feeder.SetFeederState;
+import org.first5924.frc2024.commands.feeder.SetNoteOutOfRobotSystem;
 import org.first5924.frc2024.commands.wrist.RunWristStateMachine;
 import org.first5924.frc2024.commands.wrist.SetWristPositionShuffleboard;
 import org.first5924.frc2024.commands.shooter.RunShooterStateMachine;
@@ -271,7 +272,10 @@ public class RobotContainer {
     operatorController.a().onTrue(
       new SetIntakeState(intake, elevator, feeder, IntakeState.EJECT)
     ).onFalse(
-      new SetIntakeState(intake, elevator, feeder, intake.getStateBeforeEject())
+      new ParallelCommandGroup(
+        new SetIntakeState(intake, elevator, feeder, intake.getStateBeforeEject()),
+        new SetNoteOutOfRobotSystem(feeder)
+      )
     );
 
     feeder.setDefaultCommand(new RunFeederStateMachine(feeder, intake, drive, shooter, elevator, wrist, operatorController::getLeftY, controllersWrapper));

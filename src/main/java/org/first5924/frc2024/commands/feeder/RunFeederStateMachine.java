@@ -142,7 +142,6 @@ public class RunFeederStateMachine extends Command {
         }
         break;
       case EJECT:
-        feeder.setIsNoteInRobotSystem(false);
         if (intake.isReadyToEject()) {
           feeder.setPercent(IntakeConstants.kEjectRollerPercent);
         } else {
