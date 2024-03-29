@@ -66,6 +66,8 @@ public class Drive extends SubsystemBase {
   private final BooleanSubscriber allianceSubscriber = NetworkTableInstance.getDefault().getTable("FMSInfo").getBooleanTopic("IsRedAlliance").subscribe(true);
   private boolean previousAllianceSubscriberValue = true;
 
+  private double gyroYawOffsetDegrees = 0;
+
   public Drive(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO) {
     this.gyroIO = gyroIO;
     modules[0] = new Module(flModuleIO, 0);
@@ -77,7 +79,7 @@ public class Drive extends SubsystemBase {
     }
     poseEstimator = new SwerveDrivePoseEstimator(
       kinematics,
-      new Rotation2d(gyroInputs.yawPositionRad),
+      new Rotation2d(getYaw().getRadians()),
       new SwerveModulePosition[] {
         modules[0].getPosition(),
         modules[1].getPosition(),
@@ -129,7 +131,7 @@ public class Drive extends SubsystemBase {
     }
 
     poseEstimator.update(
-      new Rotation2d(gyroInputs.yawPositionRad),
+      new Rotation2d(getYaw().getRadians()),
       new SwerveModulePosition[] {
         modules[0].getPosition(),
         modules[1].getPosition(),
@@ -155,7 +157,7 @@ public class Drive extends SubsystemBase {
         vxMetersPerSecond,
         vyMetersPerSecond,
         omegaRadiansPerSecond,
-        new Rotation2d(gyroInputs.yawPositionRad)) :
+        getYaw()) :
       new ChassisSpeeds(vxMetersPerSecond, vyMetersPerSecond, omegaRadiansPerSecond);
     SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DriveConstants.kMaxLinearSpeed);
@@ -200,12 +202,12 @@ public class Drive extends SubsystemBase {
     }
   }
 
-  public void setGyroYaw(double yaw) {
-    gyroIO.setGyroYaw(yaw);
+  public void setGyroYaw(double yawDegrees) {
+    gyroYawOffsetDegrees = edu.wpi.first.math.util.Units.radiansToDegrees(gyroInputs.yawPositionRad) - yawDegrees;
   }
 
   public Rotation2d getYaw() {
-    return new Rotation2d(gyroInputs.yawPositionRad);
+    return new Rotation2d(gyroInputs.yawPositionRad - edu.wpi.first.math.util.Units.degreesToRadians(gyroYawOffsetDegrees));
   }
 
   public Pose2d getEstimatedPose() {

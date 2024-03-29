@@ -127,6 +127,7 @@ public class RunDriveStateMachine extends Command {
           DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad
         );
         slowMode = false;
+        break;
       case DRIVETONOTE:
         //the values inside this drive command are temporary
         slowMode = false;
@@ -139,7 +140,6 @@ public class RunDriveStateMachine extends Command {
             fieldCentricSupplier.getAsBoolean(),
             false
             );
-          break;
         } else {
           drive.setState(DriveState.NORMAL);
         }

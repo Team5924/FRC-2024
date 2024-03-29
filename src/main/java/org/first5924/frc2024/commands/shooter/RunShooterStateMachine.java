@@ -42,6 +42,9 @@ public class RunShooterStateMachine extends Command {
       case OFF:
         shooter.setPercent(0);
         break;
+      case SPIT:
+        shooter.setPercent(0.25);
+        break;
     }
   }
 

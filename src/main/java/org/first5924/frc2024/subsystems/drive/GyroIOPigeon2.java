@@ -33,8 +33,4 @@ public class GyroIOPigeon2 implements GyroIO {
     inputs.yawVelocityRadPerSec = Units.degreesToRadians(mPigeon2.getAngularVelocityYWorld().getValue());
     inputs.rollVelocityRadPerSec = Units.degreesToRadians(mPigeon2.getAngularVelocityZWorld().getValue());
   }
-
-  public void setGyroYaw(double yaw) {
-    mPigeon2.setYaw(yaw);
-  }
 }

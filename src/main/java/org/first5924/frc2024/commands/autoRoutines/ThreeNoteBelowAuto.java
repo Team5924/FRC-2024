@@ -43,6 +43,7 @@ public class ThreeNoteBelowAuto extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new SetGyroYaw(drive, 0, DriverStation::getAlliance, true),
+      new WaitCommand(0.1),
       new SetShooterState(shooter, ShooterState.ON),
       new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW),
       new SetDriveStartingPose(drive, belowStartToSideShot.getStartingDifferentialPose()),
