@@ -6,7 +6,7 @@ package org.first5924.frc2024.commands.feeder;
 
 import java.util.function.DoubleSupplier;
 
-import org.first5924.frc2024.subsystems.DriverController;
+import org.first5924.frc2024.subsystems.Controllers;
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.elevator.Elevator;
 import org.first5924.frc2024.constants.FeederConstants;
@@ -34,12 +34,12 @@ public class RunFeederStateMachine extends Command {
   private final Elevator elevator;
   private final Wrist wrist;
   private final DoubleSupplier leftJoystickY;
-  private final DriverController rumbleDriverController;
+  private final Controllers rumbleDriverController;
 
   private final Timer timer = new Timer();
 
   /** Creates a new FeederShoot. */
-  public RunFeederStateMachine(Feeder feeder, Intake intake, Drive drive, Shooter shooter, Elevator elevator, Wrist wrist, DoubleSupplier leftJoystickY, DriverController rumbleDriverController) {
+  public RunFeederStateMachine(Feeder feeder, Intake intake, Drive drive, Shooter shooter, Elevator elevator, Wrist wrist, DoubleSupplier leftJoystickY, Controllers rumbleDriverController) {
     this.feeder = feeder;
     this.intake = intake;
     this.drive = drive;
@@ -68,6 +68,10 @@ public class RunFeederStateMachine extends Command {
 
     switch (feeder.getState()) {
       case MANUAL:
+        if (timer.get() != 0) {
+          timer.stop();
+          timer.reset();
+        }
         if (drive.isFacingSpeaker() &&
             drive.isStoppedToShoot() &&
             shooter.isUpToSpeed() &&
@@ -146,6 +150,10 @@ public class RunFeederStateMachine extends Command {
         }
         break;
       case FEED_SHOOTER:
+        if (timer.get() != 0) {
+          timer.stop();
+          timer.reset();
+        }
         feeder.setIsNoteInRobotSystem(false);
         feeder.setPercent(IntakeConstants.kFeederRollerPercent);
         break;

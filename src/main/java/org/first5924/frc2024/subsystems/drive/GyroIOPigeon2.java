@@ -22,7 +22,7 @@ public class GyroIOPigeon2 implements GyroIO {
     mountPoseConfigs.MountPoseYaw = 180;
     mPigeon2.getConfigurator().apply(mountPoseConfigs);
 
-    mPigeon2.setYaw(180);
+    mPigeon2.setYaw(0);
   }
 
   public void updateInputs(GyroIOInputs inputs) {

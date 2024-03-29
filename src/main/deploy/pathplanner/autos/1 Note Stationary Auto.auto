@@ -1,12 +1,6 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 1.42,
-      "y": 3.04
-    },
-    "rotation": 0
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
@@ -20,13 +14,13 @@
         {
           "type": "named",
           "data": {
-            "name": "revAndAim"
+            "name": "aimAndRev"
           }
         },
         {
-          "type": "path",
+          "type": "wait",
           "data": {
-            "pathName": "Below Start to Side Shot"
+            "waitTime": 0.5
           }
         },
         {
@@ -38,19 +32,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.2
+            "waitTime": 0.3
           }
         },
         {
           "type": "named",
           "data": {
             "name": "prepareForIntake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Side Shot to Sweep"
           }
         }
       ]

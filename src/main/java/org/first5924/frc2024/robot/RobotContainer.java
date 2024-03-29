@@ -20,6 +20,7 @@ import org.first5924.frc2024.constants.DriveConstants;
 import org.first5924.frc2024.constants.InputConstants;
 import org.first5924.frc2024.commands.SetWristAndElevatorState;
 import org.first5924.frc2024.commands.TeleopReset;
+import org.first5924.frc2024.commands.autoRoutines.ThreeNoteBelowAuto;
 import org.first5924.frc2024.commands.drive.RunDriveStateMachine;
 import org.first5924.frc2024.commands.drive.SetDriveState;
 import org.first5924.frc2024.commands.drive.SetGyroYaw;
@@ -42,7 +43,7 @@ import org.first5924.frc2024.commands.intake.SetIntakeState;
 import org.first5924.frc2024.subsystems.intake.Intake;
 import org.first5924.frc2024.subsystems.intake.IntakeIO;
 import org.first5924.frc2024.subsystems.intake.IntakeIOTalonFX;
-import org.first5924.frc2024.subsystems.DriverController;
+import org.first5924.frc2024.subsystems.Controllers;
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.drive.GyroIO;
 import org.first5924.frc2024.subsystems.drive.GyroIOPigeon2;
@@ -85,9 +86,9 @@ public class RobotContainer {
   private final Wrist wrist;
 
   // Adds new method to rumble controller for a certain amount of time
-  private final DriverController driverControllerWrapperForRumble = new DriverController(InputConstants.kDriverControllerPort);
+  private final Controllers controllersWrapper = new Controllers(InputConstants.kDriverControllerPort, InputConstants.kOperatorControllerPort);
 
-  private final CommandXboxController driverController = driverControllerWrapperForRumble.getController();
+  private final CommandXboxController driverController = controllersWrapper.getDriverController();
   private final CommandXboxController operatorController = new CommandXboxController(InputConstants.kOperatorControllerPort);
 
   private final LoggedDashboardChooser<Boolean> swerveModeChooser = new LoggedDashboardChooser<>("Swerve Mode Chooser");
@@ -161,6 +162,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("setGyroBottomStart", new SetGyroYaw(drive, DriveConstants.kBlueBottomAutoStartingYawDegrees, DriverStation::getAlliance, true));
     NamedCommands.registerCommand("setDriveStateAim", new SetDriveState(drive, DriveState.FACE_SPEAKER));
     NamedCommands.registerCommand("setDriveStateNormal", new SetDriveState(drive, DriveState.NORMAL));
+    NamedCommands.registerCommand("setGyro0", new SetGyroYaw(drive, 0, DriverStation::getAlliance, true));
 
    NamedCommands.registerCommand("aimAndRev", new ParallelCommandGroup(
     new SetShooterState(shooter, ShooterState.ON),
@@ -199,6 +201,7 @@ public class RobotContainer {
     autoModeChooser.addOption("1 Note Troll Auto", "1 Note Troll Auto");
     autoModeChooser.addOption("1 Note Out the Way Auto", "1 Note Out the Way Auto");
     autoModeChooser.addOption("1 Note Leave Auto", "1 Note Leave Auto");
+    autoModeChooser.addOption("1 Note Stationary Auto", "1 Note Stationary Auto");
     autoModeChooser.addOption("Nothing", "Nothing");
     autoModeChooser.addOption("SysId Quasistatic Forward", "SysId Quasistatic Forward");
     autoModeChooser.addOption("SysId Quasistatic Reverse", "SysId Quasistatic Reverse");
@@ -271,7 +274,7 @@ public class RobotContainer {
       new SetIntakeState(intake, elevator, feeder, intake.getStateBeforeEject())
     );
 
-    feeder.setDefaultCommand(new RunFeederStateMachine(feeder, intake, drive, shooter, elevator, wrist, operatorController::getLeftY, driverControllerWrapperForRumble));
+    feeder.setDefaultCommand(new RunFeederStateMachine(feeder, intake, drive, shooter, elevator, wrist, operatorController::getLeftY, controllersWrapper));
     operatorController.rightTrigger()
       .onTrue(new SetFeederState(feeder, FeederState.FEED_SHOOTER))
       .onFalse(new SetFeederState(feeder, FeederState.MANUAL)
@@ -284,7 +287,7 @@ public class RobotContainer {
       new SetFeederState(feeder, FeederState.MANUAL)
     ));
 
-    shooter.setDefaultCommand(new RunShooterStateMachine(shooter, elevator, drive));
+    shooter.setDefaultCommand(new RunShooterStateMachine(shooter, elevator));
     operatorController.y()
       .onTrue(new SetShooterState(shooter, ShooterState.ON))
       .onFalse(new SetShooterState(shooter, ShooterState.OFF)
@@ -316,6 +319,8 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     switch (autoModeChooser.get()) {
+      case "Three Note Below Auto":
+        return new ThreeNoteBelowAuto(drive, shooter, elevator, feeder);
       case "SysId Quasistatic Forward":
         return drive.runDriveQuasiTest(SysIdRoutine.Direction.kForward);
       case "SysId Quasistatic Reverse":
