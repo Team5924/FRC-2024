@@ -15,6 +15,7 @@ import org.first5924.frc2024.constants.WristAndElevatorState;
 import org.first5924.frc2024.constants.DriveConstants.DriveState;
 import org.first5924.frc2024.constants.FeederConstants.FeederState;
 import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
+import org.first5924.frc2024.constants.ShooterConstants.ShooterState;
 import org.first5924.frc2024.subsystems.feeder.Feeder;
 import org.first5924.frc2024.subsystems.intake.Intake;
 import org.first5924.frc2024.subsystems.shooter.Shooter;
@@ -78,6 +79,13 @@ public class RunFeederStateMachine extends Command {
             (elevator.getWristAndElevatorState() == WristAndElevatorState.AIM_LOW || elevator.getWristAndElevatorState() == WristAndElevatorState.AIM_HIGH) &&
             wrist.isAtSetpoint()) {
           feeder.setState(FeederState.WAITING_TO_SHOOT);
+        } else if (drive.getState() == DriveState.FACE_SPEAKER_QUICK_SHOT &&
+                  drive.isMostlyStoppedToShoot() &&
+                  drive.isRoughlyFacingSpeaker() &&
+                  shooter.getState() == ShooterState.ON &&
+                  wrist.isAtSetpoint() &&
+                  elevator.getWristAndElevatorState() == WristAndElevatorState.AIM_LOW) {
+          feeder.setState(FeederState.FEED_SHOOTER);
         } else {
           feeder.setPercent(-MathUtil.applyDeadband(leftJoystickY.getAsDouble(), 0.2));
         }
@@ -94,7 +102,7 @@ public class RunFeederStateMachine extends Command {
           feeder.setState(FeederState.MANUAL);
         } else if (timer.get() == 0) {
           timer.start();
-        } else if (timer.get() >= 0.25 && (drive.getState() == DriveState.FACE_SPEAKER || drive.getState() == DriveState.FACE_SPEAKER_AND_SLOW)) {
+        } else if ((timer.get() >= 0.25 && (drive.getState() == DriveState.FACE_SPEAKER || drive.getState() == DriveState.FACE_SPEAKER_AND_SLOW)) || drive.getState() == DriveState.FACE_SPEAKER_QUICK_SHOT) {
           timer.stop();
           timer.reset();
           feeder.setState(FeederState.FEED_SHOOTER);

@@ -235,8 +235,16 @@ public class Drive extends SubsystemBase {
     return Math.abs(getYaw().minus(getFieldAngleToFaceShooterAtTarget(getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation())).getDegrees()) < 5;
   }
 
+  public boolean isRoughlyFacingSpeaker() {
+    return Math.abs(getYaw().minus(getFieldAngleToFaceShooterAtTarget(getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation())).getDegrees()) < 12;
+  }
+
   public boolean isStoppedToShoot() {
     return Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2)) < DriveConstants.kMovingSpeedThreshold;
+  }
+
+  public boolean isMostlyStoppedToShoot() {
+    return Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2)) < DriveConstants.kMovingSpeedThreshold * 3;
   }
 
   public static double getDistanceToTarget(Translation2d start, Translation2d target) {

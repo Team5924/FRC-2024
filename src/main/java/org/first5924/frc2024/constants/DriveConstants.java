@@ -74,6 +74,7 @@ public class DriveConstants {
     SLOW,
     FACE_SPEAKER,
     FACE_SPEAKER_AND_SLOW,
+    FACE_SPEAKER_QUICK_SHOT,
     FACE_AMP_AREA,
     DRIVETONOTE
   }

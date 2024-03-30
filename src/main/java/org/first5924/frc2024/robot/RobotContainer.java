@@ -198,10 +198,11 @@ public class RobotContainer {
 
     autoModeChooser.addDefaultOption("4 Note Auto", "4 Note Auto");
     autoModeChooser.addOption("3 Note Below Auto", "3 Note Below Auto");
-    autoModeChooser.addOption("1 Note Troll Auto", "1 Note Troll Auto");
+    autoModeChooser.addOption("2 Note Steal and Bump Auto", "2 Note Steal and Bump Auto");
     autoModeChooser.addOption("1 Note Out the Way Auto", "1 Note Out the Way Auto");
     autoModeChooser.addOption("1 Note Leave Auto", "1 Note Leave Auto");
     autoModeChooser.addOption("1 Note Stationary Auto", "1 Note Stationary Auto");
+    autoModeChooser.addOption("Troll Auto", "Troll Auto");
     autoModeChooser.addOption("Nothing", "Nothing");
     autoModeChooser.addOption("SysId Quasistatic Forward", "SysId Quasistatic Forward");
     autoModeChooser.addOption("SysId Quasistatic Reverse", "SysId Quasistatic Reverse");
@@ -241,13 +242,6 @@ public class RobotContainer {
       )
     );
     driverController.y()
-      .onTrue(new SetDriveState(drive, DriveState.FACE_SPEAKER_AND_SLOW))
-      .onFalse(new ParallelCommandGroup(
-        new SetDriveState(drive, DriveState.NORMAL),
-        new SetFeederState(feeder, FeederState.MANUAL)
-      )
-    );
-    driverController.x()
       .onTrue(new ParallelCommandGroup(
         new SetDriveState(drive, DriveState.FACE_AMP_AREA),
         new SetWristAndElevatorState(elevator, WristAndElevatorState.LAUNCH)
@@ -255,6 +249,13 @@ public class RobotContainer {
       .onFalse(new ParallelCommandGroup(
         new SetDriveState(drive, DriveState.NORMAL),
         new SetWristAndElevatorState(elevator, WristAndElevatorState.AIM_LOW)
+      )
+    );
+    driverController.x()
+      .onTrue(new SetDriveState(drive, DriveState.FACE_SPEAKER_QUICK_SHOT))
+      .onFalse(new ParallelCommandGroup(
+        new SetDriveState(drive, DriveState.NORMAL),
+        new SetFeederState(feeder, FeederState.MANUAL)
       )
     );
 

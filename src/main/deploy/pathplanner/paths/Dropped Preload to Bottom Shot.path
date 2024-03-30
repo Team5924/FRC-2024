@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.92,
-        "y": 2.45
+        "x": 1.2,
+        "y": 2.06
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.230251460502921,
-        "y": 0.06918280040263831
+        "x": 1.1057688689451455,
+        "y": 3.104140208280417
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +20,8 @@
         "y": 4.14
       },
       "prevControl": {
-        "x": 2.4230331423625815,
-        "y": 3.0154199475065617
+        "x": 1.0703163952624204,
+        "y": 3.3505853770966807
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,19 +30,19 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.25,
-      "rotationDegrees": 0,
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": -90.0,
       "rotateFast": false
     }
   ],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.75,
+      "minWaypointRelativePos": 0.45,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 4.3,
-        "maxAcceleration": 2.0,
+        "maxAcceleration": 1.75,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0
       }
@@ -50,8 +50,8 @@
   ],
   "eventMarkers": [
     {
-      "name": "Intake Retract",
-      "waypointRelativePos": 0.25,
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.5,
       "command": {
         "type": "parallel",
         "data": {
@@ -68,7 +68,7 @@
     },
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.65,
+      "waypointRelativePos": 0.6,
       "command": {
         "type": "parallel",
         "data": {
@@ -86,7 +86,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.3,
-    "maxAcceleration": 3.5,
+    "maxAcceleration": 2.75,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -98,8 +98,8 @@
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 0.0,
+    "rotation": -90.0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

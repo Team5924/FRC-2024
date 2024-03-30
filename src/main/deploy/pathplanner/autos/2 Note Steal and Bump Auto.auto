@@ -3,7 +3,7 @@
   "startingPose": {
     "position": {
       "x": 1.42,
-      "y": 3.04
+      "y": 1.56
     },
     "rotation": 0
   },
@@ -20,31 +20,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.1
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "revAndAim"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Below Start to Side Shot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setFeederStateFeedShooter"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.2
+            "waitTime": 0.05
           }
         },
         {
@@ -56,7 +32,67 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Side Shot to Sweep"
+            "pathName": "Far Below Start to Bump Far E"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Bump Far E to Far D"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Far D to Bottom Shot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.4
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateFeedShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.3
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "prepareForIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Bottom Shot to Dropped Preload"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Dropped Preload to Bottom Shot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.15
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateFeedShooter"
           }
         }
       ]

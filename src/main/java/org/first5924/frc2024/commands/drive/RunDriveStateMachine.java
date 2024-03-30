@@ -104,6 +104,19 @@ public class RunDriveStateMachine extends Command {
         );
         slowMode = false;
         break;
+      case FACE_SPEAKER_QUICK_SHOT:
+        SmartDashboard.putNumber("Feedforward Rotations", Drive.getRadiansPerSecondFeedforwardToAimAtTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation(), drive.getChassisSpeeds()));
+        omegaRadiansPerSecond = MathUtil.clamp(
+          autoRotationPidController.calculate(
+            drive.getYaw().getRadians(),
+            Drive.getFieldAngleToFaceShooterAtTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation()).getRadians()
+          ) +
+          Drive.getRadiansPerSecondFeedforwardToAimAtTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation(), drive.getChassisSpeeds()),
+          -DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad,
+          DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad
+        );
+        slowMode = false;
+        break;
       case FACE_SPEAKER_AND_SLOW:
         omegaRadiansPerSecond = MathUtil.clamp(
           autoRotationPidController.calculate(
