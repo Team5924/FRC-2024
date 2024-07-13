@@ -56,10 +56,10 @@ public class Feeder extends SubsystemBase {
   }
 
   public boolean isNoteInFeeder() {
-    return inputs.laserCanMeasurementMillimeters <= FeederConstants.kDistanceWhenNoteIn;
+    return inputs.noteInFeeder;
   }
 
   public boolean isNoteFullyIn() {
-    return inputs.laserCanMeasurementMillimeters <= FeederConstants.kDistanceWhenNoteFullyIn;
+    return inputs.noteInFeeder;
   }
 }

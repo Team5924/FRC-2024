@@ -19,6 +19,7 @@ public class FeederConstants {
   public static final double kAlignTime = 0.08;
 
   public static final double kTimeInRetractToDisable = 2;
+  public static final int kFeederLimitSwitchId = 8;
 
   public static enum FeederState {
     MANUAL,
