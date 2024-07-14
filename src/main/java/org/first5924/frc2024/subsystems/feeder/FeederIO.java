@@ -15,6 +15,7 @@ public interface FeederIO {
       public double motorAppliedVolts = 0.0;
       public double motorVelocityRotationsPerSecond = 0.0;
       public double laserCanMeasurementMillimeters = 0;
+      public boolean limitSwitchTriggered = false;
     }
 
     /** Updates the set of loggable inputs. */
