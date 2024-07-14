@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.93,
+        "x": 7.92,
         "y": 0.78
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.9300000000000015,
-        "y": 0.7800000000000001
+        "x": 3.420726653119973,
+        "y": 0.791712527869501
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +20,8 @@
         "y": 4.14
       },
       "prevControl": {
-        "x": 2.8009553241328704,
-        "y": 2.212068081543571
+        "x": 0.8693596600156166,
+        "y": 1.998878164422996
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,11 +29,23 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.7,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 5.3,
+        "maxAcceleration": 2.3,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
   "eventMarkers": [
     {
-      "name": "Intake Retract",
-      "waypointRelativePos": 0.8,
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.3,
       "command": {
         "type": "parallel",
         "data": {
@@ -43,28 +55,11 @@
               "data": {
                 "name": "setIntakeStateRetract"
               }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Auto Aim and Shooter On",
-      "waypointRelativePos": 0.95,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "setShooterStateOn"
-              }
             },
             {
               "type": "named",
               "data": {
-                "name": "setWristAndElevatorStateAimLow"
+                "name": "aimAndRev"
               }
             }
           ]
@@ -73,8 +68,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.3,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -89,5 +84,5 @@
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

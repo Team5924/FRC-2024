@@ -15,6 +15,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.BooleanSubscriber;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
@@ -61,6 +63,11 @@ public class Drive extends SubsystemBase {
   private final MutableMeasure<Distance> distanceMutableMeasure = MutableMeasure.mutable(Units.Meters.of(0));
   private final MutableMeasure<Velocity<Distance>> velocityMutableMeasure = MutableMeasure.mutable(Units.MetersPerSecond.of(0));
 
+  private final BooleanSubscriber allianceSubscriber = NetworkTableInstance.getDefault().getTable("FMSInfo").getBooleanTopic("IsRedAlliance").subscribe(true);
+  private boolean previousAllianceSubscriberValue = true;
+
+  private double gyroYawOffsetDegrees = 0;
+
   public Drive(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO) {
     this.gyroIO = gyroIO;
     modules[0] = new Module(flModuleIO, 0);
@@ -72,7 +79,7 @@ public class Drive extends SubsystemBase {
     }
     poseEstimator = new SwerveDrivePoseEstimator(
       kinematics,
-      new Rotation2d(gyroInputs.yawPositionRad),
+      new Rotation2d(getYaw().getRadians()),
       new SwerveModulePosition[] {
         modules[0].getPosition(),
         modules[1].getPosition(),
@@ -124,7 +131,7 @@ public class Drive extends SubsystemBase {
     }
 
     poseEstimator.update(
-      new Rotation2d(gyroInputs.yawPositionRad),
+      new Rotation2d(getYaw().getRadians()),
       new SwerveModulePosition[] {
         modules[0].getPosition(),
         modules[1].getPosition(),
@@ -150,7 +157,7 @@ public class Drive extends SubsystemBase {
         vxMetersPerSecond,
         vyMetersPerSecond,
         omegaRadiansPerSecond,
-        new Rotation2d(gyroInputs.yawPositionRad)) :
+        getYaw()) :
       new ChassisSpeeds(vxMetersPerSecond, vyMetersPerSecond, omegaRadiansPerSecond);
     SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DriveConstants.kMaxLinearSpeed);
@@ -195,12 +202,12 @@ public class Drive extends SubsystemBase {
     }
   }
 
-  public void setGyroYaw(double yaw) {
-    gyroIO.setGyroYaw(yaw);
+  public void setGyroYaw(double yawDegrees) {
+    gyroYawOffsetDegrees = edu.wpi.first.math.util.Units.radiansToDegrees(gyroInputs.yawPositionRad) - yawDegrees;
   }
 
   public Rotation2d getYaw() {
-    return new Rotation2d(gyroInputs.yawPositionRad);
+    return new Rotation2d(gyroInputs.yawPositionRad - edu.wpi.first.math.util.Units.degreesToRadians(gyroYawOffsetDegrees));
   }
 
   public Pose2d getEstimatedPose() {
@@ -228,8 +235,16 @@ public class Drive extends SubsystemBase {
     return Math.abs(getYaw().minus(getFieldAngleToFaceShooterAtTarget(getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation())).getDegrees()) < 5;
   }
 
+  public boolean isRoughlyFacingSpeaker() {
+    return Math.abs(getYaw().minus(getFieldAngleToFaceShooterAtTarget(getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation())).getDegrees()) < 12;
+  }
+
   public boolean isStoppedToShoot() {
     return Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2)) < DriveConstants.kMovingSpeedThreshold;
+  }
+
+  public boolean isMostlyStoppedToShoot() {
+    return Math.sqrt(Math.pow(getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2)) < DriveConstants.kMovingSpeedThreshold * 3;
   }
 
   public static double getDistanceToTarget(Translation2d start, Translation2d target) {
@@ -240,7 +255,7 @@ public class Drive extends SubsystemBase {
     return target.minus(start).getAngle().plus(new Rotation2d(Math.PI));
   }
 
-  public static double getRadiansPerSecondFeedforwardToAimAtSpeaker(Translation2d start, Translation2d target, ChassisSpeeds fieldRelativeSpeeds) {
+  public static double getRadiansPerSecondFeedforwardToAimAtTarget(Translation2d start, Translation2d target, ChassisSpeeds fieldRelativeSpeeds) {
     return getFieldAngleToFaceShooterAtTarget(
       start,
       target

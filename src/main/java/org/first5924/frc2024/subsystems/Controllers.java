@@ -9,14 +9,16 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
-public class DriverController extends SubsystemBase {
+public class Controllers extends SubsystemBase {
   private final CommandXboxController driverController;
+  private final CommandXboxController operatorController;
 
   private double timeToStopRumble = 0;
 
   /** Creates a new DriverController. */
-  public DriverController(int port) {
-    driverController = new CommandXboxController(port);
+  public Controllers(int driverPort, int operatorPort) {
+    driverController = new CommandXboxController(driverPort);
+    operatorController = new CommandXboxController(operatorPort);
   }
 
   @Override
@@ -24,13 +26,19 @@ public class DriverController extends SubsystemBase {
     // This method will be called once per scheduler run
     if (Timer.getFPGATimestamp() < timeToStopRumble) {
       driverController.getHID().setRumble(RumbleType.kBothRumble, 1);
+      operatorController.getHID().setRumble(RumbleType.kBothRumble, 1);
     } else {
       driverController.getHID().setRumble(RumbleType.kBothRumble, 0);
+      operatorController.getHID().setRumble(RumbleType.kBothRumble, 0);
     }
   }
 
-  public CommandXboxController getController() {
+  public CommandXboxController getDriverController() {
     return driverController;
+  }
+
+  public CommandXboxController getOperatorController() {
+    return operatorController;
   }
 
   public void rumbleForTime(double seconds) {

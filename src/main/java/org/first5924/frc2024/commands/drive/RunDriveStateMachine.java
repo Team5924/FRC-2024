@@ -92,13 +92,26 @@ public class RunDriveStateMachine extends Command {
         slowMode = true;
         break;
       case FACE_SPEAKER:
-        SmartDashboard.putNumber("Feedforward Rotations", Drive.getRadiansPerSecondFeedforwardToAimAtSpeaker(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation(), drive.getChassisSpeeds()));
+        SmartDashboard.putNumber("Feedforward Rotations", Drive.getRadiansPerSecondFeedforwardToAimAtTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation(), drive.getChassisSpeeds()));
         omegaRadiansPerSecond = MathUtil.clamp(
           autoRotationPidController.calculate(
             drive.getYaw().getRadians(),
             Drive.getFieldAngleToFaceShooterAtTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation()).getRadians()
           ) +
-          Drive.getRadiansPerSecondFeedforwardToAimAtSpeaker(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation(), drive.getChassisSpeeds()),
+          Drive.getRadiansPerSecondFeedforwardToAimAtTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation(), drive.getChassisSpeeds()),
+          -DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad,
+          DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad
+        );
+        slowMode = false;
+        break;
+      case FACE_SPEAKER_QUICK_SHOT:
+        SmartDashboard.putNumber("Feedforward Rotations", Drive.getRadiansPerSecondFeedforwardToAimAtTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation(), drive.getChassisSpeeds()));
+        omegaRadiansPerSecond = MathUtil.clamp(
+          autoRotationPidController.calculate(
+            drive.getYaw().getRadians(),
+            Drive.getFieldAngleToFaceShooterAtTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation()).getRadians()
+          ) +
+          Drive.getRadiansPerSecondFeedforwardToAimAtTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation(), drive.getChassisSpeeds()),
           -DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad,
           DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad
         );
@@ -110,7 +123,7 @@ public class RunDriveStateMachine extends Command {
             drive.getYaw().getRadians(),
             Drive.getFieldAngleToFaceShooterAtTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation()).getRadians()
           ) +
-          Drive.getRadiansPerSecondFeedforwardToAimAtSpeaker(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation(), drive.getChassisSpeeds()),
+          Drive.getRadiansPerSecondFeedforwardToAimAtTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation(), drive.getChassisSpeeds()),
           -DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad,
           DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad
         );
@@ -122,11 +135,12 @@ public class RunDriveStateMachine extends Command {
             drive.getYaw().getRadians(),
             Drive.getFieldAngleToFaceShooterAtTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceAmpAreaTargetTranslation()).getRadians()
           ) +
-          Drive.getRadiansPerSecondFeedforwardToAimAtSpeaker(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceAmpAreaTargetTranslation(), drive.getChassisSpeeds()),
+          Drive.getRadiansPerSecondFeedforwardToAimAtTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceAmpAreaTargetTranslation(), drive.getChassisSpeeds()),
           -DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad,
           DriveConstants.kNormalModeRotationMultiplier * DriveConstants.kMaxAngularSpeedRad
         );
         slowMode = false;
+        break;
       case DRIVETONOTE:
         //the values inside this drive command are temporary
         slowMode = false;
@@ -139,7 +153,6 @@ public class RunDriveStateMachine extends Command {
             fieldCentricSupplier.getAsBoolean(),
             false
             );
-          break;
         } else {
           drive.setState(DriveState.NORMAL);
         }

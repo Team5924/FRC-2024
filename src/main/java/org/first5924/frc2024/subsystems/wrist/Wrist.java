@@ -31,19 +31,21 @@ public class Wrist extends SubsystemBase {
   public Wrist(WristIO io) {
     this.io = io;
 
-    lowAimInterpolatingDoubleTreeMap.put(0.9892, 50.8);
-    lowAimInterpolatingDoubleTreeMap.put(1.2615, 46.4);
-    lowAimInterpolatingDoubleTreeMap.put(1.503, 42.4);
-    lowAimInterpolatingDoubleTreeMap.put(1.7575, 39.02);
-    lowAimInterpolatingDoubleTreeMap.put(2.00, 36.03);
-    lowAimInterpolatingDoubleTreeMap.put(2.245, 33.75);
-    lowAimInterpolatingDoubleTreeMap.put(2.48, 31.5);
+    lowAimInterpolatingDoubleTreeMap.put(1.06, 54.0);
+    lowAimInterpolatingDoubleTreeMap.put(1.2615, 50.5);
+    lowAimInterpolatingDoubleTreeMap.put(1.503, 45.5);
+    lowAimInterpolatingDoubleTreeMap.put(1.75, 41.0);
+    lowAimInterpolatingDoubleTreeMap.put(2.04, 38.25);
+    lowAimInterpolatingDoubleTreeMap.put(2.26, 34.85);
+    lowAimInterpolatingDoubleTreeMap.put(2.495, 33.0);
     lowAimInterpolatingDoubleTreeMap.put(2.74, 29.36);
-    lowAimInterpolatingDoubleTreeMap.put(3.04, 27.246);
-    lowAimInterpolatingDoubleTreeMap.put(3.23, 25.45);
-    lowAimInterpolatingDoubleTreeMap.put(3.48, 25.5);
+    lowAimInterpolatingDoubleTreeMap.put(3.02, 28.0);
+    lowAimInterpolatingDoubleTreeMap.put(3.23, 26.0);
+    lowAimInterpolatingDoubleTreeMap.put(3.56, 25.6);
     lowAimInterpolatingDoubleTreeMap.put(3.735, 25.0);
-    lowAimInterpolatingDoubleTreeMap.put(4.09, 24.0);
+    // Guess, untested
+    lowAimInterpolatingDoubleTreeMap.put(3.91, 25.6);
+    lowAimInterpolatingDoubleTreeMap.put(4.09, 24.2);
     lowAimInterpolatingDoubleTreeMap.put(4.245, 21.62);
     lowAimInterpolatingDoubleTreeMap.put(4.5, 20.5);
     lowAimInterpolatingDoubleTreeMap.put(4.8, 19.8);

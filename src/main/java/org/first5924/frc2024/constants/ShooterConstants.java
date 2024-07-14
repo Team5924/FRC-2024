@@ -11,6 +11,7 @@ public class ShooterConstants {
 
     public static enum ShooterState {
       ON,
-      OFF
+      OFF,
+      SPIT
     }
 }

@@ -20,8 +20,8 @@ public class ElevatorConstants {
   public static final double kP = 16;
   public static final double kG = 0.25;
 
-  public static final double kPeakForwardVoltage = 7;
-  public static final double kPeakReverseVoltage = -5.5;
+  public static final double kPeakForwardVoltage = 11;
+  public static final double kPeakReverseVoltage = -9;
 
   public static final double kForwardSoftLimitThreshold = 4.3;
   public static final double kReverseSoftLimitThreshold = 0;
