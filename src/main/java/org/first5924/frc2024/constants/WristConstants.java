@@ -11,7 +11,7 @@ public class WristConstants {
 
   public static final double kP = 450;
 
-  public static final double kCanCoderOffset = -0.275;
+  public static final double kCanCoderOffset = 0;
 
   public static final double kGearRatio = 282.24;
 

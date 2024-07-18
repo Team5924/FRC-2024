@@ -66,7 +66,7 @@ public class FeederIOTalonFX implements FeederIO {
     inputs.motorCurrentAmps = talon.getSupplyCurrent().getValueAsDouble();
     inputs.motorAppliedVolts = talon.getMotorVoltage().getValueAsDouble();
     inputs.motorVelocityRotationsPerSecond = talon.getVelocity().getValueAsDouble();
-    inputs.limitSwitchTriggered = !limitSwitch.get();
+    inputs.limitSwitchTriggered = limitSwitch.get();
     LaserCan.Measurement measurement = laserCan.getMeasurement();
     if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
       inputs.laserCanMeasurementMillimeters = measurement.distance_mm;
