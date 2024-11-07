@@ -1,0 +1,151 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.45,
+      "y": 5.55
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "intakeAndRev"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Start to Close B with Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Close B to Shoot before Close C"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.15
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateFeedShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "prepareForIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setIntakeStateFloor"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Shoot before Close C to Close C"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "prepareForIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Close C to Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "prepareForIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Shoot to Close A"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateFeedShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "prepareForIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Close A to Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateFeedShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "prepareForIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Shoot to Mid B"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Mid B to Shoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

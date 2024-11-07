@@ -8,6 +8,7 @@ package org.first5924.frc2024.constants;
 public class IntakeConstants {
   public static final int kRollerTalonId = 50;
   public static final int kPivotTalonId = 53;
+  public static final int kLaserCanId = 15;
 
   public static final double kEncoderToPivotRatio = 59.4;
 
@@ -15,11 +16,11 @@ public class IntakeConstants {
 
   public static final double kPivotPeakVoltage = 6;
 
-  public static final double kFloorPivotAngleDegrees = 114.5;
-  public static final double kFloorRollerPercent = 0.9;
+  public static final double kFloorPivotAngleDegrees = 120;
+  public static final double kFloorRollerPercent = 0.8;
 
   public static final double kFeederPivotAngleDegrees = 35;
-  public static final double kFeederRollerPercent = 0.8;
+  public static final double kFeederRollerPercent = 0.6;
 
   public static final double kRetractPivotAngleDegrees = 15;
   public static final double kRetractRollerPercent = 0;
@@ -33,6 +34,7 @@ public class IntakeConstants {
   public static enum IntakeState {
     FLOOR(kFloorPivotAngleDegrees, kFloorRollerPercent),
     FLOOR_OFF(kFloorPivotAngleDegrees, 0),
+    HOVER(kFloorPivotAngleDegrees - 20, kFloorRollerPercent),
     FEEDER(kFeederPivotAngleDegrees, kFeederRollerPercent),
     RETRACT(kRetractPivotAngleDegrees, kRetractRollerPercent),
     EJECT(kEjectPivotAngleDegrees, kEjectRollerPercent),

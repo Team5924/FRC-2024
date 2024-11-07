@@ -17,6 +17,7 @@ public interface IntakeIO {
     public double pivotMotorTempCelsius = 0.0;
     public double pivotMotorCurrentAmps = 0.0;
     public double pivotMotorAppliedVolts = 0.0;
+    public double laserCanMeasurementMillimeters = 0;
   }
 
   /** Updates the set of loggable inputs */

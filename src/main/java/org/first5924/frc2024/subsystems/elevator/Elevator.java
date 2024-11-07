@@ -27,12 +27,8 @@ public class Elevator extends SubsystemBase {
     // This method will be called once per scheduler run
     io.updateInputs(inputs);
     Logger.processInputs("Elevator", inputs);
-    SmartDashboard.putString("Wrist and Elevator State", getWristAndElevatorState().toString());
 
-    // TODO: test if this works!
-    double elevatorHeightPercent = (inputs.elevatorHeightMeters - ((double)ElevatorConstants.kLaserCanReadingAtLowestMillimeters) / 1000) / ElevatorConstants.kForwardSoftLimitThreshold;
-    String elevatorHeightPercentString = String.valueOf(elevatorHeightPercent);
-    SmartDashboard.putString("Elevator Height %", elevatorHeightPercentString);
+    SmartDashboard.putString("Elevator Height Percent", Double.toString(getHeightMeters() / ElevatorConstants.kMaxHeight * 100));
   }
 
   public WristAndElevatorState getWristAndElevatorState() {
@@ -59,5 +55,13 @@ public class Elevator extends SubsystemBase {
 
   public void setHeight(double height){
     io.setElevatorHeight(height);
+  }
+
+  public void setSoftStopOff() {
+    io.setSoftStopOff();
+  }
+  
+  public void setSoftStopOn() {
+    io.setSoftStopOn();
   }
 }

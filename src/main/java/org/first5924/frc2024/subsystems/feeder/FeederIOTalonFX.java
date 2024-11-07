@@ -20,11 +20,13 @@ import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.LaserCan.RangingMode;
 import au.grapplerobotics.LaserCan.RegionOfInterest;
 import au.grapplerobotics.LaserCan.TimingBudget;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 /** Add your docs here. */
 public class FeederIOTalonFX implements FeederIO {
   private final TalonFX talon = new TalonFX(FeederConstants.kTalonId);
   private LaserCan laserCan;
+  private final DigitalInput limitSwitch = new DigitalInput(FeederConstants.kLimitSwitchChannel);
 
   private final DutyCycleOut dutyCycleOut = new DutyCycleOut(0).withEnableFOC(true);
 
@@ -32,7 +34,7 @@ public class FeederIOTalonFX implements FeederIO {
     try {
       laserCan = new LaserCan(FeederConstants.kLaserCanId);
       laserCan.setRangingMode(RangingMode.SHORT);
-      laserCan.setRegionOfInterest(new RegionOfInterest(8, 8, 6, 6));
+      laserCan.setRegionOfInterest(new RegionOfInterest(8, 8, 4, 4));
       laserCan.setTimingBudget(TimingBudget.TIMING_BUDGET_20MS);
     } catch (ConfigurationFailedException e) {
       System.out.println("Configuration failed! " + e);
@@ -64,6 +66,7 @@ public class FeederIOTalonFX implements FeederIO {
     inputs.motorCurrentAmps = talon.getSupplyCurrent().getValueAsDouble();
     inputs.motorAppliedVolts = talon.getMotorVoltage().getValueAsDouble();
     inputs.motorVelocityRotationsPerSecond = talon.getVelocity().getValueAsDouble();
+    inputs.limitSwitchTriggered = limitSwitch.get();
     LaserCan.Measurement measurement = laserCan.getMeasurement();
     if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
       inputs.laserCanMeasurementMillimeters = measurement.distance_mm;

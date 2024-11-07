@@ -4,13 +4,13 @@
 
 package org.first5924.frc2024.commands.wrist;
 
+import org.first5924.frc2024.constants.FieldConstants;
 import org.first5924.frc2024.constants.WristAndElevatorState;
 import org.first5924.frc2024.constants.WristConstants;
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.elevator.Elevator;
 import org.first5924.frc2024.subsystems.wrist.Wrist;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class RunWristStateMachine extends Command {
@@ -42,15 +42,18 @@ public class RunWristStateMachine extends Command {
         wrist.setAngle(WristConstants.kAmpAngle, elevator.getHeightMeters());
         break;
       case AIM_LOW:
-        wrist.setAngle(wrist.calculateWristAngle(WristAndElevatorState.AIM_LOW, drive.getDistanceToSpeakerCenter(DriverStation.getAlliance().get())), elevator.getHeightMeters());
+        wrist.setAngle(wrist.getShootAngle(WristAndElevatorState.AIM_LOW, Drive.getDistanceToTarget(drive.getEstimatedPose().getTranslation(), FieldConstants.getAllianceSpeakerCenterTranslation())), elevator.getHeightMeters());
         break;
       case AIM_HIGH:
+        wrist.setAngle(50.8, 0);
+        break;
+      case CLOSE_SHOT:
+        wrist.setAngle(50, 0);
+      case LAUNCH:
+        wrist.setAngle(WristConstants.kLaunchAngle, 0);
         break;
       case CLIMB:
-        wrist.setAngle(WristConstants.kClimbAngle, elevator.getHeightMeters());
-        break;
-      case CLIMB_MAX_HEIGHT:
-        wrist.setAngle(WristConstants.kClimbAngle, elevator.getHeightMeters());
+        wrist.getMaxAngleClimb(elevator.getHeightMeters());
         break;
     }
   }

@@ -7,7 +7,6 @@ package org.first5924.frc2024.commands.elevator;
 import java.util.function.DoubleSupplier;
 
 import org.first5924.frc2024.constants.ElevatorConstants;
-import org.first5924.frc2024.constants.WristAndElevatorState;
 import org.first5924.frc2024.subsystems.elevator.Elevator;
 
 import edu.wpi.first.math.MathUtil;
@@ -45,16 +44,14 @@ public class RunElevatorStateMachine extends Command {
       case AIM_HIGH:
         elevator.setHeight(ElevatorConstants.kAimHighHeight);
         break;
+      case CLOSE_SHOT:
+        elevator.setHeight(ElevatorConstants.kAimLowHeight);
+      case LAUNCH:
+        elevator.setHeight(ElevatorConstants.kAimLowHeight);
+        break;
       case CLIMB:
         elevator.setVoltage(MathUtil.applyDeadband(-rightJoystickY.getAsDouble(), 0.1) * ElevatorConstants.kPeakForwardVoltage);
         break;
-      case CLIMB_MAX_HEIGHT: {
-        elevator.setHeight(ElevatorConstants.kAmpHeight);
-        if (Math.abs(rightJoystickY.getAsDouble()) > 0.1) {
-          elevator.setWristAndElevatorState(WristAndElevatorState.CLIMB);
-        }
-        break;
-      }
     }
   }
 

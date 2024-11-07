@@ -40,19 +40,19 @@ public class DriveConstants {
   public static final double kMaxLinearSpeed = Units.feetToMeters(16.0);
   public static final double kMaxAngularSpeedRad = kMaxLinearSpeed / Math.hypot(kTrackWidthX / 2, kTrackWidthY / 2);
 
+  public static final double kMovingSpeedThreshold = 0.02;
+
   public static final double kWheelRadius = Units.inchesToMeters(2.0);
 
-  public static final double kDriveKp = 0.9;
-  public static final double kDriveKd = 0.0;
-  public static final double kDriveKs = 0.17957;
-  public static final double kDriveKv = 2.1474;
+  public static final double kDriveKs = 0.15215;
+  public static final double kDriveKv = 1.8854;
   public static final double kTurnKp = 3.5;
   public static final double kTurnKd = 0;
 
-  public static final double kRobotRotationKp = 0.8;
+  public static final double kRobotRotationKp = 3.5;
 
-  public static final double kEncoderToDriveRatio = 5.14;
-  public static final double kEncoderToTurnRatio = 396/35;
+  public static final double kEncoderToDriveRatio = 4.59;
+  public static final double kEncoderToTurnRatio = 468/35;
 
   public static final double kSlowModeMovementMultiplier = 0.19;
   public static final double kSlowModeRotationMultiplier = 0.2;
@@ -66,4 +66,16 @@ public class DriveConstants {
     Math.sqrt(Math.pow(kTrackWidthX / 2, 2) + Math.pow(kTrackWidthY / 2, 2)), // Drive base radius in meters. Distance from robot center to furthest module.
     new ReplanningConfig() // Default path replanning config. See the API for the options here
   );
+
+  public static final double kBlueBottomAutoStartingYawDegrees = -56.49;
+
+  public static enum DriveState{
+    NORMAL,
+    SLOW,
+    FACE_SPEAKER,
+    FACE_SPEAKER_AND_SLOW,
+    FACE_SPEAKER_QUICK_SHOT,
+    FACE_AMP_AREA,
+    DRIVETONOTE
+  }
 }

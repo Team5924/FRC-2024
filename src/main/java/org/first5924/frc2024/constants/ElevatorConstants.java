@@ -10,7 +10,6 @@ import edu.wpi.first.math.util.Units;
 public class ElevatorConstants {
   public static final int kLeftTalonId = 52;
   public static final int kRightTalonId = 51;
-  public static final int kLaserCanId = 15;
 
   public static final double kEncoderToSpoolRatio = 24.31;
   public static final double kSpoolDiameterMeters = Units.inchesToMeters(1.75);
@@ -21,14 +20,15 @@ public class ElevatorConstants {
   public static final double kP = 16;
   public static final double kG = 0.25;
 
-  public static final double kPeakForwardVoltage = 10;
-  public static final double kPeakReverseVoltage = -8;
+  public static final double kPeakForwardVoltage = 11;
+  public static final double kPeakReverseVoltage = -9;
 
   public static final double kForwardSoftLimitThreshold = 4.3;
   public static final double kReverseSoftLimitThreshold = 0;
 
   public static final double kIntakeHeight = 0;
-  public static final double kAmpHeight = 0.58;
+  public static final double kAmpHeight = 0.46;
+  public static final double kMaxHeight = 0.58;
   public static final double kAimLowHeight = 0;
   public static final double kAimHighHeight = 0;
 }

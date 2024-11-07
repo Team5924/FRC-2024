@@ -16,6 +16,7 @@ public class Feeder extends SubsystemBase {
   private final FeederIOInputsAutoLogged inputs = new FeederIOInputsAutoLogged();
 
   private FeederState state = FeederState.MANUAL;
+  private boolean isNoteInRobotSystem = true;
 
   public Feeder(FeederIO io) {
     this.io = io;
@@ -26,8 +27,8 @@ public class Feeder extends SubsystemBase {
     // This method will be called once per scheduler run
     io.updateInputs(inputs);
     Logger.processInputs("Feeder", inputs);
-    SmartDashboard.putString("Feeder State", getState().toString());
-    isNoteFullyIn();
+
+    SmartDashboard.putBoolean("Is note in robot system?", isNoteInRobotSystem);
   }
 
   public FeederState getState() {
@@ -38,6 +39,14 @@ public class Feeder extends SubsystemBase {
     this.state = state;
   }
 
+  public boolean getIsNoteInRobotSystem() {
+    return isNoteInRobotSystem;
+  }
+
+  public void setIsNoteInRobotSystem(boolean isNoteInRobotSystem) {
+    this.isNoteInRobotSystem = isNoteInRobotSystem;
+  }
+
   public double getLaserCanMeasurementMillimeters() {
     return inputs.laserCanMeasurementMillimeters;
   }
@@ -46,9 +55,11 @@ public class Feeder extends SubsystemBase {
     io.setPercent(percent);
   }
 
+  public boolean isNoteInFeeder() {
+    return inputs.limitSwitchTriggered;
+  }
+
   public boolean isNoteFullyIn() {
-    boolean isNoteFullyIn = inputs.laserCanMeasurementMillimeters <= FeederConstants.kDistanceWhenNoteIn;
-    SmartDashboard.putBoolean("Is Note Fully In", isNoteFullyIn);
-    return isNoteFullyIn;
+    return inputs.limitSwitchTriggered;
   }
 }

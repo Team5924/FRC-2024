@@ -17,7 +17,11 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import au.grapplerobotics.ConfigurationFailedException;
+import au.grapplerobotics.LaserCan;
+import au.grapplerobotics.LaserCan.RangingMode;
+import au.grapplerobotics.LaserCan.RegionOfInterest;
+import au.grapplerobotics.LaserCan.TimingBudget;
 
 import org.first5924.frc2024.constants.IntakeConstants;
 import org.first5924.frc2024.constants.RobotConstants;
@@ -26,14 +30,24 @@ import org.first5924.frc2024.constants.RobotConstants;
 public class IntakeIOTalonFX implements IntakeIO {
   private final TalonFX rollerTalon = new TalonFX(IntakeConstants.kRollerTalonId);
   private final TalonFX pivotTalon = new TalonFX(IntakeConstants.kPivotTalonId);
+  private LaserCan laserCan;
 
   private final DutyCycleOut dutyCycleOut = new DutyCycleOut(0).withEnableFOC(true);
   private final VoltageOut voltageOut = new VoltageOut(0).withEnableFOC(true);
   private final PositionVoltage positionVoltage = new PositionVoltage(0).withEnableFOC(true).withSlot(0);
 
   public IntakeIOTalonFX() {
+    try {
+      laserCan = new LaserCan(IntakeConstants.kLaserCanId);
+      laserCan.setRangingMode(RangingMode.LONG);
+      laserCan.setRegionOfInterest(new RegionOfInterest(8, 8, 4, 4));
+      laserCan.setTimingBudget(TimingBudget.TIMING_BUDGET_20MS);
+    } catch (ConfigurationFailedException e) {
+      System.out.println("Configuration failed! " + e);
+    }
+
     MotorOutputConfigs rollerMotorOutputConfigs = new MotorOutputConfigs();
-    rollerMotorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    rollerMotorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
     rollerMotorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
 
     CurrentLimitsConfigs rollerCurrentLimitsConfigs = new CurrentLimitsConfigs();
@@ -94,6 +108,12 @@ public class IntakeIOTalonFX implements IntakeIO {
     inputs.pivotMotorCurrentAmps = pivotTalon.getSupplyCurrent().getValueAsDouble();
     inputs.pivotAngleDegrees = pivotTalon.getPosition().getValueAsDouble() * 360;
     inputs.pivotMotorAppliedVolts = pivotTalon.getMotorVoltage().getValueAsDouble();
+    LaserCan.Measurement measurement = laserCan.getMeasurement();
+    if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
+      inputs.laserCanMeasurementMillimeters = measurement.distance_mm;
+    } else {
+      inputs.laserCanMeasurementMillimeters = 10000;
+    }
   }
 
   @Override
@@ -105,8 +125,6 @@ public class IntakeIOTalonFX implements IntakeIO {
   public void setPivotPosition(double degrees) {
     double rotations = degrees / 360;
     pivotTalon.setControl(positionVoltage.withPosition(rotations));
-    SmartDashboard.putNumber("Rotations Goal", rotations);
-    SmartDashboard.putNumber("Volts", pivotTalon.getMotorVoltage().getValueAsDouble());
   }
 
   @Override

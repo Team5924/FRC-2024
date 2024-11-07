@@ -14,55 +14,31 @@
         {
           "type": "named",
           "data": {
-            "name": "setShooterStateOn"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setWristAndElevatorStateAimLow"
+            "name": "setGyro0"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.05
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "setFeederStateFeedShooter"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setIntakeStateFloor"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setFeederStateManual"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setShooterStateOff"
+            "name": "intakeAndRev"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Close Shot to Close B"
+            "pathName": "Start to Close B with Shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.7
           }
         },
         {
@@ -74,30 +50,6 @@
         {
           "type": "named",
           "data": {
-            "name": "setWristAndElevatorStateAimLow"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setShooterStateOn"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setIntakeStateFloorOff"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "setFeederStateFeedShooter"
           }
         },
@@ -110,85 +62,7 @@
         {
           "type": "named",
           "data": {
-            "name": "setIntakeStateFloor"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setFeederStateManual"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setShooterStateOff"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Close Shot to Close A"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Close A to Close Shot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setWristAndElevatorStateAimLow"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setIntakeStateFloorOff"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setShooterStateOn"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setFeederStateFeedShooter"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setIntakeStateFloor"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setFeederStateManual"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setShooterStateOff"
+            "name": "prepareForIntake"
           }
         },
         {
@@ -200,31 +74,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Close C to Close Shot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setWristAndElevatorStateAimLow"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setShooterStateOn"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setIntakeStateFloorOff"
+            "pathName": "Back Off from Close C"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.7
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "closeShotAndRev"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setIntakeStateRetract"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Back Off from Close C to Close Shot"
           }
         },
         {
@@ -242,25 +116,55 @@
         {
           "type": "named",
           "data": {
+            "name": "prepareForIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Close Shot to Close A"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.35
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "setIntakeStateRetract"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "setFeederStateManual"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setShooterStateOff"
+            "name": "aimAndRev"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Close Shot to Top Midfield"
+            "pathName": "Close A to Shoot (4N)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setFeederStateFeedShooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "prepareForIntake"
           }
         }
       ]

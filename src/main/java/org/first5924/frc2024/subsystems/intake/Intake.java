@@ -4,7 +4,6 @@
 
 package org.first5924.frc2024.subsystems.intake;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
@@ -27,10 +26,6 @@ public class Intake extends SubsystemBase {
     // This method will be called once per scheduler run
     io.updateInputs(inputs);
     Logger.processInputs("Intake", inputs);
-    SmartDashboard.putString("Intake State Before", getStateBeforeEject().toString());
-    SmartDashboard.putString("Intake State", getState().toString());
-    SmartDashboard.putNumber("Intake Angle", inputs.pivotAngleDegrees);
-    SmartDashboard.putBoolean("Is Ready to Eject?", isReadyToEject());
   }
 
   public void setState(IntakeState state) {
@@ -49,7 +44,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void setRollerPercent(double percent) {
-    io.setRollerPercent(percent);
+    io.setRollerPercent(-percent);
   }
 
   public void setPivotPosition(double degrees) {
@@ -57,10 +52,14 @@ public class Intake extends SubsystemBase {
   }
 
   public void setPivotVoltage(double volts) {
-    io.setPivotVoltage(volts);
+    io.setPivotVoltage(-volts);
   }
 
   public boolean isReadyToEject() {
     return Math.abs(inputs.pivotAngleDegrees - IntakeState.EJECT.getPivotAngle()) < 5;
+  }
+
+  public boolean isNoteIn() {
+    return inputs.laserCanMeasurementMillimeters < 350;
   }
 }

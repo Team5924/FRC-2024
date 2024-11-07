@@ -4,8 +4,6 @@
 
 package org.first5924.frc2024.subsystems.wrist;
 
-import java.util.Map;
-
 import org.first5924.frc2024.constants.WristAndElevatorState;
 import org.first5924.frc2024.constants.WristConstants;
 import org.littletonrobotics.junction.Logger;
@@ -24,25 +22,49 @@ public class Wrist extends SubsystemBase {
 
   private final InterpolatingDoubleTreeMap lowAimInterpolatingDoubleTreeMap = new InterpolatingDoubleTreeMap();
   private final InterpolatingDoubleTreeMap minWristAngleFromElevatorInterpolatingDoubleTreeMap = new InterpolatingDoubleTreeMap();
+  private final InterpolatingDoubleTreeMap maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap = new InterpolatingDoubleTreeMap();
+
+  private double targetAngle;
+
+  private GenericEntry shuffleboardTargetAngle;
 
   public Wrist(WristIO io) {
     this.io = io;
 
-    lowAimInterpolatingDoubleTreeMap.put(0.9892, 50.8);
-    lowAimInterpolatingDoubleTreeMap.put(1.2615, 46.4);
-    lowAimInterpolatingDoubleTreeMap.put(1.503, 42.4);
-    lowAimInterpolatingDoubleTreeMap.put(1.7575, 39.02);
-    lowAimInterpolatingDoubleTreeMap.put(2.00, 36.03);
-    lowAimInterpolatingDoubleTreeMap.put(2.245, 33.75);
-    lowAimInterpolatingDoubleTreeMap.put(2.48, 31.5);
+    lowAimInterpolatingDoubleTreeMap.put(1.06, 54.0);
+    lowAimInterpolatingDoubleTreeMap.put(1.2615, 50.5);
+    lowAimInterpolatingDoubleTreeMap.put(1.503, 45.5);
+    lowAimInterpolatingDoubleTreeMap.put(1.75, 41.0);
+    lowAimInterpolatingDoubleTreeMap.put(2.04, 38.25);
+    lowAimInterpolatingDoubleTreeMap.put(2.26, 34.85);
+    lowAimInterpolatingDoubleTreeMap.put(2.495, 33.0);
     lowAimInterpolatingDoubleTreeMap.put(2.74, 29.36);
-    lowAimInterpolatingDoubleTreeMap.put(3.04, 27.246);
-    lowAimInterpolatingDoubleTreeMap.put(3.23, 25.45);
+    lowAimInterpolatingDoubleTreeMap.put(3.02, 28.0);
+    lowAimInterpolatingDoubleTreeMap.put(3.23, 26.0);
+    lowAimInterpolatingDoubleTreeMap.put(3.56, 25.6);
+    lowAimInterpolatingDoubleTreeMap.put(3.735, 25.0);
+    // Guess, untested
+    lowAimInterpolatingDoubleTreeMap.put(3.91, 25.6);
+    lowAimInterpolatingDoubleTreeMap.put(4.09, 24.2);
+    lowAimInterpolatingDoubleTreeMap.put(4.245, 21.62);
+    lowAimInterpolatingDoubleTreeMap.put(4.5, 20.5);
+    lowAimInterpolatingDoubleTreeMap.put(4.8, 19.8);
+    lowAimInterpolatingDoubleTreeMap.put(5.0, 19.4);
+    lowAimInterpolatingDoubleTreeMap.put(5.5, 18.2);
 
     minWristAngleFromElevatorInterpolatingDoubleTreeMap.put(0.0, 3.5);
     minWristAngleFromElevatorInterpolatingDoubleTreeMap.put(0.0965, -7.4);
     minWristAngleFromElevatorInterpolatingDoubleTreeMap.put(0.1596, -51.81);
     minWristAngleFromElevatorInterpolatingDoubleTreeMap.put(0.212, -74.004);
+
+    maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.put(-90.0, 0.59);
+    maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.put(3.23, 0.0);
+    maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.put(0.0, 0.0);
+
+    shuffleboardTargetAngle = Shuffleboard.getTab("Manual PID")
+      .add("Target Wrist Angle", 40)
+      .withWidget(BuiltInWidgets.kTextView)
+      .getEntry();
   }
 
   @Override
@@ -58,32 +80,34 @@ public class Wrist extends SubsystemBase {
   }
 
   public void setAngle(double degrees, double currentHeight) {
-    io.setAngle(MathUtil.clamp(degrees, getWristMinAngle(currentHeight), WristConstants.kMaxAngle));
+    targetAngle = MathUtil.clamp(degrees, getMinAngle(currentHeight), WristConstants.kMaxAngle);
+    io.setAngle(targetAngle);
   }
 
-  public double getWristMinAngle(double currentHeight) {
+  public double getMinAngle(double currentHeight) {
     return minWristAngleFromElevatorInterpolatingDoubleTreeMap.get(currentHeight);
   }
 
-  public double getShuffleboardAngle() {
-    GenericEntry degrees = Shuffleboard.getTab("SmartDashboard")
-      .add("ideal angle", 90)
-      .withWidget(BuiltInWidgets.kNumberSlider)
-      .withProperties(Map.of("min", -90, "max", 90)) // specify widget properties here
-      .getEntry();
-
-    return degrees.getDouble(inputs.wristAngleDegrees) ;
+  public double getMaxAngleClimb(double currentHeight) {
+    return maxWristAngleClimbFromElevatorInterpolatingDoubleTreeMap.get(currentHeight);
   }
+
+  public double getShuffleboardAngle() {
+    return shuffleboardTargetAngle.getDouble(inputs.wristAngleDegrees);
+  }
+
   public void setVoltage(double volts) {
     io.setVoltage(volts);
   }
 
-  public double calculateWristAngle(WristAndElevatorState wristAndElevatorState, double distance) {
+  public double getShootAngle(WristAndElevatorState wristAndElevatorState, double distance) {
     if (wristAndElevatorState == WristAndElevatorState.AIM_LOW) {
-      SmartDashboard.putNumber("Desired Angle", lowAimInterpolatingDoubleTreeMap.get(distance));
-      SmartDashboard.putNumber("Time", System.currentTimeMillis());
       return lowAimInterpolatingDoubleTreeMap.get(distance);
     }
     return 30;
+  }
+
+  public boolean isAtSetpoint() {
+    return Math.abs(getAngleDegrees() - targetAngle) < 1;
   }
 }

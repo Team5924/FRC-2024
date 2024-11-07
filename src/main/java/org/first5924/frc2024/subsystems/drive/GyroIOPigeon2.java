@@ -22,7 +22,7 @@ public class GyroIOPigeon2 implements GyroIO {
     mountPoseConfigs.MountPoseYaw = 180;
     mPigeon2.getConfigurator().apply(mountPoseConfigs);
 
-    mPigeon2.setYaw(180);
+    mPigeon2.setYaw(0);
   }
 
   public void updateInputs(GyroIOInputs inputs) {
@@ -32,9 +32,5 @@ public class GyroIOPigeon2 implements GyroIO {
     inputs.pitchVelocityRadPerSec = Units.degreesToRadians(mPigeon2.getAngularVelocityXWorld().getValue());
     inputs.yawVelocityRadPerSec = Units.degreesToRadians(mPigeon2.getAngularVelocityYWorld().getValue());
     inputs.rollVelocityRadPerSec = Units.degreesToRadians(mPigeon2.getAngularVelocityZWorld().getValue());
-  }
-
-  public void setGyroYaw(double yaw) {
-    mPigeon2.setYaw(yaw);
   }
 }

@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.4162303972756096,
+      "y": 1.5629374453193356
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "setGyro0"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "prepareForIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Far Below Start to Sweep"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
