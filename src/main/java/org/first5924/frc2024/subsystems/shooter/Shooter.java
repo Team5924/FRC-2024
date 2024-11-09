@@ -11,6 +11,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
@@ -39,7 +40,7 @@ public class Shooter extends SubsystemBase {
     // This method will be called once per scheduler run
     io.updateInputs(inputs);
     Logger.processInputs("Shooter", inputs);
-
+    SmartDashboard.putString("Shooter State", getState().toString());
     Logger.recordOutput("Is Shooter Up to Speed?", isUpToSpeed());
 
     if (isCurrentlyAboveThreshold) {
