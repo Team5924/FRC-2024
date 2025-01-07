@@ -53,33 +53,33 @@ public class ModuleIOTalonFX implements ModuleIO {
   public ModuleIOTalonFX(int index) {
     switch (index) {
       case 0:
-        driveTalon = new TalonFX(DriveConstants.kLeftFrontDriveTalonId, "drive");
-        turnTalon = new TalonFX(DriveConstants.kLeftFrontTurnTalonId, "drive");
-        turnCanCoder = new CANcoder(DriveConstants.kLeftFrontCanCoderId, "drive");
+        driveTalon = new TalonFX(DriveConstants.kLeftFrontDriveTalonId);
+        turnTalon = new TalonFX(DriveConstants.kLeftFrontTurnTalonId);
+        turnCanCoder = new CANcoder(DriveConstants.kLeftFrontCanCoderId);
         isDriveMotorInverted = true;
         isTurnMotorInverted = true;
         absoluteEncoderOffsetRad = DriveConstants.kLeftFrontCanCoderOffsetRad;
         break;
       case 1:
-        driveTalon = new TalonFX(DriveConstants.kRightFrontDriveTalonId, "drive");
-        turnTalon = new TalonFX(DriveConstants.kRightFrontTurnTalonId, "drive");
-        turnCanCoder = new CANcoder(DriveConstants.kRightFrontCanCoderId, "drive");
+        driveTalon = new TalonFX(DriveConstants.kRightFrontDriveTalonId);
+        turnTalon = new TalonFX(DriveConstants.kRightFrontTurnTalonId);
+        turnCanCoder = new CANcoder(DriveConstants.kRightFrontCanCoderId);
         isDriveMotorInverted = false;
         isTurnMotorInverted = true;
         absoluteEncoderOffsetRad = DriveConstants.kRightFrontCanCoderOffsetRad;
         break;
       case 2:
-        driveTalon = new TalonFX(DriveConstants.kLeftBackDriveTalonId, "drive");
-        turnTalon = new TalonFX(DriveConstants.kLeftBackTurnTalonId, "drive");
-        turnCanCoder = new CANcoder(DriveConstants.kLeftBackCanCoderId, "drive");
+        driveTalon = new TalonFX(DriveConstants.kLeftBackDriveTalonId);
+        turnTalon = new TalonFX(DriveConstants.kLeftBackTurnTalonId);
+        turnCanCoder = new CANcoder(DriveConstants.kLeftBackCanCoderId);
         isDriveMotorInverted = false;
         isTurnMotorInverted = true;
         absoluteEncoderOffsetRad = DriveConstants.kLeftBackCanCoderOffsetRad;
         break;
       case 3:
-        driveTalon = new TalonFX(DriveConstants.kRightBackDriveTalonId, "drive");
-        turnTalon = new TalonFX(DriveConstants.kRightBackTurnTalonId, "drive");
-        turnCanCoder = new CANcoder(DriveConstants.kRightBackCanCoderId, "drive");
+        driveTalon = new TalonFX(DriveConstants.kRightBackDriveTalonId);
+        turnTalon = new TalonFX(DriveConstants.kRightBackTurnTalonId);
+        turnCanCoder = new CANcoder(DriveConstants.kRightBackCanCoderId);
         isDriveMotorInverted = false;
         isTurnMotorInverted = true;
         absoluteEncoderOffsetRad = DriveConstants.kRightBackCanCoderOffsetRad;

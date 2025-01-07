@@ -40,9 +40,11 @@ import org.first5924.frc2024.constants.IntakeConstants.IntakeState;
 import org.first5924.frc2024.constants.ShooterConstants.ShooterState;
 import org.first5924.frc2024.commands.intake.RunIntakeStateMachine;
 import org.first5924.frc2024.commands.intake.SetIntakeState;
+import org.first5924.frc2024.commands.roller.RollerCommand;
 import org.first5924.frc2024.subsystems.intake.Intake;
 import org.first5924.frc2024.subsystems.intake.IntakeIO;
 import org.first5924.frc2024.subsystems.intake.IntakeIOTalonFX;
+import org.first5924.frc2024.subsystems.roller.Roller;
 import org.first5924.frc2024.subsystems.Controllers;
 import org.first5924.frc2024.subsystems.drive.Drive;
 import org.first5924.frc2024.subsystems.drive.GyroIO;
@@ -84,6 +86,7 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Elevator elevator;
   private final Wrist wrist;
+  private final Roller roller;
 
   // Adds new method to rumble controller for a certain amount of time
   private final Controllers controllersWrapper = new Controllers(InputConstants.kDriverControllerPort, InputConstants.kOperatorControllerPort);
@@ -98,9 +101,11 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
     switch (RobotConstants.kCurrentMode) {
       // Real robot, instantiate hardware IO implementations
       case REAL:
+      roller = new Roller();
         drive = new Drive(
           new GyroIOPigeon2(),
           new ModuleIOTalonFX(0),
@@ -117,6 +122,7 @@ public class RobotContainer {
         break;
       // Sim robot, instantiate physics sim IO implementations
       case SIM:
+      roller = new Roller();
         drive = new Drive(
           new GyroIO() {},
           new ModuleIO() {},
@@ -133,6 +139,7 @@ public class RobotContainer {
         break;
       // Replayed robot, disable IO implementations
       default:
+      roller = new Roller();
         drive = new Drive(
           new GyroIO() {},
           new ModuleIO() {},
@@ -219,6 +226,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    roller.setDefaultCommand(new RollerCommand(operatorController::getLeftY, roller));
     teleopInitTrigger.onTrue(new TeleopReset(elevator, feeder, intake, shooter));
     drive.setDefaultCommand(new RunDriveStateMachine(
       drive,
